@@ -7,7 +7,7 @@ module.exports = {
       colors: {
         'fpl-green': '#01ff86',
         'fpl-purple': '#37003c',
-        'fpl-pink': '#740951',
+        'fpl-pink': '#65094c',
         'fpl-purple-bright': '#963cff'
       },
       inset: {

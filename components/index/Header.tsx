@@ -1,11 +1,11 @@
 import React from 'react';
-import Button from './Button';
+import Button from '../Button';
 
 function Header() {
   return (
     <div className="bg-gradient-to-tr from-white to-gray-300">
       <div className="flex justify-between mx-auto px-8 py-6">
-        <h3 className="text-2xl font-bold text-fpl-purple">fplbot</h3>
+        <h3 className="text-2xl font-bold text-fpl-purple">fplbot.app</h3>
         <Button>Try it now</Button>
       </div>
 
