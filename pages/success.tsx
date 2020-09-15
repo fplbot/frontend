@@ -13,7 +13,7 @@ export default function Success() {
         <div className="">
 
           <div className="container mx-auto py-40 px-8 text-center">
-            <h1 className="text-3xl md:text-5xl font-bold text-gray-200">
+            <h1 className="text-3xl md:text-6xl font-bold text-gray-200">
               Success!
             </h1>
             <p className="text-lg text-center text-gray-200">fplbot is now installed in your workspace 🎉</p>
