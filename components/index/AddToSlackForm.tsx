@@ -4,7 +4,7 @@ import useDebounce from '../../utils/useDebounce';
 
 function AddToSlackForm() {
 
-  const [message, setMessage] = React.useState<string | undefined>(undefined);
+  const [message, setMessage] = React.useState<string | undefined>(undefined);
 
   const [leagueId, setLeagueId] = React.useState<string>("");
   const leagueIdDebounced = useDebounce(leagueId, 300);
@@ -19,17 +19,17 @@ function AddToSlackForm() {
 
     validateLeagueId(leagueId).then(res => {
       if (res.type === 'NOT_FOUND') {
-        setMessage("Could not find league. Only classic leagues are currently supported");
+        setMessage("Could not find league 😕 Only classic leagues are currently supported");
       } else {
         setMessage(`Found slack league ${res.leagueName}`);
       }
     });
 
-    
+
   }, [leagueIdDebounced]);
 
   return (
-    <div className="bg-gray-300">
+    <div id="add-to-slack" className="bg-gray-300">
 
       <div className="relative container mx-auto pb-24 pb-4 md:pb-20 px-8 text-center">
 
@@ -67,6 +67,10 @@ function AddToSlackForm() {
 
         </div>
 
+        <p className="mt-10 text-gray-600 text-sm break-words">
+          You can find your leagueId in the url of your fantasy premier leage page: https://fantasy.premierleague.com/leagues/<b>leagueid</b>/standings
+        </p>
+
       </div>
     </div>
   );
@@ -81,12 +85,18 @@ function AddToSlackForm() {
   };
 
   function onSubmit() {
+    if (leagueId === "" || channel === "") {
+      setMessage("Please fill in a league id and a channel");
+      return;
+    }
     getRedirectUri(channel, parseInt(leagueId, 10))
       .then((res) => {
-        if (res.type === 'ERROR') {
+        if (res.type === 'SUCCESS') {
+          window.location.href = res.redirectUri;
+        }
+        else {
           setMessage("Failed to set up bot 😕 Check your input.");
         }
-
       });
   }
 }

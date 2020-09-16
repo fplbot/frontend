@@ -14,7 +14,7 @@ interface RedirectUriSuccess {
 
 type RedirectUriResponse = RedirectUriError | RedirectUriSuccess;
 
-export async function getRedirectUri(channel: string, leagueId: number): Promise<RedirectUriResponse> {
+export function getRedirectUri(channel: string, leagueId: number): Promise<RedirectUriResponse> {
 
   const channelWithPrefix = channel.includes("#") ? channel : `#${channel}`
 

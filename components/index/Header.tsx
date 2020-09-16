@@ -6,7 +6,7 @@ function Header() {
     <div className="bg-gradient-to-tr from-white to-gray-300">
       <div className="flex justify-between mx-auto px-8 py-6">
         <h3 className="text-2xl font-bold text-fpl-purple">fplbot.app</h3>
-        <Button>Try it now</Button>
+        <Button onClick={scrollToFeature}>Try it now</Button>
       </div>
 
       <div className="relative">
@@ -19,7 +19,7 @@ function Header() {
           </h1>
           <p className="text-lg text-center text-fpl-purple">An unofficial Slackbot for Fantasy Premier League</p>
 
-          <button className="items-center py-2 px-8 mt-8 mb-16 font-bold text-2xl text-fpl-purple hover:text-white bg-fpl-green hover:bg-fpl-purple rounded shadow hover:shadow-xl transition duration-500 ">
+          <button onClick={scrollToFeature} className="items-center py-2 px-8 mt-8 mb-16 font-bold text-2xl text-fpl-purple hover:text-white bg-fpl-green hover:bg-fpl-purple rounded shadow hover:shadow-xl transition duration-500 ">
             Try fplbot
           </button>
 
@@ -31,6 +31,15 @@ function Header() {
 
     </div>
   );
+
+  function scrollToFeature() {
+    try {
+      const features = document.getElementById("add-to-slack");
+      features.scrollIntoView({ behavior: 'smooth'});
+    } catch(err) {
+      // do nothing
+    }
+  }
 }
 
 export default Header;
