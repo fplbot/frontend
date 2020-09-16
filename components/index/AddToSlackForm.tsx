@@ -1,11 +1,32 @@
 import React, { ChangeEvent } from 'react';
-import { getRedirectStatus } from 'next/dist/lib/check-custom-routes';
-import { getRedirectUri } from '../../services/signup';
+import { getRedirectUri, validateLeagueId } from '../../services/signup';
+import useDebounce from '../../utils/useDebounce';
 
 function AddToSlackForm() {
 
+  const [message, setMessage] = React.useState<string | undefined>(undefined);
+
   const [leagueId, setLeagueId] = React.useState<string>("");
+  const leagueIdDebounced = useDebounce(leagueId, 300);
+
   const [channel, setChannel] = React.useState<string>("");
+
+  React.useEffect(() => {
+    if (leagueId === "") {
+      setMessage(undefined);
+      return;
+    }
+
+    validateLeagueId(leagueId).then(res => {
+      if (res.type === 'NOT_FOUND') {
+        setMessage("Could not find league. Only classic leagues are currently supported");
+      } else {
+        setMessage(`Found slack league ${res.leagueName}`);
+      }
+    });
+
+    
+  }, [leagueIdDebounced]);
 
   return (
     <div className="bg-gray-300">
@@ -26,11 +47,15 @@ function AddToSlackForm() {
             />
             <InputField
               value={leagueId}
+              type="number"
               onChange={handleLeagueChange}
               name="league-id"
               label="Fantasy league id"
               placeHolder="010203"
             />
+            <div className="w-full p-2 mt-6 text-fpl-purple">
+              {message}
+            </div>
             <div className="container mx-auto w-40 pt-8">
               <button className="rounded shadow-sm hover:shadow" onClick={onSubmit}>
                 <img src="https://platform.slack-edge.com/img/add_to_slack@2x.png" alt="Add to slack button" />
@@ -47,6 +72,7 @@ function AddToSlackForm() {
   );
 
   function handleLeagueChange(e: ChangeEvent<HTMLInputElement>) {
+    setMessage(undefined);
     setLeagueId(e.target.value);
   };
 
@@ -55,7 +81,13 @@ function AddToSlackForm() {
   };
 
   function onSubmit() {
-    getRedirectUri(channel, leagueId).then((res) => console.log(res));
+    getRedirectUri(channel, parseInt(leagueId, 10))
+      .then((res) => {
+        if (res.type === 'ERROR') {
+          setMessage("Failed to set up bot 😕 Check your input.");
+        }
+
+      });
   }
 }
 
@@ -64,6 +96,7 @@ interface InputFieldProps {
   placeHolder: string
   label: string;
   value: string;
+  type?: "number" | "text";
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -78,9 +111,9 @@ function InputField(props: InputFieldProps) {
       <input
         className="col-span-2 appearance-none bg-transparent border-none w-full text-fpl-purple leading-tight focus:outline-none"
         value={props.value}
+        type={props.type}
         onChange={props.onChange}
         name={props.name}
-        type="text"
         placeholder={props.placeHolder}
         aria-label={props.label} />
     </div>
