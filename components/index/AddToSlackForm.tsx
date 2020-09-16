@@ -68,7 +68,7 @@ function AddToSlackForm() {
         </div>
 
         <p className="mt-10 text-gray-600 text-sm break-words">
-          You can find your leagueId in the url of your fantasy premier leage page: https://fantasy.premierleague.com/leagues/<b>leagueid</b>/standings
+          You can find your league id in the url of your fantasy premier league page: https://fantasy.premierleague.com/leagues/<b>leagueid</b>/standings
         </p>
 
       </div>
