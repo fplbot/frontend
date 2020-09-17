@@ -7,14 +7,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        {gaId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />}
-        {gaId && <script dangerouslySetInnerHTML={{
-          __html: ` window.dataLayer = window.dataLayer || [];
+        {gaId &&
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+            <script dangerouslySetInnerHTML={{
+              __html: ` window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments)}
               gtag('js', new Date());
               gtag('config', '${gaId}');`
-        }}
-        />}
+            }}
+            />
+          </>
+        }
         <title>fplbot</title>
         <meta name="theme-color" content="#37003c" />
         <meta name="slack-app-id" content="AREFP62B1" />
