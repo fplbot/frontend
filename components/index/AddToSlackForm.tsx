@@ -21,7 +21,7 @@ function AddToSlackForm() {
       if (res.type === 'NOT_FOUND') {
         setMessage("Could not find league 😕 Only classic leagues are currently supported");
       } else {
-        setMessage(`Found slack league ${res.leagueName}`);
+        setMessage(`Found fantasy league ${res.leagueName}`);
       }
     });
 
