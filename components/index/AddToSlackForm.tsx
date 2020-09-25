@@ -63,7 +63,7 @@ function AddToSlackForm() {
             </div>
           </div>
 
-          <img src="/logo.svg" className="w-48 mx-12 hidden md:block" />
+          <img src="/logo.svg" className="w-48 mx-12 hidden md:block" alt="premier league logo" />
 
         </div>
 
