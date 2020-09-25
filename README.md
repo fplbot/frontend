@@ -1,1 +1,3 @@
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+# Fplbot frontend
+
+[Frontend for fplbot](https://www.fplbot.app/)
