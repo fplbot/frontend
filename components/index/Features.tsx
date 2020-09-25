@@ -25,15 +25,15 @@ export default function Features() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4">
 
-            <FeatureImageBox imageUrl={"/taunts.png"} />
+            <FeatureImageBox imageUrl={"/taunts.png"} alt="live update example"/>
 
             <div className="md:col-span-1" />
 
             <div className="md:col-span-1" />
 
-            <FeatureImageBox imageUrl={"/injuries.png"} />
+            <FeatureImageBox imageUrl={"/injuries.png"}  alt="injuries example"/>
 
-            <FeatureImageBox imageUrl={"/standings.png"} />
+            <FeatureImageBox imageUrl={"/standings.png"}  alt="current standings example"/>
 
           </div>
 

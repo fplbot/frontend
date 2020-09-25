@@ -49,7 +49,7 @@ export default function Success() {
                 </h1>
               </div>
 
-              <FeatureImageBox imageUrl="/success.png" />
+              <FeatureImageBox imageUrl="/success.png" alt="example of how to invite the bot to a channel"/>
 
               <div className="md:col-span-1" />
 

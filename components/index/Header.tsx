@@ -24,7 +24,7 @@ function Header() {
           </button>
 
           <div className="relative shadow-2xl">
-            <img src="/slack.png" className="rounded-lg" />
+            <img src="/slack.png" className="rounded-lg" alt="slack screenshot" />
           </div>
         </div>
       </div>
