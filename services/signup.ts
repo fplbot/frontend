@@ -1,3 +1,4 @@
+
 interface RedirectUriJson {
   redirectUri: string;
 }
@@ -12,13 +13,15 @@ interface RedirectUriSuccess {
   redirectUri: string;
 }
 
-type RedirectUriResponse = RedirectUriError | RedirectUriSuccess;
+type RedirectUriResponse = RedirectUriError | RedirectUriSuccess;
+
+const FPLBOT_API_BASEURL = process.env.NEXT_PUBLIC_FPLBOT_API_BASEURL;
+
 
 export function getRedirectUri(channel: string, leagueId: number): Promise<RedirectUriResponse> {
-
   const channelWithPrefix = channel.includes("#") ? channel : `#${channel}`
 
-  return fetch(`https://api.fplbot.app/oauth/install-url`, {
+  return fetch(`${FPLBOT_API_BASEURL}/oauth/install-url`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -35,7 +38,7 @@ export function getRedirectUri(channel: string, leagueId: number): Promise<Redir
       }
       return Promise.reject(json);
     })
-    .then((json: RedirectUriJson): RedirectUriSuccess  => {
+    .then((json: RedirectUriJson): RedirectUriSuccess => {
       return { type: 'SUCCESS', redirectUri: json.redirectUri };
     })
     .catch((error): RedirectUriError => {
@@ -61,17 +64,16 @@ interface LeagueIdSuccess {
 type LeagueIdResponse = LeagueIdNotFound | LeagueIdSuccess;
 
 export function validateLeagueId(leagueId: string): Promise<LeagueIdResponse> {
-
-  return fetch(`https://api.fplbot.app/fpl/leagues/${leagueId}`, {
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/leagues/${leagueId}`, {
     method: 'GET',
   })
-    .then(response => {      
+    .then(response => {
       if (response.ok) {
         return response.json();
       }
       return Promise.reject(response);
     })
-    .then((json: LeagueIdJson): LeagueIdSuccess  => {
+    .then((json: LeagueIdJson): LeagueIdSuccess => {
       return { type: 'SUCCESS', leagueName: json.leagueName, leagueAdmin: json.leagueAdmin };
     })
     .catch((error): LeagueIdNotFound => {
