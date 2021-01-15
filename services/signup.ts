@@ -1,3 +1,4 @@
+import { FPLBOT_API_BASEURL } from "../utils/envconfig";
 
 interface RedirectUriJson {
   redirectUri: string;
@@ -14,9 +15,6 @@ interface RedirectUriSuccess {
 }
 
 type RedirectUriResponse = RedirectUriError | RedirectUriSuccess;
-
-const FPLBOT_API_BASEURL = process.env.NEXT_PUBLIC_FPLBOT_API_BASEURL;
-
 
 export function getRedirectUri(channel: string, leagueId: number): Promise<RedirectUriResponse> {
   const channelWithPrefix = channel.includes("#") ? channel : `#${channel}`

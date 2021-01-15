@@ -8,7 +8,7 @@ export default function Features() {
 
       <div className="relative">
 
-        <div className="block h-48 w-full bg-gray-300 absolute bottom-0 inset-x-0" />
+        <div className="block h-48 w-full bg-gray-200 absolute bottom-0 inset-x-0" />
 
         <div className="relative container mx-auto pb-24 px-8">
 
