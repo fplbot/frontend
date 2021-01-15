@@ -27,7 +27,7 @@ function Header() {
             onClick={scrollToFeature}
             color="GREEN"
             className="mt-8 mb-16 text-2xl"
-            size="lg"
+            shape="long"
           >
             Try fplbot
           </Button>

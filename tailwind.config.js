@@ -1,4 +1,8 @@
 module.exports = {
+  purge: [
+    './src/**/*.tsx',
+    './src/**/**/*.tsx',
+  ],
   theme: {
     fontFamily: {
       mono: ['Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
@@ -14,7 +18,7 @@ module.exports = {
         '1': '1rem',
         '4': '4rem',
         '50': '50%',
-      }
+      },
     }
   }
 }
