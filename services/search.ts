@@ -1,5 +1,9 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
 
+export interface FplApiResponse {
+  hits: PlayerEntry[];
+}
+
 export interface PlayerEntry {
   id: number;
   entry: number;
@@ -20,34 +24,7 @@ export type SearchResponse = SearchSuccess | SearchError;
 
 // TODO
 export function searchForPlayer(searchString: string): Promise<SearchResponse> {
-  const mock: SearchSuccess = {
-    type: "SUCCESS",
-    data: [{
-      id: 1581259,
-      entry: 1581259,
-      realName: 'Kristiane Westgård',
-      teamName: 'Krist10'
-    },{
-      id: 76744,
-      entry: 76744,
-      realName: 'Lars Skjelbek',
-      teamName: 'bla bla'
-    },{
-      id: 5357581,
-      entry: 5357581,
-      realName: 'Magne',
-      teamName: 'DJ Premier League'
-    },{
-      id: 2045419,
-      entry: 2045419,
-      realName: 'John Korsnes',
-      teamName: '✝'
-    }],
-  };
-
-  return Promise.resolve(mock);
-
-  return fetch(`${FPLBOT_API_BASEURL}/search/${searchString}`, {
+  return fetch(`${FPLBOT_API_BASEURL}/search/entries/${searchString}`, {
     method: "GET",
   })
     .then((response) => {
@@ -56,10 +33,14 @@ export function searchForPlayer(searchString: string): Promise<SearchResponse> {
       }
       return Promise.reject(response);
     })
-    .then((json: PlayerEntry[]): SearchSuccess => {
-        return { type: "SUCCESS", data: json };
-    })
-    .catch((error): SearchError => {
+    .then(
+      (json: FplApiResponse): SearchSuccess => {
+        return { type: "SUCCESS", data: json.hits };
+      }
+    )
+    .catch(
+      (error): SearchError => {
         return { type: "ERROR" };
-    });
+      }
+    );
 }
