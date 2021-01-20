@@ -22,7 +22,6 @@ interface SearchError {
 
 export type SearchResponse = SearchSuccess | SearchError;
 
-// TODO
 export function searchForPlayer(searchString: string): Promise<SearchResponse> {
   return fetch(`${FPLBOT_API_BASEURL}/search/entries/${searchString}`, {
     method: "GET",
