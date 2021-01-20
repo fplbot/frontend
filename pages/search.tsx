@@ -8,7 +8,11 @@ interface SearchInit {
   type: "INIT";
 }
 
-type SearchState = SearchResponse | SearchInit;
+interface SearchEmpty {
+  type: "EMPTY";
+}
+
+type SearchState = SearchResponse | SearchEmpty | SearchInit;
 
 export default function Index() {
   const [searchState, setSearchState] = useState<SearchState>({
@@ -35,9 +39,11 @@ export default function Index() {
           <div className="mt-10">
             <input
               value={searchValue}
+              placeholder="Magnus Carlsen"
               onChange={(e) => {
                 setSearchValue(e.target.value);
               }}
+              onKeyDown={handleKeyDown}
               className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
@@ -57,7 +63,17 @@ export default function Index() {
     </div>
   );
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      search();
+    }
+  }
+
   function search() {
+    if (searchValue === "") {
+      setSearchState({type:  "EMPTY"});
+      return;
+    }
     setPrevSearchState(searchValue);
     searchForPlayer(searchValue).then((res) => {
       setSearchState(res);
@@ -75,6 +91,13 @@ const SearchState = ({ searchState, searchPhrase }: SearchStateProps) => {
     return (
       <p className="text-fpl-purple">
         Search results will appear here. You can search by name or team name
+      </p>
+    );
+  }
+  if (searchState.type === "EMPTY") {
+    return (
+      <p className="text-fpl-purple">
+        Please enter a search value. You can search by name or team name
       </p>
     );
   }
@@ -111,8 +134,8 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
       </p>
       <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
         <thead className="text-white">
-          {playerEntries.map((data) => (
-            <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+          {playerEntries.map((data, i) => (
+            <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0" key={`table-header-${i}`}>
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Team name</th>
               <th className="p-3 text-left" style={{ width: "120px" }}>
@@ -122,8 +145,8 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
           ))}
         </thead>
         <tbody className="flex-1 sm:flex-none">
-          {playerEntries.map((data) => (
-            <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
+          {playerEntries.map((data, i) => (
+            <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none" key={`table-row-${i}`}>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
                 {data.realName}
               </td>
