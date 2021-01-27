@@ -35,7 +35,7 @@ class MyDocument extends Document {
           <meta property="og:title" content="@fplbot" />
           <meta property="og:description" content="A Slack app for Fantasy Premier League" />
           <meta property="og:image" content="https://fantasy.premierleague.com/img/share/facebook-share.png" />
-          <meta name="description" content="Slack bot for fpl/fantasy premier league"></meta>
+          <meta name="description" content="Slack bot for fantasy premier league. Posts live gameweek updates, standings for the league you follow and more!"></meta>
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>
