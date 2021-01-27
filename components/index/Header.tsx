@@ -1,12 +1,11 @@
 import React from "react";
-import { FPLBOT_APP_URL } from "../../utils/envconfig";
 import Button from "../Button";
 
 function Header() {
   return (
     <div className="bg-gradient-to-tr from-white to-gray-200">
       <div className="flex justify-between mx-auto px-8 py-6">
-        <a href={FPLBOT_APP_URL} className="text-2xl font-bold text-fpl-purple">
+        <a href="/" className="text-2xl font-bold text-fpl-purple">
           fplbot.app
         </a>
         <Button onClick={scrollToFeature}>Try it now</Button>

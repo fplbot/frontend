@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 
 interface ButtonProps {
-  onClick: () => void;
+  onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   children: string | JSX.Element;
   className?: string;
   color?: "PURPLE" | "GREEN";

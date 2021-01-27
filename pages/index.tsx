@@ -3,8 +3,6 @@ import Features from "../components/index/Features";
 import Header from "../components/index/Header";
 import AddToSlackForm from "../components/index/AddToSlackForm";
 import Footer from "../components/Footer";
-import FeatureImageBox from "../components/FeatureImageBox";
-import { FPLBOT_APP_URL } from "../utils/envconfig";
 
 export default function Index() {
   return (
@@ -13,7 +11,7 @@ export default function Index() {
       <Features />
       <AddToSlackForm />
       <a
-        href={`${FPLBOT_APP_URL}/search`}
+        href={"/search"}
         className="text-md md:text-lg text-fpl-purple"
       >
         <div className="flex flex-col md:flex-row items-center bg-white px-12 py-8 md:py-24">

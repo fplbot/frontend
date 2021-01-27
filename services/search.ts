@@ -1,7 +1,12 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
 
 export interface FplApiResponse {
-  hits: PlayerEntry[];
+  hits: {
+    count: number;
+    exposedHits: PlayerEntry[];
+    hitCountExceedingExposedOnes: number;
+    totalHits: number;
+  };
 }
 
 export interface PlayerEntry {
@@ -9,6 +14,7 @@ export interface PlayerEntry {
   entry: number;
   realName: string;
   teamName: string;
+  verifiedEntryEmoji: string;
 }
 
 interface SearchSuccess {
@@ -34,7 +40,7 @@ export function searchForPlayer(searchString: string): Promise<SearchResponse> {
     })
     .then(
       (json: FplApiResponse): SearchSuccess => {
-        return { type: "SUCCESS", data: json.hits };
+        return { type: "SUCCESS", data: json.hits.exposedHits };
       }
     )
     .catch(

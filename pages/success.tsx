@@ -1,14 +1,13 @@
 import React from "react";
 import FeatureImageBox from "../components/FeatureImageBox";
 import Footer from "../components/Footer";
-import { FPLBOT_APP_URL } from "../utils/envconfig";
 
 export default function Success() {
   return (
     <div>
       <div className="bg-fpl-purple">
         <div className="flex justify-between mx-auto px-8 py-6">
-          <a className="text-2xl font-bold text-fpl-green" href={FPLBOT_APP_URL}>fplbot.app</a>
+          <a className="text-2xl font-bold text-fpl-green" href="/">fplbot.app</a>
         </div>
 
         <div className="">

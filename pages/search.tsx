@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import Router from "next/router";
+import React, { useState, useEffect } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
-import { searchForPlayer, SearchResponse, PlayerEntry } from "../services/search";
+import {
+  searchForPlayer,
+  SearchResponse,
+  PlayerEntry,
+} from "../services/search";
 import { FPLBOT_APP_URL } from "../utils/envconfig";
 
 interface SearchInit {
@@ -14,15 +19,24 @@ interface SearchEmpty {
 
 type SearchState = SearchResponse | SearchEmpty | SearchInit;
 
-export default function Index() {
+
+
+function Index(query: {search: string | null}) {
+
   const [searchState, setSearchState] = useState<SearchState>({
     type: "INIT",
   });
 
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>(query.search || "");
   const [prevSearchState, setPrevSearchState] = useState<string | undefined>(
     undefined
   );
+
+  useEffect(() => {
+    if (query.search != null) {
+      search();
+    }
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
@@ -36,7 +50,7 @@ export default function Index() {
             You can search by name or team name
           </p>
 
-          <div className="mt-10">
+          <form className="mt-10" onSubmit={search}>
             <input
               value={searchValue}
               placeholder="Magnus Carlsen"
@@ -50,7 +64,7 @@ export default function Index() {
             <Button onClick={search} shape="long" className="mt-4">
               Search
             </Button>
-          </div>
+          </form>
         </div>
         <div className="pb-24 px-8 text-center">
           <SearchState
@@ -64,22 +78,45 @@ export default function Index() {
   );
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter') {
-      search();
+    if (e.key === "Enter") {
+      search(e);
     }
   }
 
-  function search() {
+  function search(event?: any) {
+    if (event) {
+      event.preventDefault();
+    }
     if (searchValue === "") {
-      setSearchState({type:  "EMPTY"});
+      setSearchState({ type: "EMPTY" });
       return;
     }
     setPrevSearchState(searchValue);
+    updateQueryParam(searchValue);
     searchForPlayer(searchValue).then((res) => {
       setSearchState(res);
     });
   }
+
+  function updateQueryParam(searchValue: string) {
+    Router.push(
+      {
+        pathname: "/search",
+        query: { search: encodeURI(searchValue) },
+      },
+      undefined,
+      {
+        shallow: true,
+      }
+    );
+  }
 }
+
+Index.getInitialProps = ({ query }) => {
+  return query;
+};
+
+export default Index;
 
 interface SearchStateProps {
   searchState: SearchState;
@@ -116,8 +153,12 @@ const SearchState = ({ searchState, searchPhrase }: SearchStateProps) => {
         </p>
       );
     }
-    return <ResultTable playerEntries={searchState.data} searchPhrase={searchPhrase}/>
-    
+    return (
+      <ResultTable
+        playerEntries={searchState.data}
+        searchPhrase={searchPhrase}
+      />
+    );
   }
 };
 
@@ -135,7 +176,10 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
       <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
         <thead className="text-white">
           {playerEntries.map((data, i) => (
-            <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0" key={`table-header-${i}`}>
+            <tr
+              className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0"
+              key={`table-header-${i}`}
+            >
               <th className="p-3 text-left">Name</th>
               <th className="p-3 text-left">Team name</th>
               <th className="p-3 text-left" style={{ width: "120px" }}>
@@ -146,7 +190,10 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
         </thead>
         <tbody className="flex-1 sm:flex-none">
           {playerEntries.map((data, i) => (
-            <tr className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none" key={`table-row-${i}`}>
+            <tr
+              className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none"
+              key={`table-row-${i}`}
+            >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
                 {data.realName}
               </td>
@@ -173,7 +220,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
 const Header = () => {
   return (
     <div className="flex justify-between px-8 py-6">
-      <a href={FPLBOT_APP_URL} className="text-2xl font-bold text-fpl-purple">
+      <a href="/" className="text-2xl font-bold text-fpl-purple">
         fplbot.app
       </a>
       <Button onClick={goToInstall} color="GREEN">
