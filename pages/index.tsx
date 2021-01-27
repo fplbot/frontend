@@ -10,7 +10,7 @@ export default function Index() {
       <Header />
       <Features />
       <AddToSlackForm />
-      <a
+      {/*<a
         href={"/search"}
         className="text-md md:text-lg text-fpl-purple"
       >
@@ -29,7 +29,7 @@ export default function Index() {
             />
           </div>
         </div>
-      </a>
+      </a>*/}
       <Footer />
     </div>
   );
