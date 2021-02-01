@@ -14,7 +14,7 @@ export interface PlayerEntry {
   entry: number;
   realName: string;
   teamName: string;
-  verifiedEntryEmoji: string;
+  verifiedType: string;
 }
 
 interface SearchSuccess {

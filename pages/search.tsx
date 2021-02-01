@@ -195,7 +195,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
               key={`table-row-${i}`}
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
-                {data.realName}
+                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon"/> : null}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.teamName}
