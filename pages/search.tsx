@@ -27,7 +27,7 @@ function Index(query: {search: string | null}) {
     type: "INIT",
   });
 
-  const [searchValue, setSearchValue] = useState<string>(query.search || "");
+  const [searchValue, setSearchValue] = useState<string>(query.search ? decodeURI(query.search) : "");
   const [prevSearchState, setPrevSearchState] = useState<string | undefined>(
     undefined
   );
