@@ -195,7 +195,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
               key={`table-row-${i}`}
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
-                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon"/> : null}
+                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon" title={getVerifiedHelpText(data.verifiedType)}/> : null}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.teamName}
@@ -233,3 +233,16 @@ const Header = () => {
     window.location.href = FPLBOT_APP_URL + "/#add-to-slack";
   }
 };
+
+const getVerifiedHelpText = (verifiedType) => {
+  switch (verifiedType) {
+    case 0: return "That guy in Premier League";
+    case 1: return "That famous football player";
+    case 2: return "That chess champion";
+    case 3: return "That voice on the podcast thing";
+    case 4: return "That person on Twitter";
+    case 5: return "That actor";
+    case 6: return "That TV face";
+    case 7: return "That famous athlete";
+  }
+}
