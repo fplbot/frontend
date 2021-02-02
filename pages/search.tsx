@@ -58,7 +58,6 @@ function Index(query: {search: string | null}) {
 
           <form className="mt-10" onSubmit={search}>
             <input
-              type="search"
               aria-label="Search for fpl player"
               value={searchValue}
               placeholder="Magnus Carlsen"
