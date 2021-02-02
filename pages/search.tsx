@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Router from "next/router";
 import React, { useState, useEffect } from "react";
 import Button from "../components/Button";
@@ -41,6 +42,10 @@ function Index(query: {search: string | null}) {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
+      <Head>
+        <title>Fantasy Premier League Search</title>
+        <meta name="description" content="Search for fpl player by name or team name." />
+      </Head>
       <Header />
       <div className="flex-grow">
         <div className="py-24 px-8 text-center">
@@ -53,6 +58,8 @@ function Index(query: {search: string | null}) {
 
           <form className="mt-10" onSubmit={search}>
             <input
+              type="search"
+              aria-label="Search for fpl player"
               value={searchValue}
               placeholder="Magnus Carlsen"
               onChange={(e) => {
@@ -196,7 +203,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
               key={`table-row-${i}`}
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
-                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon" title={getVerifiedHelpText(data.verifiedType)}/> : null}
+                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon" alt="Verified team" title={getVerifiedHelpText(data.verifiedType)}/> : null}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.teamName}
