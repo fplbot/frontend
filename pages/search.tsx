@@ -6,6 +6,7 @@ import {
   searchForPlayer,
   SearchResponse,
   PlayerEntry,
+  VerifiedType,
 } from "../services/search";
 import { FPLBOT_APP_URL } from "../utils/envconfig";
 
@@ -27,7 +28,7 @@ function Index(query: {search: string | null}) {
     type: "INIT",
   });
 
-  const [searchValue, setSearchValue] = useState<string>(query.search || "");
+  const [searchValue, setSearchValue] = useState<string>(query.search ? decodeURI(query.search) : "");
   const [prevSearchState, setPrevSearchState] = useState<string | undefined>(
     undefined
   );
@@ -195,7 +196,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
               key={`table-row-${i}`}
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
-                {data.realName}
+                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon" title={getVerifiedHelpText(data.verifiedType)}/> : null}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.teamName}
@@ -233,3 +234,17 @@ const Header = () => {
     window.location.href = FPLBOT_APP_URL + "/#add-to-slack";
   }
 };
+
+const getVerifiedHelpText = (verifiedType: VerifiedType) => {
+  switch (verifiedType) {
+    case VerifiedType.FootballerInPL: return "That guy in Premier League";
+    case VerifiedType.Footballer: return "That famous football player";
+    case VerifiedType.ChessMaster: return "That chess champion";
+    case VerifiedType.Podcaster: return "That voice on the podcast thing";
+    case VerifiedType.CommunityFame: return "That person on Twitter";
+    case VerifiedType.Actor: return "That actor";
+    case VerifiedType.TvFace: return "That TV face";
+    case VerifiedType.Athlete: return "That famous athlete";
+    default: return null;
+  }
+}

@@ -19,3 +19,10 @@ td:not(:last-child) {
 th:not(:last-child) {
   border-bottom: 2px solid rgba(0, 0, 0, .1);
 }
+
+.verified-icon{
+  width: 1.4em;
+  display: inline;
+  vertical-align: middle;
+  margin-top: -.25em;
+}

@@ -14,7 +14,18 @@ export interface PlayerEntry {
   entry: number;
   realName: string;
   teamName: string;
-  verifiedEntryEmoji: string;
+  verifiedType?: VerifiedType;
+}
+
+export enum VerifiedType {
+  FootballerInPL = 0,
+  Footballer = 1,
+  ChessMaster = 2,
+  Podcaster = 3,
+  CommunityFame = 4,
+  Actor = 5,
+  TvFace = 6,
+  Athlete = 7
 }
 
 interface SearchSuccess {
