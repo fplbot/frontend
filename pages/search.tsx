@@ -6,6 +6,7 @@ import {
   searchForPlayer,
   SearchResponse,
   PlayerEntry,
+  VerifiedType,
 } from "../services/search";
 import { FPLBOT_APP_URL } from "../utils/envconfig";
 
@@ -234,15 +235,16 @@ const Header = () => {
   }
 };
 
-const getVerifiedHelpText = (verifiedType) => {
+const getVerifiedHelpText = (verifiedType: VerifiedType) => {
   switch (verifiedType) {
-    case 0: return "That guy in Premier League";
-    case 1: return "That famous football player";
-    case 2: return "That chess champion";
-    case 3: return "That voice on the podcast thing";
-    case 4: return "That person on Twitter";
-    case 5: return "That actor";
-    case 6: return "That TV face";
-    case 7: return "That famous athlete";
+    case VerifiedType.FootballerInPL: return "That guy in Premier League";
+    case VerifiedType.Footballer: return "That famous football player";
+    case VerifiedType.ChessMaster: return "That chess champion";
+    case VerifiedType.Podcaster: return "That voice on the podcast thing";
+    case VerifiedType.CommunityFame: return "That person on Twitter";
+    case VerifiedType.Actor: return "That actor";
+    case VerifiedType.TvFace: return "That TV face";
+    case VerifiedType.Athlete: return "That famous athlete";
+    default: return null;
   }
 }
