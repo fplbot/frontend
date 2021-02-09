@@ -21,24 +21,18 @@ interface SearchEmpty {
 
 type SearchState = SearchResponse | SearchEmpty | SearchInit;
 
+function Index(query: {search: string | null, page: number}) {
 
-
-function Index(query: {search: string | null}) {
-
+  const [searchValue, setSearchValue] = useState<string>(query.search ? decodeURI(query.search) : "");
+  const [submittedSearchValue, setSubmittedSearchValue] = useState<string | undefined>(searchValue);
+  const [pageValue, setPageValue] = useState<number>(query.page || 0);
   const [searchState, setSearchState] = useState<SearchState>({
     type: "INIT",
   });
 
-  const [searchValue, setSearchValue] = useState<string>(query.search ? decodeURI(query.search) : "");
-  const [prevSearchState, setPrevSearchState] = useState<string | undefined>(
-    undefined
-  );
-
   useEffect(() => {
-    if (query.search != null) {
-      search();
-    }
-  }, []);
+    search(pageValue);
+  }, [submittedSearchValue, pageValue]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
@@ -56,7 +50,7 @@ function Index(query: {search: string | null}) {
             You can search by name or team name
           </p>
 
-          <form className="mt-10" onSubmit={search}>
+          <form className="mt-10" onSubmit={e => updateSearchValues(0, e)}>
             <input
               aria-label="Search for fpl player"
               value={searchValue}
@@ -64,11 +58,10 @@ function Index(query: {search: string | null}) {
               onChange={(e) => {
                 setSearchValue(e.target.value);
               }}
-              onKeyDown={handleKeyDown}
               className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
-            <Button onClick={search} shape="long" className="mt-4">
+            <Button onClick={e => updateSearchValues(0, e)} shape="long" className="mt-4">
               Search
             </Button>
           </form>
@@ -76,46 +69,33 @@ function Index(query: {search: string | null}) {
         <div className="pb-24 px-8 text-center">
           <SearchState
             searchState={searchState}
-            searchPhrase={prevSearchState}
+            searchPhrase={submittedSearchValue}
+            page={pageValue}
           />
+          <Pagination searchState={searchState} searchPhrase={submittedSearchValue} currentPage={pageValue} updatePage={newPage => updateSearchValues(newPage)}/>
         </div>
       </div>
       <Footer />
     </div>
   );
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      search(e);
-    }
-  }
-
-  function search(event?: any) {
+  function updateSearchValues(page: number, event?: any){
     if (event) {
       event.preventDefault();
     }
-    if (searchValue === "") {
+    setSubmittedSearchValue(searchValue);
+    setPageValue(page);
+    updateQueryParam(searchValue, page);
+  }
+
+  function search(page: number) {
+    if (submittedSearchValue === "") {
       setSearchState({ type: "EMPTY" });
       return;
     }
-    setPrevSearchState(searchValue);
-    updateQueryParam(searchValue);
-    searchForPlayer(searchValue).then((res) => {
+    searchForPlayer(submittedSearchValue, page).then((res) => {
       setSearchState(res);
     });
-  }
-
-  function updateQueryParam(searchValue: string) {
-    Router.push(
-      {
-        pathname: "/search",
-        query: { search: encodeURI(searchValue) },
-      },
-      undefined,
-      {
-        shallow: true,
-      }
-    );
   }
 }
 
@@ -128,9 +108,23 @@ export default Index;
 interface SearchStateProps {
   searchState: SearchState;
   searchPhrase: string;
+  page: number;
 }
 
-const SearchState = ({ searchState, searchPhrase }: SearchStateProps) => {
+const updateQueryParam = (searchValue: string, page: number) => {
+  Router.push(
+    {
+      pathname: "/search",
+      query: { search: encodeURI(searchValue), page: page },
+    },
+    undefined,
+    {
+      shallow: true,
+    }
+  );
+}
+
+const SearchState = ({ searchState, searchPhrase, page }: SearchStateProps) => {
   if (searchState.type === "INIT") {
     return (
       <p className="text-fpl-purple">
@@ -164,6 +158,7 @@ const SearchState = ({ searchState, searchPhrase }: SearchStateProps) => {
       <ResultTable
         playerEntries={searchState.data}
         searchPhrase={searchPhrase}
+        page={page}
       />
     );
   }
@@ -172,6 +167,7 @@ const SearchState = ({ searchState, searchPhrase }: SearchStateProps) => {
 interface ResultTableProps {
   playerEntries: PlayerEntry[];
   searchPhrase: string;
+  page: number;
 }
 
 const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
@@ -223,6 +219,37 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
     </div>
   );
 };
+
+interface PaginationProps {
+  searchState: SearchState;
+  searchPhrase: string;
+  currentPage: number;
+  updatePage: (newPage: number) => void;
+}
+
+const Pagination = ({searchState, searchPhrase, currentPage, updatePage}: PaginationProps) => {
+
+  const prevPage = +currentPage - 1;
+  const nextPage = +currentPage + 1;
+
+  function paginate(e, page){
+    e.preventDefault();
+    updatePage(page);
+  }
+
+  if (searchState.type === "SUCCESS" && (searchState.hasPrev || searchState.hasNext)){
+    return (
+      <div>
+        <p className="mb-4">Page {+currentPage + 1} of {searchState.totalPages}</p>
+        <div>
+          {searchState.hasPrev ? <a href={`?search=${searchPhrase}&page=${prevPage}`} onClick={e => paginate(e, prevPage)} className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4 mr-2">Prev</a> : null}
+          {searchState.hasNext ? <a href={`?search=${searchPhrase}&page=${nextPage}`} onClick={e => paginate(e, nextPage)} className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4">Next</a> : null}
+        </div>
+      </div>
+    )
+  }
+  return null;
+}
 
 const Header = () => {
   return (
