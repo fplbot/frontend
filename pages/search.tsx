@@ -6,7 +6,6 @@ import Footer from "../components/Footer";
 import {
   searchForPlayer,
   SearchResponse,
-  PlayerEntry,
   VerifiedType,
   SearchSuccess,
 } from "../services/search";
@@ -22,11 +21,14 @@ interface SearchEmpty {
 
 type SearchState = SearchResponse | SearchEmpty | SearchInit;
 
-function Index(query: {search: string | null, page: number}) {
-
-  const [searchValue, setSearchValue] = useState<string>(query.search ? decodeURI(query.search) : "");
-  const [submittedSearchValue, setSubmittedSearchValue] = useState<string | undefined>(searchValue);
-  const [pageValue, setPageValue] = useState<number>(query.page || 0);
+function Index(query: { search: string | null; page: string }) {
+  const [searchValue, setSearchValue] = useState<string>(
+    query.search ? decodeURI(query.search) : ""
+  );
+  const [submittedSearchValue, setSubmittedSearchValue] = useState<
+    string | undefined
+  >(searchValue);
+  const [pageValue, setPageValue] = useState<number>(query.page ? parseInt(query.page, 10) : 0);
   const [searchState, setSearchState] = useState<SearchState>({
     type: "INIT",
   });
@@ -39,7 +41,10 @@ function Index(query: {search: string | null, page: number}) {
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
         <title>Fantasy Premier League Search</title>
-        <meta name="description" content="Search for fpl player by name or team name." />
+        <meta
+          name="description"
+          content="Search for fpl player by name or team name."
+        />
       </Head>
       <Header />
       <div className="flex-grow">
@@ -51,7 +56,7 @@ function Index(query: {search: string | null, page: number}) {
             You can search by name or team name
           </p>
 
-          <form className="mt-10" onSubmit={e => submitSearchValue(e)}>
+          <form className="mt-10" onSubmit={submitSearchValue}>
             <input
               aria-label="Search for fpl player"
               value={searchValue}
@@ -62,7 +67,11 @@ function Index(query: {search: string | null, page: number}) {
               className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
-            <Button onClick={e => submitSearchValue(e)} shape="long" className="mt-4">
+            <Button
+              onClick={submitSearchValue}
+              shape="long"
+              className="mt-4"
+            >
               Search
             </Button>
           </form>
@@ -127,12 +136,17 @@ const updateQueryParam = (searchValue: string, page: number) => {
     undefined,
     {
       shallow: true,
-      scroll: false
+      scroll: false,
     }
   );
-}
+};
 
-const SearchState = ({ searchState, searchPhrase, page, updatePage }: SearchStateProps) => {
+const SearchState = ({
+  searchState,
+  searchPhrase,
+  page,
+  updatePage,
+}: SearchStateProps) => {
   if (searchState.type === "INIT") {
     return (
       <p className="text-fpl-purple">
@@ -180,7 +194,12 @@ interface ResultTableProps {
   updatePage: (newPage: number) => void;
 }
 
-const ResultTable = ({ searchState, searchPhrase, page, updatePage }: ResultTableProps) => {
+const ResultTable = ({
+  searchState,
+  searchPhrase,
+  page,
+  updatePage,
+}: ResultTableProps) => {
   return (
     <div className="w-full md:w-3/6 m-auto">
       <p className="text-fpl-purple text-xl md:text-xl text-left">
@@ -207,8 +226,19 @@ const ResultTable = ({ searchState, searchPhrase, page, updatePage }: ResultTabl
               className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none"
               key={`table-row-${i}`}
             >
-              <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
-                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon" alt="Verified team" title={getVerifiedHelpText(data.verifiedType)}/> : null}
+              <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                {data.realName}
+                {data.verifiedType !== null && (
+                  <>
+                    &nbsp;
+                    <img
+                      src="/check.svg"
+                      className="verified-icon"
+                      alt="Verified team"
+                      title={getVerifiedHelpText(data.verifiedType)}
+                    />
+                  </>
+                )}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.teamName}
@@ -226,41 +256,69 @@ const ResultTable = ({ searchState, searchPhrase, page, updatePage }: ResultTabl
           ))}
         </tbody>
       </table>
-      <Pagination searchState={searchState} searchPhrase={searchPhrase} currentPage={page} updatePage={newPage => updatePage(newPage)}/>
+      <Pagination
+        searchState={searchState}
+        searchPhrase={searchPhrase}
+        currentPage={page}
+        updatePage={updatePage}
+      />
     </div>
   );
 };
 
 interface PaginationProps {
-  searchState: SearchState;
+  searchState: SearchSuccess;
   searchPhrase: string;
   currentPage: number;
   updatePage: (newPage: number) => void;
 }
 
-const Pagination = ({searchState, searchPhrase, currentPage, updatePage}: PaginationProps) => {
+const Pagination = ({
+  searchState,
+  searchPhrase,
+  currentPage,
+  updatePage,
+}: PaginationProps) => {
 
-  const prevPage = +currentPage - 1;
-  const nextPage = +currentPage + 1;
+  const prevPage = currentPage - 1;
+  const nextPage = currentPage + 1;
 
-  function paginate(e, page){
+  function paginate(e: any, page: number) {
     e.preventDefault();
     updatePage(page);
   }
 
-  if (searchState.type === "SUCCESS" && (searchState.hasPrev || searchState.hasNext)){
+  if (searchState.hasPrev || searchState.hasNext) {
     return (
       <div>
-        <p className="mb-4">Page {+currentPage + 1} of {searchState.totalPages}</p>
+        <p className="mb-4">
+          Page {currentPage + 1} of {searchState.totalPages}
+        </p>
         <div>
-          {searchState.hasPrev ? <a href={`?search=${searchPhrase}&page=${prevPage}`} onClick={e => paginate(e, prevPage)} className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4 mr-2">Prev</a> : null}
-          {searchState.hasNext ? <a href={`?search=${searchPhrase}&page=${nextPage}`} onClick={e => paginate(e, nextPage)} className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4">Next</a> : null}
+          {searchState.hasPrev && (
+            <a
+              href={`?search=${searchPhrase}&page=${prevPage}`}
+              onClick={(e) => paginate(e, prevPage)}
+              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4 mr-2"
+            >
+              Prev
+            </a>
+          )}
+          {searchState.hasNext && (
+            <a
+              href={`?search=${searchPhrase}&page=${nextPage}`}
+              onClick={(e) => paginate(e, nextPage)}
+              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4"
+            >
+              Next
+            </a>
+          )}
         </div>
       </div>
-    )
+    );
   }
   return null;
-}
+};
 
 const Header = () => {
   return (
@@ -281,14 +339,23 @@ const Header = () => {
 
 const getVerifiedHelpText = (verifiedType: VerifiedType) => {
   switch (verifiedType) {
-    case VerifiedType.FootballerInPL: return "That guy in Premier League";
-    case VerifiedType.Footballer: return "That famous football player";
-    case VerifiedType.ChessMaster: return "That chess champion";
-    case VerifiedType.Podcaster: return "That voice on the podcast thing";
-    case VerifiedType.CommunityFame: return "That person on Twitter";
-    case VerifiedType.Actor: return "That actor";
-    case VerifiedType.TvFace: return "That TV face";
-    case VerifiedType.Athlete: return "That famous athlete";
-    default: return null;
+    case VerifiedType.FootballerInPL:
+      return "That guy in Premier League";
+    case VerifiedType.Footballer:
+      return "That famous football player";
+    case VerifiedType.ChessMaster:
+      return "That chess champion";
+    case VerifiedType.Podcaster:
+      return "That voice on the podcast thing";
+    case VerifiedType.CommunityFame:
+      return "That person on Twitter";
+    case VerifiedType.Actor:
+      return "That actor";
+    case VerifiedType.TvFace:
+      return "That TV face";
+    case VerifiedType.Athlete:
+      return "That famous athlete";
+    default:
+      return null;
   }
-}
+};
