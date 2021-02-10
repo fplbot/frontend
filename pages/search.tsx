@@ -205,6 +205,12 @@ const ResultTable = ({
       <p className="text-fpl-purple text-xl md:text-xl text-left">
         Search results for "{searchPhrase}"
       </p>
+     <Pagination
+        searchState={searchState}
+        searchPhrase={searchPhrase}
+        currentPage={page}
+        updatePage={updatePage}
+      />
       <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
         <thead className="text-white">
           {searchState.data.map((data, i) => (
