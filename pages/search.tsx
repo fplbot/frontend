@@ -6,8 +6,8 @@ import Footer from "../components/Footer";
 import {
   searchForPlayer,
   SearchResponse,
-  PlayerEntry,
   VerifiedType,
+  SearchSuccess,
 } from "../services/search";
 import { FPLBOT_APP_URL } from "../utils/envconfig";
 
@@ -21,30 +21,30 @@ interface SearchEmpty {
 
 type SearchState = SearchResponse | SearchEmpty | SearchInit;
 
-
-
-function Index(query: {search: string | null}) {
-
+function Index(query: { search: string | null; page: string }) {
+  const [searchValue, setSearchValue] = useState<string>(
+    query.search ? decodeURI(query.search) : ""
+  );
+  const [submittedSearchValue, setSubmittedSearchValue] = useState<
+    string | undefined
+  >(searchValue);
+  const [pageValue, setPageValue] = useState<number>(query.page ? parseInt(query.page, 10) : 0);
   const [searchState, setSearchState] = useState<SearchState>({
     type: "INIT",
   });
 
-  const [searchValue, setSearchValue] = useState<string>(query.search ? decodeURI(query.search) : "");
-  const [prevSearchState, setPrevSearchState] = useState<string | undefined>(
-    undefined
-  );
-
   useEffect(() => {
-    if (query.search != null) {
-      search();
-    }
-  }, []);
+    search();
+  }, [submittedSearchValue, pageValue]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
         <title>Fantasy Premier League Search</title>
-        <meta name="description" content="Search for fpl player by name or team name." />
+        <meta
+          name="description"
+          content="Search for fpl player by name or team name."
+        />
       </Head>
       <Header />
       <div className="flex-grow">
@@ -56,7 +56,7 @@ function Index(query: {search: string | null}) {
             You can search by name or team name
           </p>
 
-          <form className="mt-10" onSubmit={search}>
+          <form className="mt-10" onSubmit={submitSearchValue}>
             <input
               aria-label="Search for fpl player"
               value={searchValue}
@@ -64,11 +64,14 @@ function Index(query: {search: string | null}) {
               onChange={(e) => {
                 setSearchValue(e.target.value);
               }}
-              onKeyDown={handleKeyDown}
               className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
-            <Button onClick={search} shape="long" className="mt-4">
+            <Button
+              onClick={submitSearchValue}
+              shape="long"
+              className="mt-4"
+            >
               Search
             </Button>
           </form>
@@ -76,7 +79,9 @@ function Index(query: {search: string | null}) {
         <div className="pb-24 px-8 text-center">
           <SearchState
             searchState={searchState}
-            searchPhrase={prevSearchState}
+            searchPhrase={submittedSearchValue}
+            page={pageValue}
+            updatePage={updatePageNumber}
           />
         </div>
       </div>
@@ -84,38 +89,28 @@ function Index(query: {search: string | null}) {
     </div>
   );
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      search(e);
-    }
-  }
-
-  function search(event?: any) {
+  function submitSearchValue(event?: any) {
     if (event) {
       event.preventDefault();
     }
-    if (searchValue === "") {
+    setSubmittedSearchValue(searchValue);
+    setPageValue(0);
+    updateQueryParam(searchValue, 0);
+  }
+
+  function updatePageNumber(page: number) {
+    setPageValue(page);
+    updateQueryParam(submittedSearchValue, page);
+  }
+
+  function search() {
+    if (submittedSearchValue === "") {
       setSearchState({ type: "EMPTY" });
       return;
     }
-    setPrevSearchState(searchValue);
-    updateQueryParam(searchValue);
-    searchForPlayer(searchValue).then((res) => {
+    searchForPlayer(submittedSearchValue, pageValue).then((res) => {
       setSearchState(res);
     });
-  }
-
-  function updateQueryParam(searchValue: string) {
-    Router.push(
-      {
-        pathname: "/search",
-        query: { search: encodeURI(searchValue) },
-      },
-      undefined,
-      {
-        shallow: true,
-      }
-    );
   }
 }
 
@@ -128,9 +123,30 @@ export default Index;
 interface SearchStateProps {
   searchState: SearchState;
   searchPhrase: string;
+  page: number;
+  updatePage: (newPage: number) => void;
 }
 
-const SearchState = ({ searchState, searchPhrase }: SearchStateProps) => {
+const updateQueryParam = (searchValue: string, page: number) => {
+  Router.push(
+    {
+      pathname: "/search",
+      query: { search: encodeURI(searchValue), page: page },
+    },
+    undefined,
+    {
+      shallow: true,
+      scroll: false,
+    }
+  );
+};
+
+const SearchState = ({
+  searchState,
+  searchPhrase,
+  page,
+  updatePage,
+}: SearchStateProps) => {
   if (searchState.type === "INIT") {
     return (
       <p className="text-fpl-purple">
@@ -162,19 +178,28 @@ const SearchState = ({ searchState, searchPhrase }: SearchStateProps) => {
     }
     return (
       <ResultTable
-        playerEntries={searchState.data}
+        searchState={searchState}
         searchPhrase={searchPhrase}
+        page={page}
+        updatePage={updatePage}
       />
     );
   }
 };
 
 interface ResultTableProps {
-  playerEntries: PlayerEntry[];
+  searchState: SearchSuccess;
   searchPhrase: string;
+  page: number;
+  updatePage: (newPage: number) => void;
 }
 
-const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
+const ResultTable = ({
+  searchState,
+  searchPhrase,
+  page,
+  updatePage,
+}: ResultTableProps) => {
   return (
     <div className="w-full md:w-3/6 m-auto">
       <p className="text-fpl-purple text-xl md:text-xl text-left">
@@ -182,7 +207,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
       </p>
       <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
         <thead className="text-white">
-          {playerEntries.map((data, i) => (
+          {searchState.data.map((data, i) => (
             <tr
               className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0"
               key={`table-header-${i}`}
@@ -196,13 +221,24 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
           ))}
         </thead>
         <tbody className="flex-1 sm:flex-none">
-          {playerEntries.map((data, i) => (
+          {searchState.data.map((data, i) => (
             <tr
               className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none"
               key={`table-row-${i}`}
             >
-              <td className="text-left border-grey-light border hover:bg-gray-100 p-3">
-                {data.realName}&nbsp;{data.verifiedType !== null ? <img src="/check.svg" className="verified-icon" alt="Verified team" title={getVerifiedHelpText(data.verifiedType)}/> : null}
+              <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                {data.realName}
+                {data.verifiedType !== null && (
+                  <>
+                    &nbsp;
+                    <img
+                      src="/check.svg"
+                      className="verified-icon"
+                      alt="Verified team"
+                      title={getVerifiedHelpText(data.verifiedType)}
+                    />
+                  </>
+                )}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.teamName}
@@ -220,8 +256,68 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
           ))}
         </tbody>
       </table>
+      <Pagination
+        searchState={searchState}
+        searchPhrase={searchPhrase}
+        currentPage={page}
+        updatePage={updatePage}
+      />
     </div>
   );
+};
+
+interface PaginationProps {
+  searchState: SearchSuccess;
+  searchPhrase: string;
+  currentPage: number;
+  updatePage: (newPage: number) => void;
+}
+
+const Pagination = ({
+  searchState,
+  searchPhrase,
+  currentPage,
+  updatePage,
+}: PaginationProps) => {
+
+  const prevPage = currentPage - 1;
+  const nextPage = currentPage + 1;
+
+  function paginate(e: any, page: number) {
+    e.preventDefault();
+    updatePage(page);
+  }
+
+  if (searchState.hasPrev || searchState.hasNext) {
+    return (
+      <div>
+        <p className="mb-4">
+          Page {currentPage + 1} of {searchState.totalPages}
+        </p>
+        <div>
+          {searchState.hasPrev && (
+            <a
+              href={`?search=${searchPhrase}&page=${prevPage}`}
+              onClick={(e) => paginate(e, prevPage)}
+              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4 mr-2"
+            >
+              Prev
+            </a>
+          )}
+          {searchState.hasNext && (
+            <a
+              href={`?search=${searchPhrase}&page=${nextPage}`}
+              onClick={(e) => paginate(e, nextPage)}
+              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4"
+            >
+              Next
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  }
+  return null;
 };
 
 const Header = () => {
@@ -243,14 +339,23 @@ const Header = () => {
 
 const getVerifiedHelpText = (verifiedType: VerifiedType) => {
   switch (verifiedType) {
-    case VerifiedType.FootballerInPL: return "That guy in Premier League";
-    case VerifiedType.Footballer: return "That famous football player";
-    case VerifiedType.ChessMaster: return "That chess champion";
-    case VerifiedType.Podcaster: return "That voice on the podcast thing";
-    case VerifiedType.CommunityFame: return "That person on Twitter";
-    case VerifiedType.Actor: return "That actor";
-    case VerifiedType.TvFace: return "That TV face";
-    case VerifiedType.Athlete: return "That famous athlete";
-    default: return null;
+    case VerifiedType.FootballerInPL:
+      return "That guy in Premier League";
+    case VerifiedType.Footballer:
+      return "That famous football player";
+    case VerifiedType.ChessMaster:
+      return "That chess champion";
+    case VerifiedType.Podcaster:
+      return "That voice on the podcast thing";
+    case VerifiedType.CommunityFame:
+      return "That person on Twitter";
+    case VerifiedType.Actor:
+      return "That actor";
+    case VerifiedType.TvFace:
+      return "That TV face";
+    case VerifiedType.Athlete:
+      return "That famous athlete";
+    default:
+      return null;
   }
-}
+};
