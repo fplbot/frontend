@@ -120,6 +120,7 @@ const updateQueryParam = (searchValue: string, page: number) => {
     undefined,
     {
       shallow: true,
+      scroll: false
     }
   );
 }
