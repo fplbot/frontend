@@ -50,7 +50,7 @@ function Index(query: {search: string | null, page: number}) {
             You can search by name or team name
           </p>
 
-          <form className="mt-10" onSubmit={e => updateSearchValues(0, e)}>
+          <form className="mt-10" onSubmit={e => submitSearchValue(e)}>
             <input
               aria-label="Search for fpl player"
               value={searchValue}
@@ -61,7 +61,7 @@ function Index(query: {search: string | null, page: number}) {
               className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
-            <Button onClick={e => updateSearchValues(0, e)} shape="long" className="mt-4">
+            <Button onClick={e => submitSearchValue(e)} shape="long" className="mt-4">
               Search
             </Button>
           </form>
@@ -72,20 +72,25 @@ function Index(query: {search: string | null, page: number}) {
             searchPhrase={submittedSearchValue}
             page={pageValue}
           />
-          <Pagination searchState={searchState} searchPhrase={submittedSearchValue} currentPage={pageValue} updatePage={newPage => updateSearchValues(newPage)}/>
+          <Pagination searchState={searchState} searchPhrase={submittedSearchValue} currentPage={pageValue} updatePage={newPage => updatePageNumber(newPage)}/>
         </div>
       </div>
       <Footer />
     </div>
   );
 
-  function updateSearchValues(page: number, event?: any){
+  function submitSearchValue(event?: any) {
     if (event) {
       event.preventDefault();
     }
     setSubmittedSearchValue(searchValue);
+    setPageValue(0);
+    updateQueryParam(searchValue, 0);
+  }
+
+  function updatePageNumber(page: number) {
     setPageValue(page);
-    updateQueryParam(searchValue, page);
+    updateQueryParam(submittedSearchValue, page);
   }
 
   function search() {
