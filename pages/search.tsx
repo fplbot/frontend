@@ -31,7 +31,7 @@ function Index(query: {search: string | null, page: number}) {
   });
 
   useEffect(() => {
-    search(pageValue);
+    search();
   }, [submittedSearchValue, pageValue]);
 
   return (
@@ -88,12 +88,12 @@ function Index(query: {search: string | null, page: number}) {
     updateQueryParam(searchValue, page);
   }
 
-  function search(page: number) {
+  function search() {
     if (submittedSearchValue === "") {
       setSearchState({ type: "EMPTY" });
       return;
     }
-    searchForPlayer(submittedSearchValue, page).then((res) => {
+    searchForPlayer(submittedSearchValue, pageValue).then((res) => {
       setSearchState(res);
     });
   }
