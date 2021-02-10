@@ -30,7 +30,7 @@ export enum VerifiedType {
   Athlete = 7
 }
 
-interface SearchSuccess {
+export interface SearchSuccess {
   type: "SUCCESS";
   data: PlayerEntry[];
   hasPrev: boolean;

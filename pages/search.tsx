@@ -8,6 +8,7 @@ import {
   SearchResponse,
   PlayerEntry,
   VerifiedType,
+  SearchSuccess,
 } from "../services/search";
 import { FPLBOT_APP_URL } from "../utils/envconfig";
 
@@ -71,8 +72,8 @@ function Index(query: {search: string | null, page: number}) {
             searchState={searchState}
             searchPhrase={submittedSearchValue}
             page={pageValue}
+            updatePage={updatePageNumber}
           />
-          <Pagination searchState={searchState} searchPhrase={submittedSearchValue} currentPage={pageValue} updatePage={newPage => updatePageNumber(newPage)}/>
         </div>
       </div>
       <Footer />
@@ -114,6 +115,7 @@ interface SearchStateProps {
   searchState: SearchState;
   searchPhrase: string;
   page: number;
+  updatePage: (newPage: number) => void;
 }
 
 const updateQueryParam = (searchValue: string, page: number) => {
@@ -130,7 +132,7 @@ const updateQueryParam = (searchValue: string, page: number) => {
   );
 }
 
-const SearchState = ({ searchState, searchPhrase, page }: SearchStateProps) => {
+const SearchState = ({ searchState, searchPhrase, page, updatePage }: SearchStateProps) => {
   if (searchState.type === "INIT") {
     return (
       <p className="text-fpl-purple">
@@ -162,21 +164,23 @@ const SearchState = ({ searchState, searchPhrase, page }: SearchStateProps) => {
     }
     return (
       <ResultTable
-        playerEntries={searchState.data}
+        searchState={searchState}
         searchPhrase={searchPhrase}
         page={page}
+        updatePage={updatePage}
       />
     );
   }
 };
 
 interface ResultTableProps {
-  playerEntries: PlayerEntry[];
+  searchState: SearchSuccess;
   searchPhrase: string;
   page: number;
+  updatePage: (newPage: number) => void;
 }
 
-const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
+const ResultTable = ({ searchState, searchPhrase, page, updatePage }: ResultTableProps) => {
   return (
     <div className="w-full md:w-3/6 m-auto">
       <p className="text-fpl-purple text-xl md:text-xl text-left">
@@ -184,7 +188,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
       </p>
       <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
         <thead className="text-white">
-          {playerEntries.map((data, i) => (
+          {searchState.data.map((data, i) => (
             <tr
               className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0"
               key={`table-header-${i}`}
@@ -198,7 +202,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
           ))}
         </thead>
         <tbody className="flex-1 sm:flex-none">
-          {playerEntries.map((data, i) => (
+          {searchState.data.map((data, i) => (
             <tr
               className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none"
               key={`table-row-${i}`}
@@ -222,6 +226,7 @@ const ResultTable = ({ playerEntries, searchPhrase }: ResultTableProps) => {
           ))}
         </tbody>
       </table>
+      <Pagination searchState={searchState} searchPhrase={searchPhrase} currentPage={page} updatePage={newPage => updatePage(newPage)}/>
     </div>
   );
 };
