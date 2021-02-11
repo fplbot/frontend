@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Router from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
 import {
@@ -37,6 +37,16 @@ function Index(query: { search: string | null; page: string }) {
     search();
   }, [submittedSearchValue, pageValue]);
 
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus()
+    if (submittedSearchValue) {
+      inputRef.current.select();
+    }
+  }, [submittedSearchValue])
+
+  
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -64,6 +74,7 @@ function Index(query: { search: string | null; page: string }) {
               onChange={(e) => {
                 setSearchValue(e.target.value);
               }}
+              ref={inputRef}
               className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
