@@ -40,7 +40,8 @@ function Index(query: { search: string | null; page: string }) {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    inputRef.current.focus()
+    if (inputRef == null) return;
+    inputRef.current.focus();
     if (submittedSearchValue) {
       inputRef.current.select();
     }
