@@ -258,11 +258,11 @@ const ResultTable = ({
   return (
     <div className="w-full md:w-3/6 m-auto">
       {loading ? (
-        <div className="flex justify-center">
+        <div className="flex justify-center h-12">
           <Spinner size="lg" />
         </div>
       ) : (
-        <p className="text-fpl-purple text-xl md:text-xl text-center pb-8">
+        <p className="text-fpl-purple text-xl md:text-xl text-center pb-8 h-12">
           Search results for "{searchPhrase}"
         </p>
       )}
