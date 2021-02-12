@@ -1,7 +1,6 @@
 import { NextPageContext } from "next";
 import Head from "next/head";
 import Router from "next/router";
-import { ParsedUrlQuery } from "querystring";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";

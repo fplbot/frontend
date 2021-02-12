@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../Button";
-import SearchBar from "./SearchBar";
+import SearchBarSection from "./SearchBarSection";
 
 export interface HeaderProps {
   shouldHighlightSearch: boolean;
@@ -21,7 +21,7 @@ function Header({ shouldHighlightSearch }: HeaderProps) {
 
         <div className="container mx-auto py-24 px-8 text-center">
           {shouldHighlightSearch ? (
-            <SearchLinkComponent />
+            <SearchBarSection />
           ) : (
             <h1 className="text-4xl md:text-6xl font-bold text-fpl-purple">
               Hi, I'm @fplbot&nbsp;👋
@@ -62,25 +62,6 @@ function Header({ shouldHighlightSearch }: HeaderProps) {
       // do nothing
     }
   }
-}
-
-function SearchLinkComponent() {
-  return (
-    <div>
-      <section className="search-promotion">
-        <h1 className="text-4xl md:text-6xl font-bold text-fpl-purple mb-4">
-          FPL Search
-        </h1>
-        <p className="text-lg text-center text-fpl-purple mt-4 mb-4">
-          Search for people playing Fantasy Premier League
-        </p>
-        <SearchBar />
-      </section>
-      <h2 className="text-3xl md:text-4xl font-bold text-fpl-purple mt-20">
-        👆 This search is part of @fplbot
-      </h2>
-    </div>
-  );
 }
 
 export default Header;
