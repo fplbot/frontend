@@ -9,7 +9,6 @@ import SearchBanner from "../components/index/SearchBanner";
 import { isFplSearchHost } from "../utils/hostUtils";
 
 function Index({shouldHighlightSearch}: {shouldHighlightSearch: boolean}) {
-  shouldHighlightSearch = true;
   return (
     <div>
       <Head>
