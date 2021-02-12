@@ -145,7 +145,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
 
 SearchIndex.getInitialProps = async (ctx: NextPageContext) => {
   const isSearchHost = ctx.req?.headers.host
-    ? isFplSearchHost(ctx.req?.headers.host)
+    ? isFplSearchHost(ctx.req.headers.host)
     : false;
 
   return {

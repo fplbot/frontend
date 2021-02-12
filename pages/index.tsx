@@ -29,7 +29,7 @@ function Index({shouldHighlightSearch}: {shouldHighlightSearch: boolean}) {
 
 Index.getInitialProps = async (ctx: NextPageContext) => {
 
-  const shouldHighlightSearch = ctx.req?.headers.host ? isFplSearchHost(ctx.req?.headers.host) : false;
+  const shouldHighlightSearch = ctx.req?.headers.host ? isFplSearchHost(ctx.req.headers.host) : false;
 
   return { shouldHighlightSearch: shouldHighlightSearch }
 };
