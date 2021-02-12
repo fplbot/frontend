@@ -8,27 +8,31 @@ import Header from "../components/index/Header";
 import SearchBanner from "../components/index/SearchBanner";
 import { isFplSearchHost } from "../utils/hostUtils";
 
-function Index({shouldHightlightSearch}) {
+function Index({shouldHighlightSearch}: {shouldHighlightSearch: boolean}) {
+  shouldHighlightSearch = true;
   return (
     <div>
       <Head>
-        <title>{shouldHightlightSearch ? 'Fantasy Premier League Search' : 'fplbot'}</title>
+        <title>{shouldHighlightSearch ? 'Fantasy Premier League Search' : 'fplbot'}</title>
         <meta
           name="description"
-          content={shouldHightlightSearch ? 'Search for FPL player' : 'An unofficial Slackbot for Fantasy Premier League'}
+          content={shouldHighlightSearch ? 'Search for FPL player' : 'An unofficial Slackbot for Fantasy Premier League'}
         />
       </Head>
-      <Header shouldHightlightSearch={shouldHightlightSearch} />
+      <Header shouldHighlightSearch={shouldHighlightSearch} />
       <Features />
       <AddToSlackForm />
-      { shouldHightlightSearch ? null : <SearchBanner /> }
+      { shouldHighlightSearch || <SearchBanner /> }
       <Footer />
     </div>
   );
 }
 
 Index.getInitialProps = async (ctx: NextPageContext) => {
-  return { shouldHightlightSearch: isFplSearchHost(ctx.req.headers.host) }
+
+  const shouldHighlightSearch = ctx.req?.headers.host ? isFplSearchHost(ctx.req?.headers.host) : false;
+
+  return { shouldHighlightSearch: shouldHighlightSearch }
 };
 
 export default Index;
