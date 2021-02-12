@@ -100,7 +100,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
             </Button>
           </form>
         </div>
-        <div className="pb-24 px-8 text-center">
+        <div className="pb-16 px-8 text-center">
           <SearchState
             searchState={searchState}
             searchPhrase={submittedSearchValue}
@@ -179,7 +179,6 @@ const SearchState = ({
   page,
   updatePage,
 }: SearchStateProps) => {
-
   if (searchState.type === "SUCCESS") {
     if (searchState.data.length < 1) {
       return (
@@ -238,7 +237,7 @@ const ResultTable = ({
 }: ResultTableProps) => {
   return (
     <div className="w-full md:w-3/6 m-auto">
-      <p className="text-fpl-purple text-xl md:text-xl text-left">
+      <p className="text-fpl-purple text-xl md:text-xl text-center pb-8">
         Search results for "{searchPhrase}"
       </p>
       <Pagination
@@ -331,30 +330,28 @@ const Pagination = ({
 
   if (searchState.hasPrev || searchState.hasNext) {
     return (
-      <div>
-        <p className="mb-4">
+      <div className="flex items-center justify-center md:justify-end text-fpl-purple ">
+        {searchState.hasPrev && (
+          <a
+            href={`?search=${searchPhrase}&page=${prevPage}`}
+            onClick={(e) => paginate(e, prevPage)}
+            className="font-bold underline"
+          >
+            Prev
+          </a>
+        )}
+        <p className="mx-4">
           Page {currentPage + 1} of {searchState.totalPages}
         </p>
-        <div>
-          {searchState.hasPrev && (
-            <a
-              href={`?search=${searchPhrase}&page=${prevPage}`}
-              onClick={(e) => paginate(e, prevPage)}
-              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4 mr-2"
-            >
-              Prev
-            </a>
-          )}
-          {searchState.hasNext && (
-            <a
-              href={`?search=${searchPhrase}&page=${nextPage}`}
-              onClick={(e) => paginate(e, nextPage)}
-              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4"
-            >
-              Next
-            </a>
-          )}
-        </div>
+        {searchState.hasNext && (
+          <a
+            href={`?search=${searchPhrase}&page=${nextPage}`}
+            onClick={(e) => paginate(e, nextPage)}
+            className="font-bold underline "
+          >
+            Next
+          </a>
+        )}
       </div>
     );
   }
