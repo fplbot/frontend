@@ -1,15 +1,18 @@
+import { NextPageContext } from "next";
 import Head from "next/head";
 import Router from "next/router";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
+import { Spinner } from "../components/Spinner";
 import {
   searchForPlayer,
   SearchResponse,
-  VerifiedType,
   SearchSuccess,
+  VerifiedType,
 } from "../services/search";
 import { FPLBOT_APP_URL } from "../utils/envconfig";
+import { isFplSearchHost } from "../utils/hostUtils";
 
 interface SearchInit {
   type: "INIT";
@@ -19,35 +22,46 @@ interface SearchEmpty {
   type: "EMPTY";
 }
 
-type SearchState = SearchResponse | SearchEmpty | SearchInit;
+interface SearchLoading {
+  type: "LOADING";
+  prevData?: SearchSuccess;
+}
 
-function Index(query: { search: string | null; page: string }) {
+type SearchState = SearchResponse | SearchLoading | SearchEmpty | SearchInit;
+
+interface SearchIndexProps {
+  query: { search: string | null; page: string | null };
+  isSearchHost: boolean;
+}
+
+function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
   const [searchValue, setSearchValue] = useState<string>(
     query.search ? decodeURI(query.search) : ""
   );
-  const [submittedSearchValue, setSubmittedSearchValue] = useState<
-    string | undefined
-  >(searchValue);
-  const [pageValue, setPageValue] = useState<number>(query.page ? parseInt(query.page, 10) : 0);
+  const [submittedSearchValue, setSubmittedSearchValue] = useState<string>(
+    searchValue
+  );
+  const [pageValue, setPageValue] = useState<number>(
+    query.page ? parseInt(query.page, 10) : 0
+  );
   const [searchState, setSearchState] = useState<SearchState>({
-    type: "INIT",
+    type: query.search ? "LOADING" : "INIT",
   });
 
   useEffect(() => {
     search();
   }, [submittedSearchValue, pageValue]);
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (inputRef == null) return;
+    if (inputRef == null || inputRef.current == null) return;
     inputRef.current.focus();
     if (submittedSearchValue) {
       inputRef.current.select();
     }
-  }, [submittedSearchValue])
+  }, [submittedSearchValue]);
 
-  
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -56,6 +70,9 @@ function Index(query: { search: string | null; page: string }) {
           name="description"
           content="Search for fpl player by name or team name."
         />
+        {isSearchHost ? null : (
+          <link rel="canonical" href="https://www.fplsearch.com/search/" />
+        )}
       </Head>
       <Header />
       <div className="flex-grow">
@@ -79,16 +96,12 @@ function Index(query: { search: string | null; page: string }) {
               className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
-            <Button
-              onClick={submitSearchValue}
-              shape="long"
-              className="mt-4"
-            >
+            <Button onClick={submitSearchValue} shape="long" className="mt-4">
               Search
             </Button>
           </form>
         </div>
-        <div className="pb-24 px-8 text-center">
+        <div className="pb-16 px-8 text-center">
           <SearchState
             searchState={searchState}
             searchPhrase={submittedSearchValue}
@@ -120,17 +133,28 @@ function Index(query: { search: string | null; page: string }) {
       setSearchState({ type: "EMPTY" });
       return;
     }
+    setSearchState({
+      type: "LOADING",
+      prevData: searchState.type === "SUCCESS" ? searchState : undefined,
+    });
     searchForPlayer(submittedSearchValue, pageValue).then((res) => {
       setSearchState(res);
     });
   }
 }
 
-Index.getInitialProps = ({ query }) => {
-  return query;
+SearchIndex.getInitialProps = async (ctx: NextPageContext) => {
+  const isSearchHost = ctx.req?.headers.host
+    ? isFplSearchHost(ctx.req?.headers.host)
+    : false;
+
+  return {
+    query: ctx.query,
+    isSearchHost: isSearchHost,
+  };
 };
 
-export default Index;
+export default SearchIndex;
 
 interface SearchStateProps {
   searchState: SearchState;
@@ -159,6 +183,36 @@ const SearchState = ({
   page,
   updatePage,
 }: SearchStateProps) => {
+  if (searchState.type === "LOADING") {
+    if (searchState.prevData) {
+      return (
+        <ResultTable
+          searchState={searchState.prevData}
+          searchPhrase={searchPhrase}
+          page={page}
+          updatePage={updatePage}
+          loading={true}
+        />
+      );
+    }
+
+    return (
+      <div className="flex justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+  if (searchState.type === "SUCCESS") {
+    return (
+      <ResultTable
+        searchState={searchState}
+        searchPhrase={searchPhrase}
+        page={page}
+        updatePage={updatePage}
+        loading={false}
+      />
+    );
+  }
   if (searchState.type === "INIT") {
     return (
       <p className="text-fpl-purple">
@@ -173,30 +227,9 @@ const SearchState = ({
       </p>
     );
   }
-  if (searchState.type === "ERROR") {
-    return (
-      <p className="text-fpl-purple">
-        Ooops, looks like something went wrong 🤕
-      </p>
-    );
-  }
-  if (searchState.type === "SUCCESS") {
-    if (searchState.data.length < 1) {
-      return (
-        <p className="text-fpl-purple">
-          Search for "{searchPhrase}" did not return any matches
-        </p>
-      );
-    }
-    return (
-      <ResultTable
-        searchState={searchState}
-        searchPhrase={searchPhrase}
-        page={page}
-        updatePage={updatePage}
-      />
-    );
-  }
+  return (
+    <p className="text-fpl-purple">Ooops, looks like something went wrong 🤕</p>
+  );
 };
 
 interface ResultTableProps {
@@ -204,6 +237,7 @@ interface ResultTableProps {
   searchPhrase: string;
   page: number;
   updatePage: (newPage: number) => void;
+  loading: boolean;
 }
 
 const ResultTable = ({
@@ -211,13 +245,29 @@ const ResultTable = ({
   searchPhrase,
   page,
   updatePage,
+  loading,
 }: ResultTableProps) => {
+  if (searchState.data.length < 1) {
+    return (
+      <p className="text-fpl-purple">
+        Search for "{searchPhrase}" did not return any matches
+      </p>
+    );
+  }
+
   return (
     <div className="w-full md:w-3/6 m-auto">
-      <p className="text-fpl-purple text-xl md:text-xl text-left">
-        Search results for "{searchPhrase}"
-      </p>
-     <Pagination
+      {loading ? (
+        <div className="flex justify-center h-12">
+          <Spinner size="lg" />
+        </div>
+      ) : (
+        <p className="text-fpl-purple text-xl md:text-xl text-center pb-8 h-12">
+          Search results for "{searchPhrase}"
+        </p>
+      )}
+
+      <Pagination
         searchState={searchState}
         searchPhrase={searchPhrase}
         currentPage={page}
@@ -246,7 +296,7 @@ const ResultTable = ({
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.realName}
-                {data.verifiedType !== null && (
+                {data.verifiedType && (
                   <>
                     &nbsp;
                     <img
@@ -297,7 +347,6 @@ const Pagination = ({
   currentPage,
   updatePage,
 }: PaginationProps) => {
-
   const prevPage = currentPage - 1;
   const nextPage = currentPage + 1;
 
@@ -308,30 +357,28 @@ const Pagination = ({
 
   if (searchState.hasPrev || searchState.hasNext) {
     return (
-      <div>
-        <p className="mb-4">
+      <div className="flex items-center justify-center md:justify-end text-fpl-purple ">
+        {searchState.hasPrev && (
+          <a
+            href={`?search=${searchPhrase}&page=${prevPage}`}
+            onClick={(e) => paginate(e, prevPage)}
+            className="font-bold underline"
+          >
+            Prev
+          </a>
+        )}
+        <p className="mx-4">
           Page {currentPage + 1} of {searchState.totalPages}
         </p>
-        <div>
-          {searchState.hasPrev && (
-            <a
-              href={`?search=${searchPhrase}&page=${prevPage}`}
-              onClick={(e) => paginate(e, prevPage)}
-              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4 mr-2"
-            >
-              Prev
-            </a>
-          )}
-          {searchState.hasNext && (
-            <a
-              href={`?search=${searchPhrase}&page=${nextPage}`}
-              onClick={(e) => paginate(e, nextPage)}
-              className="font-bold rounded shadow hover:shadow-xl transition duration-500 py-2 px-8 text-white bg-fpl-purple mt-4"
-            >
-              Next
-            </a>
-          )}
-        </div>
+        {searchState.hasNext && (
+          <a
+            href={`?search=${searchPhrase}&page=${nextPage}`}
+            onClick={(e) => paginate(e, nextPage)}
+            className="font-bold underline "
+          >
+            Next
+          </a>
+        )}
       </div>
     );
   }
@@ -374,6 +421,6 @@ const getVerifiedHelpText = (verifiedType: VerifiedType) => {
     case VerifiedType.Athlete:
       return "That famous athlete";
     default:
-      return null;
+      return "That famous person";
   }
 };
