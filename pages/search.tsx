@@ -24,6 +24,7 @@ interface SearchEmpty {
 
 interface SearchLoading {
   type: "LOADING";
+  prevData?: SearchSuccess;
 }
 
 type SearchState = SearchResponse | SearchLoading | SearchEmpty | SearchInit;
@@ -132,7 +133,10 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
       setSearchState({ type: "EMPTY" });
       return;
     }
-    setSearchState({ type: "LOADING" });
+    setSearchState({
+      type: "LOADING",
+      prevData: searchState.type === "SUCCESS" ? searchState : undefined,
+    });
     searchForPlayer(submittedSearchValue, pageValue).then((res) => {
       setSearchState(res);
     });
@@ -179,20 +183,33 @@ const SearchState = ({
   page,
   updatePage,
 }: SearchStateProps) => {
-  if (searchState.type === "SUCCESS") {
-    if (searchState.data.length < 1) {
+  if (searchState.type === "LOADING") {
+    if (searchState.prevData) {
       return (
-        <p className="text-fpl-purple">
-          Search for "{searchPhrase}" did not return any matches
-        </p>
+        <ResultTable
+          searchState={searchState.prevData}
+          searchPhrase={searchPhrase}
+          page={page}
+          updatePage={updatePage}
+          loading={true}
+        />
       );
     }
+
+    return (
+      <div className="flex justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+  if (searchState.type === "SUCCESS") {
     return (
       <ResultTable
         searchState={searchState}
         searchPhrase={searchPhrase}
         page={page}
         updatePage={updatePage}
+        loading={false}
       />
     );
   }
@@ -201,13 +218,6 @@ const SearchState = ({
       <p className="text-fpl-purple">
         Search results will appear here. You can search by name or team name
       </p>
-    );
-  }
-  if (searchState.type === "LOADING") {
-    return (
-      <div className="flex justify-center">
-        <Spinner />
-      </div>
     );
   }
   if (searchState.type === "EMPTY") {
@@ -227,6 +237,7 @@ interface ResultTableProps {
   searchPhrase: string;
   page: number;
   updatePage: (newPage: number) => void;
+  loading: boolean;
 }
 
 const ResultTable = ({
@@ -234,12 +245,28 @@ const ResultTable = ({
   searchPhrase,
   page,
   updatePage,
+  loading,
 }: ResultTableProps) => {
+  if (searchState.data.length < 1) {
+    return (
+      <p className="text-fpl-purple">
+        Search for "{searchPhrase}" did not return any matches
+      </p>
+    );
+  }
+
   return (
     <div className="w-full md:w-3/6 m-auto">
-      <p className="text-fpl-purple text-xl md:text-xl text-center pb-8">
-        Search results for "{searchPhrase}"
-      </p>
+      {loading ? (
+        <div className="flex justify-center">
+          <Spinner size="lg" />
+        </div>
+      ) : (
+        <p className="text-fpl-purple text-xl md:text-xl text-center pb-8">
+          Search results for "{searchPhrase}"
+        </p>
+      )}
+
       <Pagination
         searchState={searchState}
         searchPhrase={searchPhrase}
