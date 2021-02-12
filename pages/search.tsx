@@ -4,6 +4,7 @@ import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
+import { Spinner } from "../components/Spinner";
 import {
   searchForPlayer,
   SearchResponse,
@@ -21,7 +22,11 @@ interface SearchEmpty {
   type: "EMPTY";
 }
 
-type SearchState = SearchResponse | SearchEmpty | SearchInit;
+interface SearchLoading {
+  type: "LOADING";
+}
+
+type SearchState = SearchResponse | SearchLoading | SearchEmpty | SearchInit;
 
 interface SearchIndexProps {
   query: { search: string | null; page: string | null };
@@ -39,7 +44,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
     query.page ? parseInt(query.page, 10) : 0
   );
   const [searchState, setSearchState] = useState<SearchState>({
-    type: "INIT",
+    type: query.search ? "LOADING" : "INIT",
   });
 
   useEffect(() => {
@@ -127,6 +132,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
       setSearchState({ type: "EMPTY" });
       return;
     }
+    setSearchState({ type: "LOADING" });
     searchForPlayer(submittedSearchValue, pageValue).then((res) => {
       setSearchState(res);
     });
@@ -173,6 +179,7 @@ const SearchState = ({
   page,
   updatePage,
 }: SearchStateProps) => {
+
   if (searchState.type === "SUCCESS") {
     if (searchState.data.length < 1) {
       return (
@@ -195,6 +202,13 @@ const SearchState = ({
       <p className="text-fpl-purple">
         Search results will appear here. You can search by name or team name
       </p>
+    );
+  }
+  if (searchState.type === "LOADING") {
+    return (
+      <div className="flex justify-center">
+        <Spinner />
+      </div>
     );
   }
   if (searchState.type === "EMPTY") {
