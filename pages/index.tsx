@@ -1,36 +1,34 @@
+import { NextPageContext } from "next";
+import Head from "next/head";
 import React from "react";
+import Footer from "../components/Footer";
+import AddToSlackForm from "../components/index/AddToSlackForm";
 import Features from "../components/index/Features";
 import Header from "../components/index/Header";
-import AddToSlackForm from "../components/index/AddToSlackForm";
-import Footer from "../components/Footer";
+import SearchBanner from "../components/index/SearchBanner";
+import { isFplSearchHost } from "../utils/hostUtils";
 
-export default function Index() {
+function Index({shouldHightlightSearch}) {
   return (
     <div>
-      <Header />
+      <Head>
+        <title>{shouldHightlightSearch ? 'Fantasy Premier League Search' : 'fplbot'}</title>
+        <meta
+          name="description"
+          content={shouldHightlightSearch ? 'Search for FPL player' : 'An unofficial Slackbot for Fantasy Premier League'}
+        />
+      </Head>
+      <Header shouldHightlightSearch={shouldHightlightSearch} />
       <Features />
       <AddToSlackForm />
-      <a
-        href={"/search"}
-        className="text-md md:text-lg text-fpl-purple"
-      >
-        <div className="flex flex-col md:flex-row items-center bg-white px-12 py-8 md:py-24">
-          <div className="md:pr-4 pb-4 md:w-1/3">
-            <h1 className="text-4xl md:text-5xl font-bold text-fpl-purple pb-2">
-              New!
-            </h1>
-            Check out our search function ➡️
-          </div>
-          <div className="md:w-2/3">
-            <img
-              src="/search.png"
-              className="rounded-lg"
-              alt="search-function"
-            />
-          </div>
-        </div>
-      </a>
+      { shouldHightlightSearch ? null : <SearchBanner /> }
       <Footer />
     </div>
   );
 }
+
+Index.getInitialProps = async (ctx: NextPageContext) => {
+  return { shouldHightlightSearch: isFplSearchHost(ctx.req.headers.host) }
+};
+
+export default Index;

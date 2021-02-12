@@ -1,15 +1,17 @@
+import { NextPageContext } from "next";
 import Head from "next/head";
 import Router from "next/router";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
 import {
   searchForPlayer,
   SearchResponse,
-  VerifiedType,
-  SearchSuccess,
+
+  SearchSuccess, VerifiedType
 } from "../services/search";
 import { FPLBOT_APP_URL } from "../utils/envconfig";
+import { isFplSearchHost } from "../utils/hostUtils";
 
 interface SearchInit {
   type: "INIT";
@@ -21,7 +23,7 @@ interface SearchEmpty {
 
 type SearchState = SearchResponse | SearchEmpty | SearchInit;
 
-function Index(query: { search: string | null; page: string }) {
+function SearchIndex({query, isFplSearchHost}) {
   const [searchValue, setSearchValue] = useState<string>(
     query.search ? decodeURI(query.search) : ""
   );
@@ -56,6 +58,7 @@ function Index(query: { search: string | null; page: string }) {
           name="description"
           content="Search for fpl player by name or team name."
         />
+        { isFplSearchHost ? null : <link rel="canonical" href="https://www.fplsearch.com/search/" /> }
       </Head>
       <Header />
       <div className="flex-grow">
@@ -126,11 +129,11 @@ function Index(query: { search: string | null; page: string }) {
   }
 }
 
-Index.getInitialProps = ({ query }) => {
-  return query;
+SearchIndex.getInitialProps = async (ctx: NextPageContext) => {
+  return { query: ctx.query, isFplSearchHost: isFplSearchHost(ctx.req.headers.host) }
 };
 
-export default Index;
+export default SearchIndex;
 
 interface SearchStateProps {
   searchState: SearchState;
