@@ -1,3 +1,7 @@
+/*
+Inspired by https://stackoverflow.com/a/57009839
+*/
+
 const express = require('express');
 const next = require('next');
 
@@ -26,7 +30,7 @@ app
     server.get('*', (req, res) => handle(req, res));
 
     server.listen(
-        port,
+      port,
       error => {
         if (error) throw error;
         console.error(`Listening on port ${port}`);
