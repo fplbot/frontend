@@ -15,7 +15,7 @@ function Index({shouldHighlightSearch}: {shouldHighlightSearch: boolean}) {
         <title>{shouldHighlightSearch ? 'Fantasy Premier League Search' : 'fplbot'}</title>
         <meta
           name="description"
-          content={shouldHighlightSearch ? 'Search for FPL player' : 'An unofficial Slackbot for Fantasy Premier League'}
+          content={shouldHighlightSearch ? 'Search for fantasy premier league managers. Search by name or team name, and find fpl players and celebrities.' : 'Slack bot for fantasy premier league. Posts live gameweek updates, standings for the league you follow and more!'}
         />
       </Head>
       <Header shouldHighlightSearch={shouldHighlightSearch} />

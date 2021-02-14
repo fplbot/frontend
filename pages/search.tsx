@@ -68,7 +68,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
         <title>Fantasy Premier League Search</title>
         <meta
           name="description"
-          content="Search for fpl player by name or team name."
+          content="Search for fantasy premier league managers. Search by name or team name, and find fpl players and celebrities."
         />
         {isSearchHost ? null : (
           <link rel="canonical" href="https://www.fplsearch.com/search/" />

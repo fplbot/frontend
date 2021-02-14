@@ -5,6 +5,11 @@ import Footer from "../components/Footer";
 export default function Success() {
   return (
     <div>
+      <title>You have installed fplbot!</title>
+        <meta
+          name="description"
+          content= 'Slack bot for fantasy premier league. Posts live gameweek updates, standings for the league you follow and more!'
+        />
       <div className="bg-fpl-purple">
         <div className="flex justify-between mx-auto px-8 py-6">
           <a className="text-2xl font-bold text-fpl-green" href="/">fplbot.app</a>
