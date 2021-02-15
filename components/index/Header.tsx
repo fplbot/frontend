@@ -28,7 +28,7 @@ function Header({ shouldHighlightSearch }: HeaderProps) {
             </h1>
           )}
           <p className="text-lg text-center text-fpl-purple mt-4">
-            An unofficial Slackbot for Fantasy Premier League
+            An unofficial Slackbot for Fantasy&nbsp;Premier&nbsp;League
           </p>
 
           <Button

@@ -78,7 +78,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
       <div className="flex-grow">
         <div className="py-24 px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-            Search for fpl player
+            Search for FPL player
           </h1>
           <p className="text-md md:text-lg text-center text-fpl-purple">
             You can search by name or team name
@@ -86,14 +86,14 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
 
           <form className="mt-10" onSubmit={submitSearchValue}>
             <input
-              aria-label="Search for fpl player"
+              aria-label="Search for FPL player"
               value={searchValue}
               placeholder="Magnus Carlsen"
               onChange={(e) => {
                 setSearchValue(e.target.value);
               }}
               ref={inputRef}
-              className="w-72 py-2 px-4 mr-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
+              className="search-input w-72 py-2 px-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
             />
 
             <Button onClick={submitSearchValue} shape="long" className="mt-4">
@@ -256,13 +256,13 @@ const ResultTable = ({
   }
 
   return (
-    <div className="w-full md:w-3/6 m-auto">
+    <div className="w-full max-w-3xl m-auto">
       {loading ? (
-        <div className="flex justify-center h-12">
+        <div className="flex justify-center h-12 mb-4">
           <Spinner size="lg" />
         </div>
       ) : (
-        <p className="text-fpl-purple text-xl md:text-xl text-center pb-8 h-12">
+        <p className="text-fpl-purple text-xl md:text-xl text-center mb-4 h-12">
           Search results for "{searchPhrase}"
         </p>
       )}

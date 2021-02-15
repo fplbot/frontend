@@ -34,6 +34,18 @@ th:not(:last-child) {
   justify-content: space-between;
 }
 
+.search-input {
+  margin-right: 1rem;
+}
+
+@media screen and (max-width: 31.125rem) {
+  .search-input {
+    margin-right: 0;
+    width: 100%;
+    max-width: 22rem;
+  }
+}
+
 .loader {
   border-top-color: #37003c;
   -webkit-animation: spinner 1.5s linear infinite;
