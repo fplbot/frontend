@@ -1,6 +1,15 @@
+import { useEffect, useRef } from "react";
 import Button from "../Button";
 
 export default function SearchBarSection() {
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (inputRef == null || inputRef.current == null) return;
+    inputRef.current.focus();
+  }, []);
+
   return (
     <section className="search-promotion">
       <div>
@@ -12,6 +21,7 @@ export default function SearchBarSection() {
         </p>
         <form className="search-bar" action="/search">
           <input
+            ref={inputRef}
             name="search"
             placeholder="Magnus Carlsen"
             aria-label="Search for fpl player"
