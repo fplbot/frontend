@@ -296,7 +296,7 @@ const ResultTable = ({
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.realName}
-                {data.verifiedType && (
+                {data.verifiedType !== null && (
                   <>
                     &nbsp;
                     <img
@@ -402,7 +402,7 @@ const Header = () => {
   }
 };
 
-const getVerifiedHelpText = (verifiedType: VerifiedType) => {
+const getVerifiedHelpText = (verifiedType?: VerifiedType) => {
   switch (verifiedType) {
     case VerifiedType.FootballerInPL:
       return "That guy in Premier League";
