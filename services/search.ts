@@ -19,16 +19,15 @@ export interface PlayerEntry {
   verifiedType?: VerifiedType;
 }
 
-export enum VerifiedType {
-  FootballerInPL = 'FootballerInPL',
-  Footballer = 'Footballer',
-  ChessMaster = 'ChessMaster',
-  Podcaster = 'Podcaster',
-  CommunityFame = 'CommunityFame',
-  Actor = 'Actor',
-  TvFace = 'TvFace',
-  Athlete = 'Athlete'
-}
+export type VerifiedType =
+  | "FootballerInPL"
+  | "Footballer"
+  | "ChessMaster"
+  | "Podcaster"
+  | "CommunityFame"
+  | "Actor"
+  | "TvFace"
+  | "Athlete";
 
 export interface SearchSuccess {
   type: "SUCCESS";
@@ -44,10 +43,16 @@ interface SearchError {
 
 export type SearchResponse = SearchSuccess | SearchError;
 
-export function searchForPlayer(searchString: string, page: number): Promise<SearchResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/search/entries/${searchString}?page=${page}`, {
-    method: "GET",
-  })
+export function searchForPlayer(
+  searchString: string,
+  page: number
+): Promise<SearchResponse> {
+  return fetch(
+    `${FPLBOT_API_BASEURL}/search/entries/${searchString}?page=${page}`,
+    {
+      method: "GET",
+    }
+  )
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -56,12 +61,12 @@ export function searchForPlayer(searchString: string, page: number): Promise<Sea
     })
     .then(
       (json: FplApiResponse): SearchSuccess => {
-        return { 
-          type: "SUCCESS", 
-          data: json.hits.exposedHits, 
-          hasPrev: json.hits.page > 0, 
-          hasNext: json.hits.totalPages - 1 > json.hits.page, 
-          totalPages: json.hits.totalPages 
+        return {
+          type: "SUCCESS",
+          data: json.hits.exposedHits,
+          hasPrev: json.hits.page > 0,
+          hasNext: json.hits.totalPages - 1 > json.hits.page,
+          totalPages: json.hits.totalPages,
         };
       }
     )
