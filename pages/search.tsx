@@ -30,13 +30,13 @@ interface SearchLoading {
 type SearchState = SearchResponse | SearchLoading | SearchEmpty | SearchInit;
 
 interface SearchIndexProps {
-  query: { search: string | null; page: string | null };
+  query: { q: string | null; page: string | null };
   isSearchHost: boolean;
 }
 
 function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
   const [searchValue, setSearchValue] = useState<string>(
-    query.search ? decodeURI(query.search) : ""
+    query.q ? decodeURI(query.q) : ""
   );
   const [submittedSearchValue, setSubmittedSearchValue] = useState<string>(
     searchValue
@@ -45,7 +45,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
     query.page ? parseInt(query.page, 10) : 0
   );
   const [searchState, setSearchState] = useState<SearchState>({
-    type: query.search ? "LOADING" : "INIT",
+    type: query.q ? "LOADING" : "INIT",
   });
 
   useEffect(() => {
@@ -167,7 +167,7 @@ const updateQueryParam = (searchValue: string, page: number) => {
   Router.push(
     {
       pathname: "/search",
-      query: { search: encodeURI(searchValue), page: page },
+      query: { q: encodeURI(searchValue), page: page },
     },
     undefined,
     {

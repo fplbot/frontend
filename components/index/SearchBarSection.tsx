@@ -22,7 +22,7 @@ export default function SearchBarSection() {
         <form className="search-bar" action="/search">
           <input
             ref={inputRef}
-            name="search"
+            name="q"
             placeholder="Magnus Carlsen"
             aria-label="Search for fpl player"
             className="search-input w-72 py-2 px-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
