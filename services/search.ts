@@ -20,14 +20,14 @@ export interface PlayerEntry {
 }
 
 export enum VerifiedType {
-  FootballerInPL = 0,
-  Footballer = 1,
-  ChessMaster = 2,
-  Podcaster = 3,
-  CommunityFame = 4,
-  Actor = 5,
-  TvFace = 6,
-  Athlete = 7
+  FootballerInPL = 'FootballerInPL',
+  Footballer = 'Footballer',
+  ChessMaster = 'ChessMaster',
+  Podcaster = 'Podcaster',
+  CommunityFame = 'CommunityFame',
+  Actor = 'Actor',
+  TvFace = 'TvFace',
+  Athlete = 'Athlete'
 }
 
 export interface SearchSuccess {
