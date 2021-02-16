@@ -26,6 +26,19 @@ app
       res.setHeader('strict-transport-security', 'max-age=31536000; includeSubDomains; preload');
       next();
     });
+    
+    server.get('/sitemap.txt', (req, res) => {
+      const hostName = req.hostname;
+      const isFplSearchDomain = /^(www\.)?fplsearch.com/.test(hostName);
+      
+      let siteMap = `https://${hostName}`;
+      if (isFplSearchDomain) {
+        siteMap += `\nhttps://${hostName}/search`;
+      }
+      
+      res.contentType("text/plain");
+      res.send(siteMap);
+    })
 
     server.get('*', (req, res) => handle(req, res));
 
