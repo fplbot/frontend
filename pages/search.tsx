@@ -402,25 +402,23 @@ const Header = () => {
   }
 };
 
-const getVerifiedHelpText = (verifiedType: VerifiedType) => {
+const getVerifiedHelpText = (verifiedType: VerifiedType): string => {
   switch (verifiedType) {
-    case VerifiedType.FootballerInPL:
+    case 'FootballerInPL':
       return "That guy in Premier League";
-    case VerifiedType.Footballer:
+    case 'Footballer':
       return "That famous football player";
-    case VerifiedType.ChessMaster:
+    case 'ChessMaster':
       return "That chess champion";
-    case VerifiedType.Podcaster:
+    case 'Podcaster':
       return "That voice on the podcast thing";
-    case VerifiedType.CommunityFame:
+    case 'CommunityFame':
       return "That person on Twitter";
-    case VerifiedType.Actor:
+    case 'Actor':
       return "That actor";
-    case VerifiedType.TvFace:
+    case 'TvFace':
       return "That TV face";
-    case VerifiedType.Athlete:
+    case 'Athlete':
       return "That famous athlete";
-    default:
-      return "That famous person";
   }
 };
