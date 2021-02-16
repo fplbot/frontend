@@ -402,7 +402,7 @@ const Header = () => {
   }
 };
 
-const getVerifiedHelpText = (verifiedType: VerifiedType) => {
+const getVerifiedHelpText = (verifiedType: VerifiedType): string => {
   switch (verifiedType) {
     case 'FootballerInPL':
       return "That guy in Premier League";
@@ -420,7 +420,5 @@ const getVerifiedHelpText = (verifiedType: VerifiedType) => {
       return "That TV face";
     case 'Athlete':
       return "That famous athlete";
-    default:
-      return "That famous person";
   }
 };
