@@ -3,6 +3,7 @@ import React from "react";
 import Footer from "../components/Footer";
 import SimpleHeader from "../components/SimpleHeader";
 import { ChipType, FplVerifiedResponse, getVerifiedEntries } from "../services/verified";
+import { abbreviate } from "@pqt/abbreviate";
 
 function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse }) {
     return (
@@ -26,15 +27,15 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                 <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
                     <thead className="text-white">
                         <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
-                            <th className="p-3 text-left">Pos</th>
+                            <th className="p-3 text-left">#</th>
                             <th className="p-3 text-left">Name</th>
                             <th className="p-3 text-left">Team&nbsp;name</th>
                             <th className="p-3 text-right">GW&nbsp;pts</th>
-                            <th className="p-3 text-right">Total&nbsp;pts</th>
-                            <th className="p-3 text-right" title="Overall rank">OR</th>
                             <th className="p-3 text-left">Captain</th>
                             <th className="p-3 text-left">Vice&nbsp;captain</th>
                             <th className="p-3 text-left">Chip</th>
+                            <th className="p-3 text-right">Total&nbsp;pts</th>
+                            <th className="p-3 text-right">Overall</th>
                             <th className="p-3 text-left">Open</th>
                         </tr>
                     </thead>
@@ -47,19 +48,13 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                                     {i + 1}&nbsp;<Movement movement={data.movement}/>
                                 </td>
                                 <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                                    {data.realName}
+                                    <img className="shirt" src={data.shirtImageUrl} alt={`Plays for ${data.playsForTeam}`} title={`Plays for ${data.playsForTeam}`}/>&nbsp;{data.plName}
                                 </td>
                                 <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.teamName}
                                 </td>
                                 <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.pointsThisGw}
-                                </td>
-                                <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
-                                    {data.totalPoints}
-                                </td>
-                                <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
-                                    {data.overallRank}
                                 </td>
                                 <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.captain}
@@ -69,6 +64,12 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                                 </td>
                                 <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     <Chip chipUsed={data.chipUsed}/>
+                                </td>
+                                <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                    {data.totalPoints}
+                                </td>
+                                <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                    {abbreviate(data.overallRank, 1)}
                                 </td>
                                 <td className="text-left md:text-center border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">
                                     <a

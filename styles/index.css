@@ -83,3 +83,10 @@ th:not(:last-child) {
   height: .625rem;
   width: .625rem;
 }
+
+.shirt {
+  display: inline-block;
+  height: 1.75rem;
+  margin-right: .25rem;
+  vertical-align: top;
+}
