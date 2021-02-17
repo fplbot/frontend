@@ -21,6 +21,9 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
                         The Premier FPL League <img src="/check.svg" className="verified-icon" alt="Verified"/>
                     </h1>
+                    <p className="text-md md:text-lg text-center text-fpl-purple">
+                        This virtual league consists of Premier League players with verified FPL teams.
+                    </p>
                 </div>
             </div>
             <div className="w-full max-w-6xl m-auto mb-20">
@@ -28,7 +31,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                     <thead className="text-white">
                         <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
                             <th className="p-3 text-left">#</th>
-                            <th className="p-3 text-left">Name</th>
+                            <th className="p-3 text-left">Player</th>
                             <th className="p-3 text-left">Team&nbsp;name</th>
                             <th className="p-3 text-right">GW&nbsp;pts</th>
                             <th className="p-3 text-left">Captain</th>
