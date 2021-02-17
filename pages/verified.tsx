@@ -19,7 +19,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
             <div className="flex-grow">
                 <div className="py-24 px-8 text-center">
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-                        The Premier FPL League
+                        The Premier FPL League <img src="/check.svg" className="verified-icon" alt="Verified"/>
                     </h1>
                 </div>
             </div>
