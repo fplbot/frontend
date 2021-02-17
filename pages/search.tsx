@@ -3,6 +3,7 @@ import Head from "next/head";
 import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
+import SimpleHeader from "../components/SimpleHeader";
 import Footer from "../components/Footer";
 import { Spinner } from "../components/Spinner";
 import {
@@ -74,7 +75,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
           <link rel="canonical" href="https://www.fplsearch.com/search/" />
         )}
       </Head>
-      <Header />
+      <SimpleHeader />
       <div className="flex-grow">
         <div className="py-24 px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
@@ -383,23 +384,6 @@ const Pagination = ({
     );
   }
   return null;
-};
-
-const Header = () => {
-  return (
-    <div className="flex justify-between px-8 py-6">
-      <a href="/" className="text-2xl font-bold text-fpl-purple">
-        fplbot.app
-      </a>
-      <Button onClick={goToInstall} color="GREEN">
-        Install fplbot
-      </Button>
-    </div>
-  );
-
-  function goToInstall() {
-    window.location.href = FPLBOT_APP_URL + "/#add-to-slack";
-  }
 };
 
 const getVerifiedHelpText = (verifiedType: VerifiedType): string => {

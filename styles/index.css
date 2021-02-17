@@ -61,3 +61,25 @@ th:not(:last-child) {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.movement {
+  height: .75rem;
+  width: .75rem;
+  display: inline-block;
+  vertical-align: baseline;
+  margin-left: .25rem;
+}
+
+.movement--up {
+  fill: rgb(0, 217, 0);
+}
+
+.movement--down {
+  fill: rgb(255, 0, 90);
+}
+
+.movement--none {
+  fill: rgb(148, 150, 140);
+  height: .625rem;
+  width: .625rem;
+}
