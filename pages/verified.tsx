@@ -1,11 +1,14 @@
+import { abbreviate } from "@pqt/abbreviate";
 import Head from "next/head";
+import Link from 'next/link';
 import React from "react";
+import { Chip } from "../components/Chip";
 import Footer from "../components/Footer";
 import SimpleHeader from "../components/SimpleHeader";
-import { ChipType, FplVerifiedResponse, getVerifiedEntries } from "../services/verified";
-import { abbreviate } from "@pqt/abbreviate";
+import { FplVerifiedEntriesResponse, getVerifiedEntries } from "../services/verified";
+import { formatNumber } from "../utils/formatter";
 
-function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse }) {
+function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedEntriesResponse }) {
     return (
         <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
             <Head>
@@ -26,7 +29,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                     </p>
                 </div>
             </div>
-            <div className="w-full max-w-6xl m-auto mb-20">
+            <div className="w-full max-w-7xl m-auto mb-20">
                 <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
                     <thead className="text-white">
                         <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
@@ -51,7 +54,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                                     {i + 1}&nbsp;<Movement movement={data.movement}/>
                                 </td>
                                 <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                                    <img className="shirt" src={data.shirtImageUrl} alt={`Plays for ${data.playsForTeam}`} title={`Plays for ${data.playsForTeam}`}/>&nbsp;{data.plName}
+                                    <img className="shirt" src={data.shirtImageUrl} alt={`Plays for ${data.playsForTeam}`} title={`Plays for ${data.playsForTeam}`}/>&nbsp;<Link href={`/verified/${encodeURIComponent(data.slug)}`}><a className="underline">{data.plName}</a></Link>
                                 </td>
                                 <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.teamName}
@@ -69,7 +72,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: FplVerifiedResponse 
                                     <Chip chipUsed={data.chipUsed}/>
                                 </td>
                                 <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
-                                    {data.totalPoints}
+                                    {formatNumber(data.totalPoints)}
                                 </td>
                                 <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {abbreviate(data.overallRank, 1)}
@@ -97,26 +100,9 @@ interface MovementProps {
     movement: number;
 }
 const Movement = ({movement}: MovementProps) => {
-    if (movement > 0) return (<svg className="movement movement--down" width="24" height="24" viewBox="0 0 24 24"><polygon fill-rule="evenodd" points="20.521 -2.479 20.521 14.521 3.521 14.521" transform="rotate(45 12.02 6.02)"></polygon></svg>)
-    else if (movement < 0) return (<svg className="movement movement--up" width="24" height="24" viewBox="0 0 24 24"><polygon fill-rule="evenodd" points="20.521 8.521 20.521 25.521 3.521 25.521" transform="rotate(-135 12.02 17.02)"></polygon></svg>)
-    else return (<svg className="movement movement--none" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill-rule="evenodd"></circle></svg>)
-}
-
-interface ChipProps {
-    chipUsed?: ChipType;
-}
-const Chip = ({chipUsed}: ChipProps) => {
-    switch (chipUsed) {
-        case '3xc':
-            return (<span>🚀 Triple Cap</span>);
-        case 'wildcard':
-            return (<span>🔥 Wildcard</span>);
-        case 'freehit':
-            return (<span>💥 Free Hit</span>);
-        case 'bboost':
-            return (<span>👨‍👨‍👦‍👦 Bench Boost</span>)
-        default: return null;
-    }
+    if (movement > 0) return (<svg className="movement movement--down" width="24" height="24" viewBox="0 0 24 24"><polygon fillRule="evenodd" points="20.521 -2.479 20.521 14.521 3.521 14.521" transform="rotate(45 12.02 6.02)"></polygon></svg>)
+    else if (movement < 0) return (<svg className="movement movement--up" width="24" height="24" viewBox="0 0 24 24"><polygon fillRule="evenodd" points="20.521 8.521 20.521 25.521 3.521 25.521" transform="rotate(-135 12.02 17.02)"></polygon></svg>)
+    else return (<svg className="movement movement--none" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fillRule="evenodd"></circle></svg>)
 }
 
 VerifiedIndex.getInitialProps = async () => {

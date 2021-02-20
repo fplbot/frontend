@@ -90,3 +90,8 @@ th:not(:last-child) {
   width: 1.25rem;
   vertical-align: middle;
 }
+
+.entry-image {
+  display: inline-block;
+  max-width: 10rem;
+}

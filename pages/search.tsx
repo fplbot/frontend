@@ -3,16 +3,15 @@ import Head from "next/head";
 import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
-import SimpleHeader from "../components/SimpleHeader";
 import Footer from "../components/Footer";
+import SimpleHeader from "../components/SimpleHeader";
 import { Spinner } from "../components/Spinner";
 import {
   searchForPlayer,
   SearchResponse,
   SearchSuccess,
-  VerifiedType,
+  VerifiedType
 } from "../services/search";
-import { FPLBOT_APP_URL } from "../utils/envconfig";
 import { isFplSearchHost } from "../utils/hostUtils";
 
 interface SearchInit {
