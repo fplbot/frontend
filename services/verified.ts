@@ -1,10 +1,5 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
 
-export interface FplVerifiedEntriesResponse {
-    gameweek: number;
-    entries: VerifiedEntry[];
-}
-
 export interface VerifiedEntry {
   entryId: number;
   slug: string;
@@ -23,6 +18,7 @@ export interface VerifiedEntry {
   movement: number;
   selfOwnershipWeekCount: number;
   selfOwnershipTotalPoints: number;
+  gameweek: number;
 }
 
 export type ChipType = 
@@ -31,7 +27,7 @@ export type ChipType =
     | "freehit"
     | "bboost";
 
-export function getVerifiedEntries(): Promise<FplVerifiedEntriesResponse> {
+export function getVerifiedEntries(): Promise<VerifiedEntry[]> {
     return fetch(`${FPLBOT_API_BASEURL}/fpl/verified`)
       .then((response) => {
         if (response.ok) {

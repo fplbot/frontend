@@ -2,11 +2,11 @@ import { ServerResponse } from "http";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
-import { Chip } from "../../components/Chip";
-import Footer from "../../components/Footer";
-import SimpleHeader from "../../components/SimpleHeader";
-import { getVerifiedEntry, VerifiedEntry } from "../../services/verified";
-import { formatNumber } from "../../utils/formatter";
+import { Chip } from "../../../components/Chip";
+import Footer from "../../../components/Footer";
+import SimpleHeader from "../../../components/SimpleHeader";
+import { getVerifiedEntry, VerifiedEntry } from "../../../services/verified";
+import { formatNumber } from "../../../utils/formatter";
 
 function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
     return (
@@ -21,12 +21,6 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
             <SimpleHeader />
             <div className="flex-grow">
                 <div className="py-24 px-8 text-center">
-                    <Link href="/verified">
-                        <a className="text-1xl md:text-2xl font-bold text-fpl-purple mb-2">The Premier FPL League</a>
-                    </Link>
-                    <p className="text-1xl md:text-2xl mt-2 mb-6">
-                        ⤵️
-                    </p>
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
                         {verifiedEntry.plName} <img src="/check.svg" className="verified-icon" alt="Verified"/>
                     </h1>
@@ -69,16 +63,14 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
                                     {verifiedEntry.captain} (VC: {verifiedEntry.viceCaptain})
                                 </dd>
                             </div>
-                            {verifiedEntry.chipUsed && (
-                                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                 <dt className="text-sm font-medium text-gray-500">
-                                    Chip
+                                    Chip played this GW
                                 </dt>
                                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    <Chip chipUsed={verifiedEntry.chipUsed}/>
+                                    {verifiedEntry.chipUsed ? <Chip chipUsed={verifiedEntry.chipUsed}/> : 'None'}
                                 </dd>
                             </div>
-                            )}
                             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                 <dt className="text-sm font-medium text-gray-500">
                                     Total points
@@ -100,7 +92,21 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
                                     Self ownership
                                 </dt>
                                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    Owned himself <strong>{verifiedEntry.selfOwnershipWeekCount}</strong> of <strong>X</strong> gameweeks, with a total value of <strong>{formatNumber(verifiedEntry.selfOwnershipTotalPoints)}</strong> points.
+                                    Owned himself {verifiedEntry.selfOwnershipWeekCount} of {verifiedEntry.gameweek} gameweeks, earning him {formatNumber(verifiedEntry.selfOwnershipTotalPoints)} points in total.
+                                </dd>
+                            </div>
+                            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                <dt className="text-sm font-medium text-gray-500">
+                                    FPL Team
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <a
+                                        href={`https://fantasy.premierleague.com/entry/${verifiedEntry.entryId}/event/${verifiedEntry.gameweek}`}
+                                        className="block underline"
+                                        target="_blank"
+                                        >
+                                        {`https://fantasy.premierleague.com/entry/${verifiedEntry.entryId}/event/${verifiedEntry.gameweek}`}
+                                    </a>
                                 </dd>
                             </div>
                         </dl>

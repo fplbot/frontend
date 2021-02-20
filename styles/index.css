@@ -95,3 +95,20 @@ th:not(:last-child) {
   display: inline-block;
   max-width: 10rem;
 }
+
+.progressbar {
+  background:#e6e6e6;
+  border-radius: .25em;
+  width: 100%;
+  display: block;
+  position: relative;
+}
+
+.progressbar__share {
+  background: #c5c5c5;
+  border-radius: .25em;
+}
+
+.progressbar__label {
+  padding: 0.1875em .4em;
+}
