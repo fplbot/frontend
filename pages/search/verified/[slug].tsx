@@ -19,7 +19,7 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
                 />
             </Head>
             <SimpleHeader />
-            <div className="flex-grow">
+            <div className="flex-grow px-8">
                 <div className="w-full max-w-7xl m-auto mt-4 mb-14 text-center">
                     <Breadcrumbs breadcrumbs={[{title: 'Search', href: '/search'}, {title: 'The Premier FPL League', href: '/search/verified'}, {title: verifiedEntry.plName}]}/>
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">

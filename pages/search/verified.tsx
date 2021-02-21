@@ -21,7 +21,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: VerifiedEntry[] }) {
             </Head>
             <SimpleHeader />
             <div className="flex-grow">
-                <div className="w-full max-w-7xl m-auto mt-4 mb-14 text-center">
+                <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
                     <Breadcrumbs breadcrumbs={[{title: 'Search', href: '/search'}, {title: 'The Premier FPL League'}]}/>
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
                         The Premier FPL League <img src="/check.svg" className="verified-icon" alt="Verified"/>
@@ -31,10 +31,11 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: VerifiedEntry[] }) {
                     </p>
                 </div>
             </div>
-            <div className="w-full max-w-7xl m-auto mb-20">
+            <div className="w-full max-w-7xl m-auto mb-20 px-8">
                 <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
                     <thead className="text-white">
-                        <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+                        {verifiedEntries.map((data, i) => (
+                        <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0" key={`table-header-${i}`}>
                             <th className="p-3 text-left">#</th>
                             <th className="p-3 text-left">Player</th>
                             <th className="p-3 text-left">Team&nbsp;name</th>
@@ -47,6 +48,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: VerifiedEntry[] }) {
                             <th className="p-3 text-left">Owned&nbsp;himself</th>
                             <th className="p-3 text-left">Open</th>
                         </tr>
+                        ))}
                     </thead>
                     <tbody className="flex-1 sm:flex-none">
                         {verifiedEntries.map((data, i) => (
@@ -72,7 +74,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: VerifiedEntry[] }) {
                                     {data.viceCaptain}
                                 </td>
                                 <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                                    <Chip chipUsed={data.chipUsed} short={true}/>
+                                    {data.chipUsed ? <Chip chipUsed={data.chipUsed}/> : (<span>&nbsp;</span>)}
                                 </td>
                                 <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {formatNumber(data.totalPoints)}
