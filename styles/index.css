@@ -137,3 +137,63 @@ th:not(:last-child) {
 .breadcrumbs__item:last-child::after {
   display: none;
 }
+
+.verified-table {
+  max-width: 100rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.verified-table__inner {
+  min-width: 78rem;
+}
+
+.verified-table__pos{
+  width: 4rem;
+}
+
+.verified-table__player {
+  width: 16rem;
+}
+
+.verified-table__teamname {
+  width: 12rem;
+}
+
+.verified-table__gwpts {
+  width: 4.25rem;
+}
+
+.verified-table__chip {
+  width: 6rem;
+}
+
+.verified-table__total {
+  width: 6rem;
+}
+
+.verified-table__or {
+  width: 6rem;
+}
+
+.verified-table__open {
+  width: 4rem;
+}
+
+@media screen and (max-width: 94rem) {
+  .verified-table__selfown {
+    width: 10rem;
+  }
+}
+
+@media screen and (max-width: 88rem) {
+  .verified-table__teamname {
+    width: 9rem;
+  }
+}
+
+@media screen and (max-width: 82rem) {
+  .verified-table__player {
+    width: 11rem;
+  }
+}

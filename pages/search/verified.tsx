@@ -22,70 +22,66 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: VerifiedEntry[] }) {
             <SimpleHeader />
             <div className="flex-grow">
                 <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
-                    <Breadcrumbs breadcrumbs={[{title: 'Search', href: '/search'}, {title: 'The Premier FPL League'}]}/>
+                    <Breadcrumbs breadcrumbs={[{title: 'Search', href: '/search'}, {title: 'Verified PL players'}]}/>
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-                        The Premier FPL League <img src="/check.svg" className="verified-icon" alt="Verified"/>
+                        Verified PL Players <img src="/check.svg" className="verified-icon" alt="Verified"/>
                     </h1>
                     <p className="text-md md:text-lg text-center text-fpl-purple">
                         This virtual league consists of Premier League players' verified Fantasy Premier League teams.
                     </p>
                 </div>
             </div>
-            <div className="w-full max-w-7xl m-auto mb-20 px-8">
-                <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
+            <div className="w-full m-auto mb-20 px-8 verified-table">
+                <table className="w-full table-fixed my-5">
                     <thead className="text-white">
-                        {verifiedEntries.map((data, i) => (
-                        <tr className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0" key={`table-header-${i}`}>
-                            <th className="p-3 text-left">#</th>
-                            <th className="p-3 text-left">Player</th>
-                            <th className="p-3 text-left">Team&nbsp;name</th>
-                            <th className="p-3 text-right">GW&nbsp;pts</th>
-                            <th className="p-3 text-left">Captain</th>
-                            <th className="p-3 text-left">Vice&nbsp;captain</th>
-                            <th className="p-3 text-left">Chip</th>
-                            <th className="p-3 text-right">Total&nbsp;pts</th>
-                            <th className="p-3 text-right">Overall</th>
-                            <th className="p-3 text-left">Owned&nbsp;himself</th>
-                            <th className="p-3 text-left">Open</th>
+                        <tr className="bg-fpl-purple">
+                            <th className="verified-table__pos p-3 text-left">#</th>
+                            <th className="verified-table__player p-3 text-left">Player</th>
+                            <th className="verified-table__teamname verified-table__group1 p-3 text-left truncate">Team&nbsp;name</th>
+                            <th className="verified-table__gwpts verified-table__group2 p-3 text-right ">GW&nbsp;pts</th>
+                            <th className="verified-table__cap verified-table__group2 p-3 text-left">Captain</th>
+                            <th className="verified-table__vice verified-table__group2 p-3 text-left truncate">Vice&nbsp;captain</th>
+                            <th className="verified-table__chip verified-table__group2 p-3 text-left">Chip</th>
+                            <th className="verified-table__total verified-table__group3 p-3 text-right">Total&nbsp;pts</th>
+                            <th className="verified-table__or verified-table__group3 p-3 text-right">Overall</th>
+                            <th className="verified-table__selfown verified-table__group3 p-3 text-left">Owned&nbsp;himself</th>
+                            <th className="verified-table__open verified-table__group4 p-3 text-center">Open</th>
                         </tr>
-                        ))}
                     </thead>
-                    <tbody className="flex-1 sm:flex-none">
+                    <tbody className="">
                         {verifiedEntries.map((data, i) => (
-                            <tr
-                            className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none"
-                            key={`table-row-${i}`}>
-                                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                            <tr className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
+                                <td className="verified-table__pos text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {i + 1}&nbsp;<Movement movement={data.movement}/>
                                 </td>
-                                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__player text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     <img className="shirt" src={data.shirtImageUrl} alt={`Plays for ${data.playsForTeam}`} title={`Plays for ${data.playsForTeam}`}/>&nbsp;<Link href={`/search/verified/${encodeURIComponent(data.slug)}`}><a className="underline">{data.plName}</a></Link>
                                 </td>
-                                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__teamname verified-table__group1 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.teamName}
                                 </td>
-                                <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__gwpts verified-table__group2 text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.pointsThisGw}
                                 </td>
-                                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__cap verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.captain}
                                 </td>
-                                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__vice verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {data.viceCaptain}
                                 </td>
-                                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                                    {data.chipUsed ? <Chip chipUsed={data.chipUsed}/> : (<span>&nbsp;</span>)}
+                                <td className="verified-table__chip verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                    {data.chipUsed ? <Chip chipUsed={data.chipUsed} short={true}/> : (<span>&nbsp;</span>)}
                                 </td>
-                                <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__total verified-table__group3 text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {formatNumber(data.totalPoints)}
                                 </td>
-                                <td className="text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__or verified-table__group3 text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     {abbreviate(data.overallRank, 1)}
                                 </td>
-                                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                                <td className="verified-table__selfown verified-table__group3 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                                     <ProgressBar percentage={(data.selfOwnershipWeekCount / data.gameweek) * 100} label={`${data.selfOwnershipWeekCount} GWs${data.selfOwnershipWeekCount > 0 ? ` (${data.selfOwnershipTotalPoints} pts)` : ''}`} />
                                 </td>
-                                <td className="text-left md:text-center border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">
+                                <td className="verified-table__open verified-table__group4 text-center border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">
                                     <a
                                     href={`https://fantasy.premierleague.com/entry/${data.entryId}/event/${data.gameweek}`}
                                     className="block"
@@ -94,7 +90,7 @@ function VerifiedIndex({verifiedEntries}: {verifiedEntries: VerifiedEntry[] }) {
                                     ➡️
                                     </a>
                                 </td>
-                          </tr>
+                        </tr>
                         ))}
                     </tbody>
                 </table>

@@ -20,8 +20,8 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
             </Head>
             <SimpleHeader />
             <div className="flex-grow px-8">
-                <div className="w-full max-w-7xl m-auto mt-4 mb-14 text-center">
-                    <Breadcrumbs breadcrumbs={[{title: 'Search', href: '/search'}, {title: 'The Premier FPL League', href: '/search/verified'}, {title: verifiedEntry.plName}]}/>
+                <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
+                    <Breadcrumbs breadcrumbs={[{title: 'Search', href: '/search'}, {title: 'Verified PL players', href: '/search/verified'}, {title: verifiedEntry.plName}]}/>
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
                         {verifiedEntry.plName} <img src="/check.svg" className="verified-icon" alt="Verified"/>
                     </h1>
@@ -100,7 +100,7 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
                                 <dt className="text-sm font-medium text-gray-500">
                                     FPL Team
                                 </dt>
-                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 truncate">
                                     <a
                                         href={`https://fantasy.premierleague.com/entry/${verifiedEntry.entryId}/event/${verifiedEntry.gameweek}`}
                                         className="block underline"
