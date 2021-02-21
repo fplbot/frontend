@@ -1,7 +1,7 @@
 import { ServerResponse } from "http";
 import Head from "next/head";
-import Link from "next/link";
 import React from "react";
+import Breadcrumbs from "../../../components/Breadcrumbs";
 import { Chip } from "../../../components/Chip";
 import Footer from "../../../components/Footer";
 import SimpleHeader from "../../../components/SimpleHeader";
@@ -12,7 +12,7 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
     return (
         <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
             <Head>
-                <title>{verifiedEntry.plName} - FPL Search</title>
+                <title>{verifiedEntry.plName}</title>
                 <meta
                     name="description"
                     content={`${verifiedEntry.plName} plays Fantasy Premier League. Here are details about his FPL team.`}
@@ -20,7 +20,8 @@ function VerifiedEntryIndex({verifiedEntry}: {verifiedEntry: VerifiedEntry }) {
             </Head>
             <SimpleHeader />
             <div className="flex-grow">
-                <div className="py-24 px-8 text-center">
+                <div className="w-full max-w-7xl m-auto mt-4 mb-14 text-center">
+                    <Breadcrumbs breadcrumbs={[{title: 'Search', href: '/search'}, {title: 'The Premier FPL League', href: '/search/verified'}, {title: verifiedEntry.plName}]}/>
                     <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
                         {verifiedEntry.plName} <img src="/check.svg" className="verified-icon" alt="Verified"/>
                     </h1>

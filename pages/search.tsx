@@ -1,5 +1,6 @@
 import { NextPageContext } from "next";
 import Head from "next/head";
+import Link from 'next/link';
 import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
@@ -76,12 +77,12 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
       </Head>
       <SimpleHeader />
       <div className="flex-grow">
-        <div className="py-24 px-8 text-center">
+        <div className="w-full max-w-2xl m-auto py-24 px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
             Search for FPL player
           </h1>
           <p className="text-md md:text-lg text-center text-fpl-purple">
-            You can search by name or team name
+            You can search by name or team name. Also feel free to check out our list of <Link href="/search/verified/"><a className="underline">verified PL players playing FPL</a></Link>.
           </p>
 
           <form className="mt-10" onSubmit={submitSearchValue}>

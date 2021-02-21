@@ -97,18 +97,43 @@ th:not(:last-child) {
 }
 
 .progressbar {
-  background:#e6e6e6;
+  background:#f1f1f1;
   border-radius: .25em;
   width: 100%;
   display: block;
   position: relative;
+  border: .0625em solid;
 }
 
 .progressbar__share {
-  background: #c5c5c5;
+  background: #d1d1d1;
   border-radius: .25em;
 }
 
 .progressbar__label {
   padding: 0.1875em .4em;
+  font-size: .875rem;
+  position: relative;
+  top: -.1em;
+}
+
+.breadcrumbs {
+  text-align: left;
+  display: flex;
+}
+
+.breadcrumbs__item {
+  margin-right: 1.25rem;
+  position: relative;
+}
+
+.breadcrumbs__item::after {
+  content: '>';
+  position: absolute;
+  top: -.1rem;
+  right: -1rem;
+}
+
+.breadcrumbs__item:last-child::after {
+  display: none;
 }
