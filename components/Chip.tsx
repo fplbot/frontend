@@ -1,10 +1,10 @@
 import { ChipType } from "../services/verified";
 
 export interface ChipProps {
-  chipUsed?: ChipType;
+  chipUsed: ChipType;
   short?: boolean;
 }
-export function Chip({ chipUsed, short }: ChipProps) {
+export function Chip({ chipUsed, short }: ChipProps): JSX.Element {
   switch (chipUsed) {
     case "3xc":
       return <span>🚀 {short ? "TC" : "Triple captain"}</span>;
@@ -14,7 +14,5 @@ export function Chip({ chipUsed, short }: ChipProps) {
       return <span>💥 {short ? "FH" : "Free hit"}</span>;
     case "bboost":
       return <span>👨‍👨‍👦‍👦 {short ? "BB" : "Bench boost"}</span>;
-    default:
-      return null;
   }
 }
