@@ -71,17 +71,11 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
           <tr className="bg-fpl-purple">
             <th className="verified-table__pos p-3 text-left">#</th>
             <th className="verified-table__player p-3 text-left">Player</th>
-            <th className="verified-table__teamname verified-table__group1 p-3 text-left truncate">
-              Team&nbsp;name
-            </th>
             <th className="verified-table__gwpts verified-table__group2 p-3 text-right ">
               GW&nbsp;pts
             </th>
             <th className="verified-table__cap verified-table__group2 p-3 text-left">
               Captain
-            </th>
-            <th className="verified-table__vice verified-table__group2 p-3 text-left truncate">
-              Vice&nbsp;captain
             </th>
             <th className="verified-table__chip verified-table__group2 p-3 text-left">
               Chip
@@ -108,29 +102,30 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
                 <Movement movement={data.movement} />
               </td>
               <td className="verified-table__player text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                <div className="verified-table__player_inner">
+                <span  className="verified-table__player_inner_shirt">
                 <img
                   className="shirt"
                   src={data.shirtImageUrl}
                   alt={`Plays for ${data.playsForTeam}`}
                   title={`Plays for ${data.playsForTeam}`}
                 />
+                </span>
+                <span>
                 <Link
                   href={`/search/verified/${encodeURIComponent(data.slug)}`}
                 >
                   <a className="underline">{data.plName}</a>
                 </Link>
-              </td>
-              <td className="verified-table__teamname verified-table__group1 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {data.teamName}
+                <p className="text-sm">{data.teamName}</p>
+                </span>
+                </div>
               </td>
               <td className="verified-table__gwpts verified-table__group2 text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.pointsThisGw}
               </td>
               <td className="verified-table__cap verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {data.captain}
-              </td>
-              <td className="verified-table__vice verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {data.viceCaptain}
+                {data.captain} ({data.viceCaptain})
               </td>
               <td className="verified-table__chip verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.chipUsed ? (

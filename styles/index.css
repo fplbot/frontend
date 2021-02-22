@@ -84,13 +84,6 @@ th:not(:last-child) {
   width: .625rem;
 }
 
-.shirt {
-  display: inline-block;
-  margin: -0.75rem .25rem -.5em;
-  width: 1.25rem;
-  vertical-align: middle;
-}
-
 .entry-image {
   display: inline-block;
   max-width: 10rem;
@@ -149,15 +142,26 @@ th:not(:last-child) {
 }
 
 .verified-table__pos{
-  width: 4rem;
+  width: 5rem;
 }
 
 .verified-table__player {
-  width: 16rem;
+  width: 20rem;
 }
 
-.verified-table__teamname {
-  width: 12rem;
+.verified-table__player_inner {
+  display: flex;
+  align-items: center;
+}
+
+.verified-table__player_inner_shirt {
+  flex-shrink: 0;
+}
+
+.shirt {
+  display: inline-block;
+  margin-right: 0.5rem;
+  width: 1.8rem;
 }
 
 .verified-table__gwpts {
@@ -165,7 +169,7 @@ th:not(:last-child) {
 }
 
 .verified-table__chip {
-  width: 6rem;
+  width: 5rem;
 }
 
 .verified-table__total {
@@ -180,20 +184,20 @@ th:not(:last-child) {
   width: 4rem;
 }
 
+.verified-table__selfown {
+  min-width: 10rem;
+}
+
 @media screen and (max-width: 94rem) {
   .verified-table__selfown {
-    width: 10rem;
+    width: 12rem;
   }
-}
 
-@media screen and (max-width: 88rem) {
-  .verified-table__teamname {
-    width: 9rem;
-  }
-}
-
-@media screen and (max-width: 82rem) {
   .verified-table__player {
-    width: 11rem;
+    width: 12rem;
+  }
+
+  .verified-table__cap {
+    width: 10rem;
   }
 }
