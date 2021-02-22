@@ -17,6 +17,7 @@ export default function Breadcrumbs({ breadcrumbs }: BreadcrumbsProps) {
     >
       {breadcrumbs.map((item, i) => (
         <li
+          key={item.title}
           className="breadcrumbs__item"
           itemProp="itemListElement"
           itemScope
