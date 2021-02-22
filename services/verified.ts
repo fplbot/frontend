@@ -21,29 +21,72 @@ export interface VerifiedEntry {
   gameweek: number;
 }
 
-export type ChipType = 
-    | "3xc"
-    | "wildcard"
-    | "freehit"
-    | "bboost";
+export type ChipType = "3xc" | "wildcard" | "freehit" | "bboost";
 
-export function getVerifiedEntries(): Promise<VerifiedEntry[]> {
-    return fetch(`${FPLBOT_API_BASEURL}/fpl/verified`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(response);
-      });
+interface GetVerifiedEntriesSuccess {
+  type: "SUCCESS";
+  data: VerifiedEntry[];
 }
 
-export function getVerifiedEntry(slug: string): Promise<VerifiedEntry> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/verified/${slug}`)
+interface GetVerifiedEntriesError {
+  type: "ERROR";
+}
+
+export type GetVerifiedEntriesResponse =
+  | GetVerifiedEntriesSuccess
+  | GetVerifiedEntriesError;
+
+export function getVerifiedEntries(): Promise<GetVerifiedEntriesResponse> {
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/verified`)
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
       return Promise.reject(response);
-    });
+    })
+    .then(
+      (json: VerifiedEntry[]): GetVerifiedEntriesSuccess => {
+        return { type: "SUCCESS", data: json };
+      }
+    )
+    .catch(
+      (error): GetVerifiedEntriesError => {
+        return { type: "ERROR" };
+      }
+    );
 }
-  
+
+interface GetVerifiedEntrySuccess {
+  type: "SUCCESS";
+  data: VerifiedEntry;
+}
+
+interface GetVerifiedEntryError {
+  type: "ERROR";
+}
+
+export type GetVerifiedEntryResponse =
+  | GetVerifiedEntrySuccess
+  | GetVerifiedEntryError;
+
+export function getVerifiedEntry(
+  slug: string
+): Promise<GetVerifiedEntryResponse> {
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/verified/${slug}`)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return Promise.reject(response);
+  })
+  .then(
+    (json: VerifiedEntry): GetVerifiedEntrySuccess => {
+      return { type: "SUCCESS", data: json };
+    }
+  )
+  .catch(
+    (error): GetVerifiedEntryError => {
+      return { type: "ERROR" };
+    }
+  );
+}

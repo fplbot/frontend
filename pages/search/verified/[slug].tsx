@@ -1,18 +1,59 @@
-import { ServerResponse } from "http";
+import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import React from "react";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import { Chip } from "../../../components/Chip";
 import Footer from "../../../components/Footer";
 import SimpleHeader from "../../../components/SimpleHeader";
-import { getVerifiedEntry, VerifiedEntry } from "../../../services/verified";
+import { getVerifiedEntry, VerifiedEntry, GetVerifiedEntryResponse} from "../../../services/verified";
 import { formatNumber } from "../../../utils/formatter";
 
-function VerifiedEntryIndex({
-  verifiedEntry,
-}: {
-  verifiedEntry: VerifiedEntry;
-}) {
+interface GetVerifiedEntryNoSlug {
+  type: "NO_SLUG";
+}
+
+export type GetVerifiedEntryStatus =
+  | GetVerifiedEntryResponse
+  | GetVerifiedEntryNoSlug;
+
+interface VerifiedEntryIndexProps {
+  verifiedEntryData: GetVerifiedEntryStatus;
+}
+
+const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryData}: VerifiedEntryIndexProps) => {
+
+  if (verifiedEntryData.type === 'NO_SLUG' || verifiedEntryData.type === 'ERROR') {
+    return (
+        <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
+          <Head>
+            <title>fplbot</title>
+            <meta
+              name="description"
+              content={`This player plays Fantasy Premier League. Here are details about his FPL team.`}
+            />
+          </Head>
+          <SimpleHeader />
+          <div className="flex-grow px-8">
+            <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
+              <Breadcrumbs
+                breadcrumbs={[
+                  { title: "Search", href: "/search" },
+                  { title: "Verified PL players", href: "/search/verified" },
+                  { title: '...' },
+                ]}
+              />
+              <h1 className="text-xl md:text-2xl font-bold text-fpl-purple mb-2">
+                {verifiedEntryData.type === "NO_SLUG" ? "This player does not exist" : "Ops, looks like something went wrong 🤕"}
+              </h1>
+            </div>
+          </div>
+          <Footer />
+        </div>
+    );
+  }
+
+  const verifiedEntry = verifiedEntryData.data;
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -138,24 +179,18 @@ function VerifiedEntryIndex({
       <Footer />
     </div>
   );
-}
+};
 
-interface VerifiedEntryIndexProps {
-  query: { slug: string | null };
-  res: ServerResponse | undefined;
-}
-VerifiedEntryIndex.getInitialProps = async ({
-  query: { slug },
-  res,
-}: VerifiedEntryIndexProps) => {
-  if (slug) {
+VerifiedEntryIndex.getInitialProps = async ({query}) => {
+
+  if (query.slug) {
+    const slug = query.slug as string;
     const verifiedEntry = await getVerifiedEntry(decodeURI(slug));
-    return { verifiedEntry: verifiedEntry };
+    return { verifiedEntryData: verifiedEntry };
   }
 
-  if (res) {
-    res.statusCode = 404;
-    return { err: { statusCode: 404 } };
+  return {
+    verifiedEntryData: {type: "NO_SLUG"}
   }
 };
 

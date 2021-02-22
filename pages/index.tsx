@@ -1,4 +1,4 @@
-import { NextPageContext } from "next";
+import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import React from "react";
 import Footer from "../components/Footer";
@@ -8,7 +8,7 @@ import Header from "../components/index/Header";
 import SearchBanner from "../components/index/SearchBanner";
 import { isFplSearchHost } from "../utils/hostUtils";
 
-function Index({shouldHighlightSearch}: {shouldHighlightSearch: boolean}) {
+const Index: NextPage<{shouldHighlightSearch: boolean}> = ({shouldHighlightSearch}) => {
   return (
     <div>
       <Head>
