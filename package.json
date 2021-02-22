@@ -5,12 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "NODE_PORT=$PORT node server.js"
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@pqt/abbreviate": "^1.0.2",
     "classnames": "^2.2.6",
-    "express": "^4.17.1",
     "next": "10.0.5",
     "react": "17.0.1",
     "react-dom": "17.0.1"
