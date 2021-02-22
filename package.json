@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "NODE_PORT=$PORT node server.js"
+    "start": "next start -p $PORT",
+    "start-express": "NODE_PORT=$PORT node server.js"
+
   },
   "dependencies": {
     "@pqt/abbreviate": "^1.0.2",
