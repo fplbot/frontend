@@ -1,36 +1,37 @@
+import { NextPageContext } from "next";
+import Head from "next/head";
 import React from "react";
+import Footer from "../components/Footer";
+import AddToSlackForm from "../components/index/AddToSlackForm";
 import Features from "../components/index/Features";
 import Header from "../components/index/Header";
-import AddToSlackForm from "../components/index/AddToSlackForm";
-import Footer from "../components/Footer";
+import SearchBanner from "../components/index/SearchBanner";
+import { isFplSearchHost } from "../utils/hostUtils";
 
-export default function Index() {
+function Index({shouldHighlightSearch}: {shouldHighlightSearch: boolean}) {
   return (
     <div>
-      <Header />
+      <Head>
+        <title>{shouldHighlightSearch ? 'Fantasy Premier League Search' : 'fplbot'}</title>
+        <meta
+          name="description"
+          content={shouldHighlightSearch ? 'Search for fantasy premier league managers. Search by name or team name, and find fpl players and celebrities.' : 'Slack bot for fantasy premier league. Posts live gameweek updates, standings for the league you follow and more!'}
+        />
+      </Head>
+      <Header shouldHighlightSearch={shouldHighlightSearch} />
       <Features />
       <AddToSlackForm />
-      <a
-        href={"/search"}
-        className="text-md md:text-lg text-fpl-purple"
-      >
-        <div className="flex flex-col md:flex-row items-center bg-white px-12 py-8 md:py-24">
-          <div className="md:pr-4 pb-4 md:w-1/3">
-            <h1 className="text-4xl md:text-5xl font-bold text-fpl-purple pb-2">
-              New!
-            </h1>
-            Check out our search function ➡️
-          </div>
-          <div className="md:w-2/3">
-            <img
-              src="/search.png"
-              className="rounded-lg"
-              alt="search-function"
-            />
-          </div>
-        </div>
-      </a>
+      { shouldHighlightSearch || <SearchBanner /> }
       <Footer />
     </div>
   );
 }
+
+Index.getInitialProps = async (ctx: NextPageContext) => {
+
+  const shouldHighlightSearch = ctx.req?.headers.host ? isFplSearchHost(ctx.req.headers.host) : false;
+
+  return { shouldHighlightSearch: shouldHighlightSearch }
+};
+
+export default Index;
