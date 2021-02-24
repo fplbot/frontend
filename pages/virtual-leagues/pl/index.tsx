@@ -33,7 +33,7 @@ const VerifiedIndex: NextPage<VerifiedIndexProps> = ({
           <Breadcrumbs
             breadcrumbs={[
               { title: "Home", href: "/" },
-              { title: "Virtual Leagues" },
+              { title: "Virtual Leagues", href: "/virtual-leagues/" },
               { title: "PL", href: "/virtual-leagues/pl" },
             ]}
           />
