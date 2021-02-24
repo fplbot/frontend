@@ -38,7 +38,7 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
               <Breadcrumbs
                 breadcrumbs={[
                   { title: "Search", href: "/search" },
-                  { title: "Verified PL players", href: "/search/verified" },
+                  { title: "Verified PL players", href: "/virtual-leagues/pl" },
                   { title: '...' },
                 ]}
               />
@@ -69,7 +69,7 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
           <Breadcrumbs
             breadcrumbs={[
               { title: "Search", href: "/search" },
-              { title: "Verified PL players", href: "/search/verified" },
+              { title: "Virtual PL league", href: "/virtual-leagues/pl" },
               { title: verifiedEntry.plName },
             ]}
           />

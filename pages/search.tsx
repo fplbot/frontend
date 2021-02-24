@@ -82,7 +82,7 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
             Search for FPL player
           </h1>
           <p className="text-md md:text-lg text-center text-fpl-purple">
-            You can search by name or team name. Also feel free to check out our list of <Link href="/search/verified/"><a className="underline">verified PL players playing FPL</a></Link>.
+            You can search by name or team name. Also feel free to check out our virtual league of <Link href="/virtual-leagues/pl"><a className="underline">verified PL players playing FPL</a></Link>.
           </p>
 
           <form className="mt-10" onSubmit={submitSearchValue}>

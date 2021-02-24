@@ -3,16 +3,16 @@ import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
-import Breadcrumbs from "../../components/Breadcrumbs";
-import { Chip } from "../../components/Chip";
-import Footer from "../../components/Footer";
-import SimpleHeader from "../../components/SimpleHeader";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import { Chip } from "../../../components/Chip";
+import Footer from "../../../components/Footer";
+import SimpleHeader from "../../../components/SimpleHeader";
 import {
   getVerifiedEntries,
   VerifiedEntry,
   GetVerifiedEntriesResponse,
-} from "../../services/verified";
-import { formatNumber } from "../../utils/formatter";
+} from "../../../services/verified";
+import { formatNumber } from "../../../utils/formatter";
 
 interface VerifiedIndexProps {
   verifiedEntriesData: GetVerifiedEntriesResponse;
@@ -33,7 +33,7 @@ const VerifiedIndex: NextPage<VerifiedIndexProps> = ({
           <Breadcrumbs
             breadcrumbs={[
               { title: "Search", href: "/search" },
-              { title: "Verified PL players" },
+              { title: "Virtual PL league" },
             ]}
           />
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
@@ -113,7 +113,7 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
                 </span>
                 <span>
                 <Link
-                  href={`/search/verified/${data.entryId}/${encodeURIComponent(data.slug)}`}
+                  href={`/verified/pl/${data.entryId}/${encodeURIComponent(data.slug)}`}
                 >
                   <a className="underline">{data.plName}</a>
                 </Link>
