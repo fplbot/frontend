@@ -23,7 +23,7 @@ const VerifiedIndex: NextPage = () => {
             ]}
           />
 
-          <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-4 text-center">
             Viritual Leagues{" "}
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
@@ -32,7 +32,7 @@ const VerifiedIndex: NextPage = () => {
             <li className="cursor-pointer">
               <Link href="/virtual-leagues/pl">
                 <div>
-                  <span className="underline">Verified PL Players </span>
+                  <span className="underline text-lg">Verified PL Players </span>
 
                   <img
                     src="/check.svg"
