@@ -32,8 +32,9 @@ const VerifiedIndex: NextPage<VerifiedIndexProps> = ({
         <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
           <Breadcrumbs
             breadcrumbs={[
-              { title: "Search", href: "/search" },
-              { title: "Virtual PL league" },
+              { title: "Home", href: "/" },
+              { title: "Virtual Leagues" },
+              { title: "PL", href: "/virtual-leagues/pl" },
             ]}
           />
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
