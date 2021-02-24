@@ -49,10 +49,10 @@ const VerifiedIndex: NextPage<VerifiedIndexProps> = ({
       {verifiedEntriesData.type === "SUCCESS" ? (
         <VerifiedTable verifiedEntries={verifiedEntriesData.data} />
       ) : (
-        <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
-          Looks like something went wrong 🤕
-        </p>
-      )}
+          <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
+            Looks like something went wrong 🤕
+          </p>
+        )}
 
       <Footer />
     </div>
@@ -103,22 +103,22 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
               </td>
               <td className="verified-table__player text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 <div className="verified-table__player_inner">
-                <span  className="verified-table__player_inner_shirt">
-                <img
-                  className="shirt"
-                  src={data.shirtImageUrl}
-                  alt={`Plays for ${data.playsForTeam}`}
-                  title={`Plays for ${data.playsForTeam}`}
-                />
-                </span>
-                <span>
-                <Link
-                  href={`/search/verified/${encodeURIComponent(data.slug)}`}
-                >
-                  <a className="underline">{data.plName}</a>
-                </Link>
-                <p className="text-sm">{data.teamName}</p>
-                </span>
+                  <span className="verified-table__player_inner_shirt">
+                    <img
+                      className="shirt"
+                      src={data.shirtImageUrl}
+                      alt={`Plays for ${data.playsForTeam}`}
+                      title={`Plays for ${data.playsForTeam}`}
+                    />
+                  </span>
+                  <span>
+                    <Link
+                      href={`/search/verified/${data.entryId}/${encodeURIComponent(data.slug)}`}
+                    >
+                      <a className="underline">{data.plName}</a>
+                    </Link>
+                    <p className="text-sm">{data.teamName}</p>
+                  </span>
                 </div>
               </td>
               <td className="verified-table__gwpts verified-table__group2 text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
@@ -131,8 +131,8 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
                 {data.chipUsed ? (
                   <Chip chipUsed={data.chipUsed} short={true} />
                 ) : (
-                  <span>&nbsp;</span>
-                )}
+                    <span>&nbsp;</span>
+                  )}
               </td>
               <td className="verified-table__total verified-table__group3 text-right border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {formatNumber(data.totalPoints)}
@@ -145,11 +145,10 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
                   percentage={
                     (data.selfOwnershipWeekCount / data.gameweek) * 100
                   }
-                  label={`${data.selfOwnershipWeekCount} GWs${
-                    data.selfOwnershipWeekCount > 0
-                      ? ` (${data.selfOwnershipTotalPoints} pts)`
-                      : ""
-                  }`}
+                  label={`${data.selfOwnershipWeekCount} GWs${data.selfOwnershipWeekCount > 0
+                    ? ` (${data.selfOwnershipTotalPoints} pts)`
+                    : ""
+                    }`}
                 />
               </td>
               <td className="verified-table__open verified-table__group4 text-center border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">

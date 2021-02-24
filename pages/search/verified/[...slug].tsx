@@ -5,7 +5,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import { Chip } from "../../../components/Chip";
 import Footer from "../../../components/Footer";
 import SimpleHeader from "../../../components/SimpleHeader";
-import { getVerifiedEntry, VerifiedEntry, GetVerifiedEntryResponse} from "../../../services/verified";
+import { getVerifiedEntry, VerifiedEntry, GetVerifiedEntryResponse } from "../../../services/verified";
 import { formatNumber } from "../../../utils/formatter";
 
 interface GetVerifiedEntryNoSlug {
@@ -20,35 +20,35 @@ interface VerifiedEntryIndexProps {
   verifiedEntryData: GetVerifiedEntryStatus;
 }
 
-const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryData}: VerifiedEntryIndexProps) => {
+const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({ verifiedEntryData }: VerifiedEntryIndexProps) => {
 
-  if (verifiedEntryData.type === 'NO_SLUG' || verifiedEntryData.type === 'ERROR') {
+  if (verifiedEntryData.type === 'NO_SLUG' || verifiedEntryData.type === 'ERROR') {
     return (
-        <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
-          <Head>
-            <title>fplbot</title>
-            <meta
-              name="description"
-              content={`This player plays Fantasy Premier League. Here are details about his FPL team.`}
+      <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
+        <Head>
+          <title>fplbot</title>
+          <meta
+            name="description"
+            content={`This player plays Fantasy Premier League. Here are details about his FPL team.`}
+          />
+        </Head>
+        <SimpleHeader />
+        <div className="flex-grow px-8">
+          <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
+            <Breadcrumbs
+              breadcrumbs={[
+                { title: "Search", href: "/search" },
+                { title: "Verified PL players", href: "/search/verified" },
+                { title: '...' },
+              ]}
             />
-          </Head>
-          <SimpleHeader />
-          <div className="flex-grow px-8">
-            <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
-              <Breadcrumbs
-                breadcrumbs={[
-                  { title: "Search", href: "/search" },
-                  { title: "Verified PL players", href: "/search/verified" },
-                  { title: '...' },
-                ]}
-              />
-              <h1 className="text-xl md:text-2xl font-bold text-fpl-purple mb-2">
-                {verifiedEntryData.type === "NO_SLUG" ? "This player does not exist" : "Ops, looks like something went wrong 🤕"}
-              </h1>
-            </div>
+            <h1 className="text-xl md:text-2xl font-bold text-fpl-purple mb-2">
+              {verifiedEntryData.type === "NO_SLUG" ? "This player does not exist" : "Ops, looks like something went wrong 🤕"}
+            </h1>
           </div>
-          <Footer />
         </div>
+        <Footer />
+      </div>
     );
   }
 
@@ -129,8 +129,8 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
                   {verifiedEntry.chipUsed ? (
                     <Chip chipUsed={verifiedEntry.chipUsed} />
                   ) : (
-                    "None"
-                  )}
+                      "None"
+                    )}
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -181,16 +181,20 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
   );
 };
 
-VerifiedEntryIndex.getInitialProps = async ({query}) => {
+VerifiedEntryIndex.getInitialProps = async ({ query }) => {
 
-  if (query.slug) {
-    const slug = query.slug as string;
-    const verifiedEntry = await getVerifiedEntry(decodeURI(slug));
+  if (query.slug && query.slug.length == 2) {
+    const entryId = parseInt(query.slug[0]);
+
+    if (!entryId)
+      return { verifiedEntryData: { type: "NO_SLUG" } }
+
+    const verifiedEntry = await getVerifiedEntry(entryId);
     return { verifiedEntryData: verifiedEntry };
   }
 
   return {
-    verifiedEntryData: {type: "NO_SLUG"}
+    verifiedEntryData: { type: "NO_SLUG" }
   }
 };
 
