@@ -1,17 +1,18 @@
 import { NextPageContext } from "next";
 import Head from "next/head";
+import Link from 'next/link';
 import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
+import SimpleHeader from "../components/SimpleHeader";
 import { Spinner } from "../components/Spinner";
 import {
   searchForPlayer,
   SearchResponse,
   SearchSuccess,
-  VerifiedType,
+  VerifiedType
 } from "../services/search";
-import { FPLBOT_APP_URL } from "../utils/envconfig";
 import { isFplSearchHost } from "../utils/hostUtils";
 
 interface SearchInit {
@@ -74,14 +75,14 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
           <link rel="canonical" href="https://www.fplsearch.com/search/" />
         )}
       </Head>
-      <Header />
+      <SimpleHeader />
       <div className="flex-grow">
-        <div className="py-24 px-8 text-center">
+        <div className="w-full max-w-2xl m-auto py-24 px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
             Search for FPL player
           </h1>
           <p className="text-md md:text-lg text-center text-fpl-purple">
-            You can search by name or team name
+            You can search by name or team name. Also feel free to check out our list of <Link href="/search/verified/"><a className="underline">verified PL players playing FPL</a></Link>.
           </p>
 
           <form className="mt-10" onSubmit={submitSearchValue}>
@@ -383,23 +384,6 @@ const Pagination = ({
     );
   }
   return null;
-};
-
-const Header = () => {
-  return (
-    <div className="flex justify-between px-8 py-6">
-      <a href="/" className="text-2xl font-bold text-fpl-purple">
-        fplbot.app
-      </a>
-      <Button onClick={goToInstall} color="GREEN">
-        Install fplbot
-      </Button>
-    </div>
-  );
-
-  function goToInstall() {
-    window.location.href = FPLBOT_APP_URL + "/#add-to-slack";
-  }
 };
 
 const getVerifiedHelpText = (verifiedType: VerifiedType): string => {

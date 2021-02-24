@@ -61,3 +61,143 @@ th:not(:last-child) {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.movement {
+  height: .75rem;
+  width: .75rem;
+  display: inline-block;
+  vertical-align: baseline;
+  margin-left: .25rem;
+}
+
+.movement--up {
+  fill: rgb(0, 217, 0);
+}
+
+.movement--down {
+  fill: rgb(255, 0, 90);
+}
+
+.movement--none {
+  fill: rgb(148, 150, 140);
+  height: .625rem;
+  width: .625rem;
+}
+
+.entry-image {
+  display: inline-block;
+  max-width: 10rem;
+}
+
+.progressbar {
+  background:#f1f1f1;
+  border-radius: .25em;
+  width: 100%;
+  display: block;
+  position: relative;
+  border: .0625em solid;
+}
+
+.progressbar__share {
+  background: #d1d1d1;
+  border-radius: .25em;
+}
+
+.progressbar__label {
+  padding: 0.1875em .4em;
+  font-size: .875rem;
+  position: relative;
+  top: -.1em;
+}
+
+.breadcrumbs {
+  text-align: left;
+  display: flex;
+}
+
+.breadcrumbs__item {
+  margin-right: 1.25rem;
+  position: relative;
+}
+
+.breadcrumbs__item::after {
+  content: '>';
+  position: absolute;
+  top: -.1rem;
+  right: -1rem;
+}
+
+.breadcrumbs__item:last-child::after {
+  display: none;
+}
+
+.verified-table {
+  max-width: 100rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.verified-table__inner {
+  min-width: 78rem;
+}
+
+.verified-table__pos{
+  width: 5rem;
+}
+
+.verified-table__player {
+  width: 20rem;
+}
+
+.verified-table__player_inner {
+  display: flex;
+  align-items: center;
+}
+
+.verified-table__player_inner_shirt {
+  flex-shrink: 0;
+}
+
+.shirt {
+  display: inline-block;
+  margin-right: 0.5rem;
+  width: 1.8rem;
+}
+
+.verified-table__gwpts {
+  width: 4.25rem;
+}
+
+.verified-table__chip {
+  width: 5rem;
+}
+
+.verified-table__total {
+  width: 6rem;
+}
+
+.verified-table__or {
+  width: 6rem;
+}
+
+.verified-table__open {
+  width: 4rem;
+}
+
+.verified-table__selfown {
+  min-width: 10rem;
+}
+
+@media screen and (max-width: 94rem) {
+  .verified-table__selfown {
+    width: 12rem;
+  }
+
+  .verified-table__player {
+    width: 12rem;
+  }
+
+  .verified-table__cap {
+    width: 10rem;
+  }
+}
