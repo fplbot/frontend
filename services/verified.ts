@@ -37,7 +37,7 @@ export type GetVerifiedEntriesResponse =
   | GetVerifiedEntriesError;
 
 export function getVerifiedEntries(): Promise<GetVerifiedEntriesResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/verified`)
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -70,9 +70,9 @@ export type GetVerifiedEntryResponse =
   | GetVerifiedEntryError;
 
 export function getVerifiedEntry(
-  slug: string
+  entryId: Number
 ): Promise<GetVerifiedEntryResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/verified/${slug}`)
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified/${entryId}`)
   .then((response) => {
     if (response.ok) {
       return response.json();

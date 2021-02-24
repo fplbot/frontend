@@ -113,7 +113,7 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
                 </span>
                 <span>
                 <Link
-                  href={`/search/verified/${encodeURIComponent(data.slug)}`}
+                  href={`/search/verified/${data.entryId}/${encodeURIComponent(data.slug)}`}
                 >
                   <a className="underline">{data.plName}</a>
                 </Link>
