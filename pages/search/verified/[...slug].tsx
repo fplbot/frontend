@@ -183,9 +183,13 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
 
 VerifiedEntryIndex.getInitialProps = async ({query}) => {
 
-  if (query.slug) {
-    const slug = query.slug as string;
-    const verifiedEntry = await getVerifiedEntry(decodeURI(slug));
+  if (query.slug) {    
+    const entryId = parseInt(query.slug[0]);
+
+    if (!entryId)
+      return { verifiedEntryData: { type: "NO_SLUG" } }
+
+    const verifiedEntry = await getVerifiedEntry(entryId);
     return { verifiedEntryData: verifiedEntry };
   }
 
