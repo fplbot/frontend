@@ -29,7 +29,7 @@ function AddToSlackForm() {
   }, [leagueIdDebounced]);
 
   return (
-    <div id="add-to-slack" className="bg-gray-200">
+    <div id="add-to-slack" className="bg-gray-200 pt-10">
 
       <div className="relative container mx-auto pb-24 pb-4 md:pb-20 px-8 text-center">
 

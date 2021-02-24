@@ -6,7 +6,7 @@ import React from "react";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import { Chip } from "../../../components/Chip";
 import Footer from "../../../components/Footer";
-import SimpleHeader from "../../../components/SimpleHeader";
+import SimpleHeader from "../../../components/Menu";
 import {
   getVerifiedEntries,
   VerifiedEntry,

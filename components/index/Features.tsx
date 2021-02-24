@@ -10,7 +10,7 @@ export default function Features() {
 
         <div className="block h-48 w-full bg-gray-200 absolute bottom-0 inset-x-0" />
 
-        <div className="relative container mx-auto pb-24 px-8">
+        <div className="relative container mx-auto pb-16 px-8">
 
           <div className="max-w-screen-sm m-auto text-white pb-12">
             <h1 className="text-2xl md:text-6xl pb-2 font-bold">Features</h1>

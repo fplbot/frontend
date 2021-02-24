@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../Button";
 import SearchBarSection from "./SearchBarSection";
+import Menu from '../Menu';
 
 export interface HeaderProps {
   shouldHighlightSearch: boolean;
@@ -9,12 +10,8 @@ export interface HeaderProps {
 function Header({ shouldHighlightSearch }: HeaderProps) {
   return (
     <div className="bg-gradient-to-tr from-white to-gray-200">
-      <div className="flex justify-between mx-auto px-8 py-6">
-        <a href="/" className="text-2xl font-bold text-fpl-purple">
-          fplbot.app
-        </a>
-        <Button onClick={scrollToFeature}>Try it now</Button>
-      </div>
+
+      <Menu/>
 
       <div className="relative">
         <div className="block h-64 w-full bg-fpl-purple absolute bottom-0 inset-x-0" />
