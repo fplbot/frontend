@@ -5,7 +5,7 @@ import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
-import SimpleHeader from "../components/SimpleHeader";
+import SimpleHeader from "../components/Menu";
 import { Spinner } from "../components/Spinner";
 import {
   searchForPlayer,
