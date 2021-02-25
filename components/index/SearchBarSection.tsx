@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useEffect, useRef } from "react";
 import Button from "../Button";
 
@@ -12,12 +13,12 @@ export default function SearchBarSection() {
 
   return (
     <section className="search-promotion">
-      <div>
+      <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold text-fpl-purple mb-4">
-          FPL Search
+          Try our search 🕵️
         </h1>
         <p className="text-lg text-center text-fpl-purple mt-4 mb-4">
-          Search for people playing Fantasy&nbsp;Premier&nbsp;League
+          Search for people playing Fantasy&nbsp;Premier&nbsp;League. You can search by name or team name. Also feel free to check out our virtual league of <Link href="/virtual-leagues/pl"><a className="underline">verified PL players playing FPL</a></Link>.
         </p>
         <form className="search-bar" action="/search">
           <input
@@ -32,9 +33,6 @@ export default function SearchBarSection() {
           </Button>
         </form>
       </div>
-      <h2 className="text-3xl md:text-4xl font-bold text-fpl-purple">
-        👆 This search is part of @fplbot
-      </h2>
     </section>
   );
 }

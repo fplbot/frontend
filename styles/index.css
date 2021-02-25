@@ -32,7 +32,7 @@ th:not(:last-child) {
 }
 
 .search-promotion {
-  min-height: 70vh;
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

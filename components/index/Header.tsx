@@ -3,11 +3,7 @@ import Button from "../Button";
 import SearchBarSection from "./SearchBarSection";
 import Menu from '../Menu';
 
-export interface HeaderProps {
-  shouldHighlightSearch: boolean;
-}
-
-function Header({ shouldHighlightSearch }: HeaderProps) {
+function Header() {
   return (
     <div className="bg-gradient-to-tr from-white to-gray-200">
 
@@ -17,17 +13,13 @@ function Header({ shouldHighlightSearch }: HeaderProps) {
         <div className="block h-64 w-full bg-fpl-purple absolute bottom-0 inset-x-0" />
 
         <div className="container mx-auto py-24 px-8 text-center">
-          {shouldHighlightSearch ? (
-            <SearchBarSection />
-          ) : (
-            <h1 className="text-4xl md:text-6xl font-bold text-fpl-purple">
-              Hi, I'm @fplbot&nbsp;👋
-            </h1>
-          )}
+          <SearchBarSection />     
+          <h2 className="text-3xl md:text-4xl font-bold text-fpl-purple">
+            👆 This search is part of @fplbot
+          </h2>
           <p className="text-lg text-center text-fpl-purple mt-4">
             An unofficial Slackbot for Fantasy&nbsp;Premier&nbsp;League
-          </p>
-
+          </p>    
           <Button
             onClick={scrollToFeature}
             color="GREEN"
