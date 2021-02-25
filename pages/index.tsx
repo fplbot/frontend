@@ -8,30 +8,22 @@ import Header from "../components/index/Header";
 import SearchBanner from "../components/index/SearchBanner";
 import { isFplSearchHost } from "../utils/hostUtils";
 
-const Index: NextPage<{shouldHighlightSearch: boolean}> = ({shouldHighlightSearch}) => {
+const Index: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>{shouldHighlightSearch ? 'Fantasy Premier League Search' : 'fplbot'}</title>
+        <title>Fantasy Premier League slackbot and search</title>
         <meta
           name="description"
-          content={shouldHighlightSearch ? 'Search for fantasy premier league managers. Search by name or team name, and find fpl players and celebrities.' : 'Slack bot for fantasy premier league. Posts live gameweek updates, standings for the league you follow and more!'}
-        />
+          content="Slackbot for Fantasy Premier League. Posts live gameweek updates, standings for the league you follow and more. Search for Fantasy Premier League managers. Search by name or team name, and find FPL players and celebrities."/>
       </Head>
-      <Header shouldHighlightSearch={shouldHighlightSearch} />
+      <Header />
       <Features />
       <AddToSlackForm />
-      { shouldHighlightSearch || <SearchBanner /> }
+      <SearchBanner />
       <Footer />
     </div>
   );
 }
-
-Index.getInitialProps = async (ctx: NextPageContext) => {
-
-  const shouldHighlightSearch = ctx.req?.headers.host ? isFplSearchHost(ctx.req.headers.host) : false;
-
-  return { shouldHighlightSearch: shouldHighlightSearch }
-};
 
 export default Index;

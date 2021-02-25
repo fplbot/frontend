@@ -32,10 +32,9 @@ type SearchState = SearchResponse | SearchLoading | SearchEmpty | SearchInit;
 
 interface SearchIndexProps {
   query: { q: string | null; page: string | null };
-  isSearchHost: boolean;
 }
 
-function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
+function SearchIndex({ query }: SearchIndexProps) {
   const [searchValue, setSearchValue] = useState<string>(
     query.q ? decodeURI(query.q) : ""
   );
@@ -69,11 +68,8 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
         <title>Fantasy Premier League Search</title>
         <meta
           name="description"
-          content="Search for fantasy premier league managers. Search by name or team name, and find fpl players and celebrities."
+          content="Search for Fantasy Premier League managers. Search by name or team name, and find FPL players and celebrities."
         />
-        {isSearchHost ? null : (
-          <link rel="canonical" href="https://www.fplsearch.com/search/" />
-        )}
       </Head>
       <SimpleHeader />
       <div className="flex-grow">
@@ -145,13 +141,8 @@ function SearchIndex({ query, isSearchHost }: SearchIndexProps) {
 }
 
 SearchIndex.getInitialProps = async (ctx: NextPageContext) => {
-  const isSearchHost = ctx.req?.headers.host
-    ? isFplSearchHost(ctx.req.headers.host)
-    : false;
-
   return {
     query: ctx.query,
-    isSearchHost: isSearchHost,
   };
 };
 
