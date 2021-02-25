@@ -33,6 +33,7 @@ th:not(:last-child) {
 
 .search-promotion {
   min-height: 50vh;
+  margin-bottom: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
