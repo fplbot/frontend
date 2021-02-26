@@ -71,6 +71,35 @@ export function getPLVerifiedEntries(): Promise<GetVerifiedPLEntriesResponse> {
     );
 }
 
+interface GetVerifiedEntriesSuccess {
+  type: "SUCCESS";
+  data: VerifiedEntry[];
+}
+
+export type GetVerifiedEntriesResponse =
+  | GetVerifiedEntriesSuccess
+  | GetVerifiedEntriesError;
+
+export function getVerifiedEntries(): Promise<GetVerifiedEntriesResponse> {
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/verified`)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    })
+    .then(
+      (json: VerifiedEntry[]): GetVerifiedEntriesSuccess => {
+        return { type: "SUCCESS", data: json };
+      }
+    )
+    .catch(
+      (error): GetVerifiedEntriesError => {
+        return { type: "ERROR" };
+      }
+    );
+}
+
 interface GetVerifiedPLEntrySuccess {
   type: "SUCCESS";
   data: VerifiedPLEntry;
