@@ -5,8 +5,11 @@ import React from "react";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Footer from "../../components/Footer";
 import SimpleHeader from "../../components/Menu";
+import { getVerifiedHelpText } from "../../services/getVerifiedHelpText";
+import { getVirtualLeagues } from "../../services/virtual-leagues";
 
-const VerifiedIndex: NextPage = () => {
+const VerifiedIndex: NextPage = ( {data,type}: VerifiedIndexProps) => {
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -27,6 +30,9 @@ const VerifiedIndex: NextPage = () => {
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
           <HeroLink rel="pl" title="Verified PL Players" description="This virtual league consists of Premier League players' verified Fantasy Premier League teams." />
+          {data.map((league, i) => (
+              <HeroLink rel={league.toLowerCase()} title={getVerifiedHelpText(league)} description={league} />            
+          ))}
           <HeroLink rel="all" title="All verified accounts" description="All verifed accounts in our registry" />
         </div>
       </div>
@@ -41,7 +47,7 @@ type HeroLinkProperties = {
   rel: string
 }
 
-function HeroLink({ title, description, rel } : HeroLinkProperties) {
+function HeroLink({ title, description, rel }: HeroLinkProperties) {
   return (
     <>
       <ul className="list-disc ml-8 pt-10">
@@ -63,5 +69,26 @@ function HeroLink({ title, description, rel } : HeroLinkProperties) {
     </>
   );
 }
+
+interface VerifiedIndexProps {
+  type:string
+  data: string[]
+}
+
+VerifiedIndex.getInitialProps = async () => {
+  var virtualLeaguesRes = await getVirtualLeagues();
+  if(virtualLeaguesRes.type == "SUCCESS")  {
+    return {
+      type: virtualLeaguesRes.type,
+      data : virtualLeaguesRes.data
+    }
+  }
+  else{
+    return {
+      type: virtualLeaguesRes.type,
+      data: []
+    }
+  }
+};
 
 export default VerifiedIndex;
