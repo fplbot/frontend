@@ -47,7 +47,7 @@ export default function VerifiedTable({ verifiedEntries }: VerifiedTableProps) {
               <td className="verified-table__player text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 <div className="verified-table__player_inner">
                   <span>
-                    <Link href={`/verified/generic/${data.entryId}/${encodeURIComponent(data.slug)}`}>
+                    <Link href={`/verified/${data.entryId}/${encodeURIComponent(data.realName.replaceAll(" ","-").toLowerCase())}`}>
                       <a>{data.realName}</a>
                     </Link>
                     <p className="text-sm">{data.teamName}</p>

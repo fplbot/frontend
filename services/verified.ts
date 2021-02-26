@@ -22,8 +22,7 @@ export interface VerifiedPLEntry {
 }
 
 export interface VerifiedEntry {
-  entryId: number;
-  slug: string;
+  entryId: number;  
   teamName: string;
   realName: string;
   pointsThisGw: number;

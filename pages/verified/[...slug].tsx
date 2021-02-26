@@ -1,12 +1,12 @@
 import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import React from "react";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import { Chip } from "../../../components/Chip";
-import Footer from "../../../components/Footer";
-import SimpleHeader from "../../../components/Menu";
-import { getVerifiedEntry, GetVerifiedEntryResponse} from "../../../services/verified";
-import { formatNumber } from "../../../utils/formatter";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import { Chip } from "../../components/Chip";
+import Footer from "../../components/Footer";
+import SimpleHeader from "../../components/Menu";
+import { getVerifiedEntry, GetVerifiedEntryResponse} from "../../services/verified";
+import { formatNumber } from "../../utils/formatter";
 
 interface GetVerifiedEntryNoSlug {
   type: "NO_SLUG";
