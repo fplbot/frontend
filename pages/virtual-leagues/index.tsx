@@ -22,36 +22,46 @@ const VerifiedIndex: NextPage = () => {
               { title: "Virtual Leagues", href: "/virtual-leagues/" },
             ]}
           />
-
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-4 text-center">
             Virtual Leagues{" "}
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
-
-          <ul className="list-disc ml-8">
-            <li className="cursor-pointer">
-              <Link href="/virtual-leagues/pl">
-                <div>
-                  <span className="underline text-lg">Verified PL Players </span>
-
-                  <img
-                    src="/check.svg"
-                    className="verified-icon"
-                    alt="Verified"
-                  />
-                  <p className="text-md md:text-lg text-fpl-purple">
-                    This virtual league consists of Premier League players'
-                    verified Fantasy Premier League teams.
-                  </p>
-                </div>
-              </Link>
-            </li>
-          </ul>
+          <HeroLink rel="pl" title="Verified PL Players" description="This virtual league consists of Premier League players' verified Fantasy Premier League teams." />
+          <HeroLink rel="all" title="All verified accounts" description="All verifed accounts in our registry" />
         </div>
       </div>
       <Footer />
     </div>
   );
 };
+
+type HeroLinkProperties = {
+  title: string,
+  description: string,
+  rel: string
+}
+
+function HeroLink({ title, description, rel } : HeroLinkProperties) {
+  return (
+    <>
+      <ul className="list-disc ml-8 pt-10">
+        <li className="cursor-pointer">
+          <Link href={`/virtual-leagues/${rel}`}>
+            <div>
+              <span className="underline text-lg">{title}</span>
+              <img
+                src="/check.svg"
+                className="verified-icon"
+                alt="Verified" />
+              <p className="text-md md:text-lg text-fpl-purple">
+                {description}
+              </p>
+            </div>
+          </Link>
+        </li>
+      </ul>
+    </>
+  );
+}
 
 export default VerifiedIndex;

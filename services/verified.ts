@@ -1,6 +1,6 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
 
-export interface VerifiedEntry {
+export interface VerifiedPLEntry {
   entryId: number;
   slug: string;
   teamName: string;
@@ -21,15 +21,58 @@ export interface VerifiedEntry {
   gameweek: number;
 }
 
+export interface VerifiedEntry {
+  entryId: number;  
+  teamName: string;
+  realName: string;
+  pointsThisGw: number;
+  totalPoints: number;
+  overallRank: number;
+  captain: string;
+  viceCaptain: string;
+  chipUsed?: ChipType;
+  movement: number;
+  gameweek: number;
+}
+
 export type ChipType = "3xc" | "wildcard" | "freehit" | "bboost";
 
-interface GetVerifiedEntriesSuccess {
+interface GetVerifiedPLEntriesSuccess {
   type: "SUCCESS";
-  data: VerifiedEntry[];
+  data: VerifiedPLEntry[];
 }
 
 interface GetVerifiedEntriesError {
   type: "ERROR";
+}
+
+export type GetVerifiedPLEntriesResponse =
+  | GetVerifiedPLEntriesSuccess
+  | GetVerifiedEntriesError;
+
+export function getPLVerifiedEntries(): Promise<GetVerifiedPLEntriesResponse> {
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified`)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return Promise.reject(response);
+    })
+    .then(
+      (json: VerifiedPLEntry[]): GetVerifiedPLEntriesSuccess => {
+        return { type: "SUCCESS", data: json };
+      }
+    )
+    .catch(
+      (error): GetVerifiedEntriesError => {
+        return { type: "ERROR" };
+      }
+    );
+}
+
+interface GetVerifiedEntriesSuccess {
+  type: "SUCCESS";
+  data: VerifiedEntry[];
 }
 
 export type GetVerifiedEntriesResponse =
@@ -37,7 +80,7 @@ export type GetVerifiedEntriesResponse =
   | GetVerifiedEntriesError;
 
 export function getVerifiedEntries(): Promise<GetVerifiedEntriesResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified`)
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/verified`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -56,13 +99,44 @@ export function getVerifiedEntries(): Promise<GetVerifiedEntriesResponse> {
     );
 }
 
-interface GetVerifiedEntrySuccess {
+interface GetVerifiedPLEntrySuccess {
   type: "SUCCESS";
-  data: VerifiedEntry;
+  data: VerifiedPLEntry;
 }
 
 interface GetVerifiedEntryError {
   type: "ERROR";
+}
+
+export type GetVerifiedPLEntryResponse =
+  | GetVerifiedPLEntrySuccess
+  | GetVerifiedEntryError;
+
+export function getVerifiedPLEntry(
+  entryId: Number
+): Promise<GetVerifiedPLEntryResponse> {
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified/${entryId}`)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return Promise.reject(response);
+  })
+  .then(
+    (json: VerifiedPLEntry): GetVerifiedPLEntrySuccess => {
+      return { type: "SUCCESS", data: json };
+    }
+  )
+  .catch(
+    (error): GetVerifiedEntryError => {
+      return { type: "ERROR" };
+    }
+  );
+}
+
+interface GetVerifiedEntrySuccess {
+  type: "SUCCESS";
+  data: VerifiedEntry;
 }
 
 export type GetVerifiedEntryResponse =
@@ -72,7 +146,7 @@ export type GetVerifiedEntryResponse =
 export function getVerifiedEntry(
   entryId: Number
 ): Promise<GetVerifiedEntryResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified/${entryId}`)
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/verified/${entryId}`)
   .then((response) => {
     if (response.ok) {
       return response.json();
@@ -80,7 +154,7 @@ export function getVerifiedEntry(
     return Promise.reject(response);
   })
   .then(
-    (json: VerifiedEntry): GetVerifiedEntrySuccess => {
+    (json: VerifiedPLEntry): GetVerifiedEntrySuccess => {
       return { type: "SUCCESS", data: json };
     }
   )
