@@ -165,10 +165,7 @@ VerifiedEntryIndex.getInitialProps = async ({query}) => {
     const verifiedEntry = await getVerifiedEntry(entryId);
     
     return {       
-      verifiedEntryData: {
-        type: verifiedEntry.type,
-        data: verifiedEntry.data
-      }
+      verifiedEntryData: verifiedEntry
      };
   }
 
