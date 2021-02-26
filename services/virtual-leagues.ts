@@ -24,7 +24,7 @@ export function getVirtualLeagues(): Promise<GetVirtualLeaguesResponse> {
       return Promise.reject(response);
     })
     .then(
-      (json: string[]): GetVirtualLeaguesSuccess => {
+      (json: VerifiedType[]): GetVirtualLeaguesSuccess => {
         return { type: "SUCCESS", data: json };
       }
     )

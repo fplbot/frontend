@@ -35,7 +35,7 @@ const VerifiedPage: NextPage<VerifiedPageProps> = ({
             breadcrumbs={[
               { title: "Home", href: "/" },
               { title: "Virtual Leagues", href: "/virtual-leagues/" },
-              { title: "All", href: `/virtual-leagues/${relUrl}` },
+              { title: relUrl.charAt(0).toUpperCase() + relUrl.slice(1), href: `/virtual-leagues/${relUrl}` },
             ]}
           />
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">

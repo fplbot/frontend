@@ -6,10 +6,13 @@ import Breadcrumbs from "../../components/Breadcrumbs";
 import Footer from "../../components/Footer";
 import SimpleHeader from "../../components/Menu";
 import { getVerifiedHelpText } from "../../services/getVerifiedHelpText";
-import { getVirtualLeagues } from "../../services/virtual-leagues";
+import { VerifiedType } from "../../services/VerifiedType";
+import { getVirtualLeagues, GetVirtualLeaguesResponse } from "../../services/virtual-leagues";
 
-const VerifiedIndex: NextPage = ( {data,type}: VerifiedIndexProps) => {
 
+const VerifiedIndex = ({resData} : VerifiedIndexProps) => {
+  if(resData.type == "ERROR")
+    return (<></>);
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -30,8 +33,8 @@ const VerifiedIndex: NextPage = ( {data,type}: VerifiedIndexProps) => {
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
           <HeroLink rel="pl" title="Verified PL Players" description="This virtual league consists of Premier League players' verified Fantasy Premier League teams." />
-          {data.map((league, i) => (
-              <HeroLink rel={league.toLowerCase()} title={getVerifiedHelpText(league)} description={league} />            
+          {resData.data.map((verifiedType, i) => shouldBeVisibleAsLink(verifiedType) && (
+              <HeroLink rel={verifiedType.toLowerCase()} title={getVerifiedHelpText(verifiedType)} description={verifiedType} />
           ))}
           <HeroLink rel="all" title="All verified accounts" description="All verifed accounts in our registry" />
         </div>
@@ -40,6 +43,30 @@ const VerifiedIndex: NextPage = ( {data,type}: VerifiedIndexProps) => {
     </div>
   );
 };
+
+
+function shouldBeVisibleAsLink(verifiedType: VerifiedType) : boolean {
+  switch (verifiedType) {
+    case 'FootballerInPL':
+      return false // covered by a sep display
+    case 'Footballer':
+      return true
+    case 'ChessMaster':
+      return true
+    case 'Podcaster':
+      return true
+    case 'CommunityFame':
+      return true;
+    case 'Actor':
+      return true;
+    case 'TvFace':
+      return true;
+    case 'Athlete':
+      return true;
+    default:
+      return false;
+  }
+}
 
 type HeroLinkProperties = {
   title: string,
@@ -70,25 +97,16 @@ function HeroLink({ title, description, rel }: HeroLinkProperties) {
   );
 }
 
-interface VerifiedIndexProps {
-  type:string
-  data: string[]
+
+
+interface VerifiedIndexProps {  
+  resData: GetVirtualLeaguesResponse
 }
 
 VerifiedIndex.getInitialProps = async () => {
   var virtualLeaguesRes = await getVirtualLeagues();
-  if(virtualLeaguesRes.type == "SUCCESS")  {
-    return {
-      type: virtualLeaguesRes.type,
-      data : virtualLeaguesRes.data
-    }
-  }
-  else{
-    return {
-      type: virtualLeaguesRes.type,
-      data: []
-    }
-  }
+  return { resData : virtualLeaguesRes};
 };
+
 
 export default VerifiedIndex;
