@@ -28,30 +28,49 @@ const VerifiedIndex: NextPage = () => {
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
 
-          <ul className="list-disc ml-8">
-            <li className="cursor-pointer">
-              <Link href="/virtual-leagues/pl">
-                <div>
-                  <span className="underline text-lg">Verified PL Players </span>
+          <HeroLink rel="pl" title="Verified PL Players" description="This virtual league consists of Premier League players' verified Fantasy Premier League teams." />
+          <HeroLink rel="all" title="All verified accounts" description="All verifed accounts in our registry" />
 
-                  <img
-                    src="/check.svg"
-                    className="verified-icon"
-                    alt="Verified"
-                  />
-                  <p className="text-md md:text-lg text-fpl-purple">
-                    This virtual league consists of Premier League players'
-                    verified Fantasy Premier League teams.
-                  </p>
-                </div>
-              </Link>
-            </li>
-          </ul>
+
         </div>
       </div>
+
+
       <Footer />
     </div>
   );
 };
+
+type HeroLinkProperties = {
+  title: string,
+  description: string,
+  rel: string
+}
+
+function HeroLink({ title, description, rel } : HeroLinkProperties) {
+  return (
+    <>
+
+
+      <ul className="list-disc ml-8 pt-10">
+        <li className="cursor-pointer">
+          <Link href={`/virtual-leagues/${rel}`}>
+            <div>
+              <span className="underline text-lg">{title}</span>
+
+              <img
+                src="/check.svg"
+                className="verified-icon"
+                alt="Verified" />
+              <p className="text-md md:text-lg text-fpl-purple">
+                {description}
+              </p>
+            </div>
+          </Link>
+        </li>
+      </ul>
+    </>
+  );
+}
 
 export default VerifiedIndex;
