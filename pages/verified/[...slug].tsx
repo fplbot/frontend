@@ -1,4 +1,4 @@
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import Breadcrumbs from "../../components/Breadcrumbs";
@@ -155,20 +155,15 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
 };
 
 VerifiedEntryIndex.getInitialProps = async ({query}) => {
-
-  if (query.slug) {    
+  if (query.slug) {
     const entryId = parseInt(query.slug[0]);
-
     if (!entryId)
       return { verifiedEntryData: { type: "NO_SLUG" } }
-    
-    const verifiedEntry = await getVerifiedEntry(entryId);
-    
+    const verifiedEntry = await getVerifiedEntry(entryId);    
     return {       
       verifiedEntryData: verifiedEntry
      };
   }
-
   return {
     verifiedEntryData: {type: "NO_SLUG"}
   }

@@ -22,20 +22,14 @@ const VerifiedIndex: NextPage = () => {
               { title: "Virtual Leagues", href: "/virtual-leagues/" },
             ]}
           />
-
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-4 text-center">
             Virtual Leagues{" "}
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
-
           <HeroLink rel="pl" title="Verified PL Players" description="This virtual league consists of Premier League players' verified Fantasy Premier League teams." />
           <HeroLink rel="all" title="All verified accounts" description="All verifed accounts in our registry" />
-
-
         </div>
       </div>
-
-
       <Footer />
     </div>
   );
@@ -50,14 +44,11 @@ type HeroLinkProperties = {
 function HeroLink({ title, description, rel } : HeroLinkProperties) {
   return (
     <>
-
-
       <ul className="list-disc ml-8 pt-10">
         <li className="cursor-pointer">
           <Link href={`/virtual-leagues/${rel}`}>
             <div>
               <span className="underline text-lg">{title}</span>
-
               <img
                 src="/check.svg"
                 className="verified-icon"
