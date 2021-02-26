@@ -13,7 +13,6 @@ import {
   SearchSuccess,
   VerifiedType
 } from "../services/search";
-import { isFplSearchHost } from "../utils/hostUtils";
 
 interface SearchInit {
   type: "INIT";
