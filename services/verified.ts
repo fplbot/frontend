@@ -134,3 +134,34 @@ export function getVerifiedPLEntry(
     }
   );
 }
+
+interface GetVerifiedEntrySuccess {
+  type: "SUCCESS";
+  data: VerifiedEntry;
+}
+
+export type GetVerifiedEntryResponse =
+  | GetVerifiedEntrySuccess
+  | GetVerifiedEntryError;
+
+export function getVerifiedEntry(
+  entryId: Number
+): Promise<GetVerifiedEntryResponse> {
+  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/verified/${entryId}`)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return Promise.reject(response);
+  })
+  .then(
+    (json: VerifiedPLEntry): GetVerifiedEntrySuccess => {
+      return { type: "SUCCESS", data: json };
+    }
+  )
+  .catch(
+    (error): GetVerifiedEntryError => {
+      return { type: "ERROR" };
+    }
+  );
+}
