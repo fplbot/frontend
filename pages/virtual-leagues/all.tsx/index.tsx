@@ -13,7 +13,7 @@ const Page = (verifiedEntriesResponse:GetVerifiedEntriesResponse) => {
     ) 
     : (
           <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
-            Looks like something went wrong 🤕 : <pre>STUFF: '{JSON.stringify(verifiedEntriesResponse)}'</pre>
+            Looks like something went wrong 🤕
           </p>
       )}
   

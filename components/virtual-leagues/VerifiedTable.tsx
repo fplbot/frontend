@@ -9,7 +9,7 @@ interface VerifiedTableProps {
   verifiedEntries: VerifiedEntry[];
 }
 
-export default function VerifiedTable ({ verifiedEntries }: VerifiedTableProps) {
+export default function VerifiedTable({ verifiedEntries }: VerifiedTableProps) {
   return (
     <div className="w-full m-auto mb-20 px-8 verified-table">
       <table className="w-full table-fixed my-5">

@@ -5,23 +5,23 @@ import Breadcrumbs from "../Breadcrumbs";
 import Footer from "../Footer";
 import SimpleHeader from "../Menu";
 import VerifiedTable from "./VerifiedTable";
-import {  
+import {
   VerifiedEntry
 } from "../../services/verified";
 
-interface VerifiedPageProps {  
-  title:string;
-  description:string;
+interface VerifiedPageProps {
+  title: string;
+  description: string;
   verifiedEntries: VerifiedEntry[];
-  relUrl:string  
+  relUrl: string
 }
 
 const VerifiedPage: NextPage<VerifiedPageProps> = ({
   title,
   description,
   relUrl,
-  verifiedEntries  
-}: VerifiedPageProps) => {  
+  verifiedEntries
+}: VerifiedPageProps) => {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -46,7 +46,7 @@ const VerifiedPage: NextPage<VerifiedPageProps> = ({
             {description}
           </p>
         </div>
-      </div>    
+      </div>
       <VerifiedTable verifiedEntries={verifiedEntries} />
       <Footer />
     </div>
