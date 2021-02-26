@@ -5,7 +5,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import { Chip } from "../../../components/Chip";
 import Footer from "../../../components/Footer";
 import SimpleHeader from "../../../components/Menu";
-import { getVerifiedEntry, VerifiedEntry, GetVerifiedEntryResponse} from "../../../services/verified";
+import { getVerifiedPLEntry, VerifiedPLEntry, GetVerifiedPLEntryResponse} from "../../../services/verified";
 import { formatNumber } from "../../../utils/formatter";
 
 interface GetVerifiedEntryNoSlug {
@@ -13,7 +13,7 @@ interface GetVerifiedEntryNoSlug {
 }
 
 export type GetVerifiedEntryStatus =
-  | GetVerifiedEntryResponse
+  | GetVerifiedPLEntryResponse
   | GetVerifiedEntryNoSlug;
 
 interface VerifiedEntryIndexProps {
@@ -191,7 +191,7 @@ VerifiedEntryIndex.getInitialProps = async ({query}) => {
     if (!entryId)
       return { verifiedEntryData: { type: "NO_SLUG" } }
 
-    const verifiedEntry = await getVerifiedEntry(entryId);
+    const verifiedEntry = await getVerifiedPLEntry(entryId);
     return { verifiedEntryData: verifiedEntry };
   }
 
