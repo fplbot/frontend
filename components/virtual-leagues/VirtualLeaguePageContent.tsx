@@ -1,27 +1,24 @@
-import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import Breadcrumbs from "../Breadcrumbs";
 import Footer from "../Footer";
 import SimpleHeader from "../Menu";
 import VerifiedTable from "./VerifiedTable";
-import {
-  VerifiedEntry
-} from "../../services/verified";
+import {  VerifiedEntry} from "../../services/verified";
 
-interface VerifiedPageProps {
+interface VirtualLeaguePageContentProps {
   title: string;
   description: string;
   verifiedEntries: VerifiedEntry[];
   relUrl: string
 }
 
-const VerifiedPage: NextPage<VerifiedPageProps> = ({
+export default function VirtualLeaguePageContent ({
   title,
   description,
   relUrl,
   verifiedEntries
-}: VerifiedPageProps) => {
+} : VirtualLeaguePageContentProps) {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -35,7 +32,7 @@ const VerifiedPage: NextPage<VerifiedPageProps> = ({
             breadcrumbs={[
               { title: "Home", href: "/" },
               { title: "Virtual Leagues", href: "/virtual-leagues/" },
-              { title: "All", href: `/virtual-leagues/${relUrl}` },
+              { title: relUrl.charAt(0).toUpperCase() + relUrl.slice(1), href: `/virtual-leagues/${relUrl}` },
             ]}
           />
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
@@ -52,5 +49,3 @@ const VerifiedPage: NextPage<VerifiedPageProps> = ({
     </div>
   );
 };
-
-export default VerifiedPage;

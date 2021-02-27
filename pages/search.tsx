@@ -10,9 +10,8 @@ import { Spinner } from "../components/Spinner";
 import {
   searchForPlayer,
   SearchResponse,
-  SearchSuccess,
-  VerifiedType
-} from "../services/search";
+  SearchSuccess} from "../services/search";
+import { getVerifiedHelpText } from "../services/getVerifiedHelpText";
 
 interface SearchInit {
   type: "INIT";
@@ -376,23 +375,4 @@ const Pagination = ({
   return null;
 };
 
-const getVerifiedHelpText = (verifiedType: VerifiedType): string => {
-  switch (verifiedType) {
-    case 'FootballerInPL':
-      return "That guy in Premier League";
-    case 'Footballer':
-      return "That famous football player";
-    case 'ChessMaster':
-      return "That chess champion";
-    case 'Podcaster':
-      return "That voice on the podcast thing";
-    case 'CommunityFame':
-      return "That person on Twitter";
-    case 'Actor':
-      return "That actor";
-    case 'TvFace':
-      return "That TV face";
-    case 'Athlete':
-      return "That famous athlete";
-  }
-};
+

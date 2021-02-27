@@ -1,22 +1,31 @@
-import VerifiedPage from "../../../components/virtual-leagues/VerifiedPage";
+import { NextPage } from "next";
+import VirtualLeaguePageContent from "../../../components/virtual-leagues/VirtualLeaguePageContent";
 import { getVerifiedEntries, GetVerifiedEntriesResponse } from "../../../services/verified";
 
-const Page = (verifiedEntriesResponse:GetVerifiedEntriesResponse) => {
-  if(verifiedEntriesResponse.type === "SUCCESS")
-    return <VerifiedPage 
-        title="All verified accounts"
-        description="This virtual league contains all verified accounts"
-        verifiedEntries={verifiedEntriesResponse.data}
-        relUrl="all"/>
-    
-   return <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
-            Looks like something went wrong 🤕
-          </p>
-  
+interface AllVerifiedPageProps {
+  res: GetVerifiedEntriesResponse
+}
+
+const AllVerifiedPage: NextPage<AllVerifiedPageProps> = ({ res }) => {
+  if (res.type === "SUCCESS")
+    return <VirtualLeaguePageContent
+      title="All verified accounts"
+      description="This virtual league contains all verified accounts"
+      verifiedEntries={res.data}
+      relUrl="all" />
+
+  return (
+    <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
+      Looks like something went wrong 🤕
+    </p>
+  )
 };
 
-Page.getInitialProps = async () => {
-  return await getVerifiedEntries();
+AllVerifiedPage.getInitialProps = async () => {
+  var allEntriesRes = await getVerifiedEntries("all");
+  return {
+    res: allEntriesRes
+  }
 };
 
-export default Page;
+export default AllVerifiedPage;

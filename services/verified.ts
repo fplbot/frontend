@@ -1,4 +1,5 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
+import { VerifiedType } from "./VerifiedType";
 
 export interface VerifiedPLEntry {
   entryId: number;
@@ -79,8 +80,8 @@ export type GetVerifiedEntriesResponse =
   | GetVerifiedEntriesSuccess
   | GetVerifiedEntriesError;
 
-export function getVerifiedEntries(): Promise<GetVerifiedEntriesResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/verified`)
+export function getVerifiedEntries(verifiedType: string): Promise<GetVerifiedEntriesResponse> {
+  return fetch(`${FPLBOT_API_BASEURL}/virtual-leagues/league?type=${verifiedType}`)
     .then((response) => {
       if (response.ok) {
         return response.json();

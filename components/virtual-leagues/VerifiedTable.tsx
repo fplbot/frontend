@@ -39,7 +39,7 @@ export default function VerifiedTable({ verifiedEntries }: VerifiedTableProps) {
         </thead>
         <tbody className="">
           {verifiedEntries.map((data, i) => (
-            <tr className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
+            <tr key={data.entryId} className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
               <td className="verified-table__pos text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {i + 1}&nbsp;
                 <Movement movement={data.movement} />
@@ -47,7 +47,7 @@ export default function VerifiedTable({ verifiedEntries }: VerifiedTableProps) {
               <td className="verified-table__player text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 <div className="verified-table__player_inner">
                   <span>
-                    <Link href={`/verified/${data.entryId}/${encodeURIComponent(data.realName.replaceAll(" ","-").toLowerCase())}`}>
+                    <Link href={`/verified/${data.entryId}/${encodeURIComponent(data.realName.replace(/\s/g, 'i').toLowerCase())}`}>
                       <a>{data.realName}</a>
                     </Link>
                     <p className="text-sm">{data.teamName}</p>
