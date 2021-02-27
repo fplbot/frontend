@@ -51,7 +51,6 @@ const VirtualLeaguesIndex: NextPage<VirtualLeaguesIndexProps> = ({ resData }) =>
   );
 };
 
-
 function shouldBeVisibleAsLink(verifiedType: VerifiedType): boolean {
   switch (verifiedType) {
     case 'FootballerInPL':
@@ -108,6 +107,5 @@ VirtualLeaguesIndex.getInitialProps = async () => {
   var virtualLeaguesRes = await getVirtualLeagues();
   return { resData: virtualLeaguesRes };
 };
-
 
 export default VirtualLeaguesIndex;

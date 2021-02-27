@@ -22,7 +22,6 @@ const VirtualLeaguePage: NextPage<PageProps> = ({ res, verifiedType }) => {
       Looks like something went wrong 🤕
     </p>
   )
-
 };
 
 VirtualLeaguePage.getInitialProps = async (ctx: NextPageContext) => {
