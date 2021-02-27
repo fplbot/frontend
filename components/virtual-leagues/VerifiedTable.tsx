@@ -39,7 +39,7 @@ export default function VerifiedTable({ verifiedEntries }: VerifiedTableProps) {
         </thead>
         <tbody className="">
           {verifiedEntries.map((data, i) => (
-            <tr className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
+            <tr key={data.entryId} className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
               <td className="verified-table__pos text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {i + 1}&nbsp;
                 <Movement movement={data.movement} />

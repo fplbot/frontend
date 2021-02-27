@@ -9,10 +9,17 @@ import { getVerifiedHelpText } from "../../services/getVerifiedHelpText";
 import { VerifiedType } from "../../services/VerifiedType";
 import { getVirtualLeagues, GetVirtualLeaguesResponse } from "../../services/virtual-leagues";
 
+interface VirtualLeaguesIndexProps {
+  resData: GetVirtualLeaguesResponse
+}
 
-const VerifiedIndex = ({resData} : VerifiedIndexProps) => {
-  if(resData.type == "ERROR")
-    return (<></>);
+const VirtualLeaguesIndex: NextPage<VirtualLeaguesIndexProps> = ({ resData }) => {
+  if (resData.type == "ERROR")
+    return (
+      <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
+        Looks like something went wrong 🤕
+      </p>
+    );
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -34,7 +41,7 @@ const VerifiedIndex = ({resData} : VerifiedIndexProps) => {
           </h1>
           <HeroLink rel="pl" title="Verified PL Players" description="This virtual league consists of Premier League players' verified Fantasy Premier League teams." />
           {resData.data.map((verifiedType, i) => shouldBeVisibleAsLink(verifiedType) && (
-              <HeroLink rel={verifiedType.toLowerCase()} title={getVerifiedHelpText(verifiedType)} description={verifiedType} />
+            <HeroLink rel={verifiedType.toLowerCase()} title={getVerifiedHelpText(verifiedType)} description={verifiedType} />
           ))}
           <HeroLink rel="all" title="All verified accounts" description="All verifed accounts in our registry" />
         </div>
@@ -45,7 +52,7 @@ const VerifiedIndex = ({resData} : VerifiedIndexProps) => {
 };
 
 
-function shouldBeVisibleAsLink(verifiedType: VerifiedType) : boolean {
+function shouldBeVisibleAsLink(verifiedType: VerifiedType): boolean {
   switch (verifiedType) {
     case 'FootballerInPL':
       return false // covered by a sep display
@@ -97,16 +104,10 @@ function HeroLink({ title, description, rel }: HeroLinkProperties) {
   );
 }
 
-
-
-interface VerifiedIndexProps {  
-  resData: GetVirtualLeaguesResponse
-}
-
-VerifiedIndex.getInitialProps = async () => {
+VirtualLeaguesIndex.getInitialProps = async () => {
   var virtualLeaguesRes = await getVirtualLeagues();
-  return { resData : virtualLeaguesRes};
+  return { resData: virtualLeaguesRes };
 };
 
 
-export default VerifiedIndex;
+export default VirtualLeaguesIndex;
