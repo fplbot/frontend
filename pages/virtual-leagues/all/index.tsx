@@ -1,6 +1,5 @@
 import VerifiedPage from "../../../components/virtual-leagues/VerifiedPage";
 import { getVerifiedEntries, GetVerifiedEntriesResponse } from "../../../services/verified";
-import { VerifiedType } from "../../../services/VerifiedType";
 
 const Page = (verifiedEntriesResponse:GetVerifiedEntriesResponse) => {
   if(verifiedEntriesResponse.type === "SUCCESS")
@@ -15,11 +14,6 @@ const Page = (verifiedEntriesResponse:GetVerifiedEntriesResponse) => {
           </p>
   
 };
-
-interface PageProps {
-  res: GetVerifiedEntriesResponse,
-  verifiedType : VerifiedType
-}
 
 Page.getInitialProps = async () => {
   return await getVerifiedEntries("all");

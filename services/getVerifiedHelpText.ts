@@ -18,5 +18,7 @@ export const getVerifiedHelpText = (verifiedType: VerifiedType): string => {
       return "That TV face";
     case 'Athlete':
       return "That famous athlete";
+    case 'Unknown':
+      return "Not sure who this is";
   }
 };
