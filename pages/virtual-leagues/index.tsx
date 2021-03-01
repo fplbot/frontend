@@ -5,15 +5,20 @@ import React from "react";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Footer from "../../components/Footer";
 import SimpleHeader from "../../components/Menu";
-import { getVerifiedHelpText } from "../../services/getVerifiedHelpText";
 import { VerifiedType } from "../../services/VerifiedType";
-import { getVirtualLeagues, GetVirtualLeaguesResponse } from "../../services/virtual-leagues";
+import {
+  getVirtualLeagues,
+  GetVirtualLeaguesResponse,
+} from "../../services/virtual-leagues";
+import { getVerifiedExtraInformation } from "../../utils/verifiedTypeHelper";
 
 interface VirtualLeaguesIndexProps {
-  resData: GetVirtualLeaguesResponse
+  resData: GetVirtualLeaguesResponse;
 }
 
-const VirtualLeaguesIndex: NextPage<VirtualLeaguesIndexProps> = ({ resData }) => {
+const VirtualLeaguesIndex: NextPage<VirtualLeaguesIndexProps> = ({
+  resData,
+}) => {
   if (resData.type == "ERROR")
     return (
       <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
@@ -39,67 +44,88 @@ const VirtualLeaguesIndex: NextPage<VirtualLeaguesIndexProps> = ({ resData }) =>
             Virtual Leagues{" "}
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
-          <HeroLink rel="pl" title="Verified PL Players" description="This virtual league consists of Premier League players' verified Fantasy Premier League teams." />
-          {resData.data.map((verifiedType, i) => shouldBeVisibleAsLink(verifiedType) && (
-            <HeroLink rel={verifiedType.toLowerCase()} title={getVerifiedHelpText(verifiedType)} description={verifiedType} />
-          ))}
-          <HeroLink rel="all" title="All verified accounts" description="All verifed accounts in our registry" />
+          <ul className="list-disc ml-8 pt-10">
+            <HeroLink
+              rel="pl"
+              title="Verified PL Players"
+              description="This virtual league consists of Premier League players' verified Fantasy Premier League teams."
+            />
+            <HeroLink
+              rel="all"
+              title="All verified accounts"
+              description="All verifed accounts in our registry"
+            />
+            {resData.data.map((verifiedType) => renderLeagueLink(verifiedType))}
+          </ul>
         </div>
       </div>
       <Footer />
     </div>
   );
+
+  function renderLeagueLink(verifiedType: VerifiedType) {
+    const shouldDisplay = shouldBeVisibleAsLink(verifiedType);
+    if (!shouldDisplay.visible) {
+      return null;
+    }
+    return (
+      <HeroLink
+        rel={verifiedType.toLowerCase()}
+        title={shouldDisplay.title}
+        description={shouldDisplay.description}
+      />
+    );
+  }
 };
 
-function shouldBeVisibleAsLink(verifiedType: VerifiedType): boolean {
+interface ShouldBeVisibleAsLink {
+  visible: true;
+  title: string;
+  description: string;
+}
+
+interface ShouldNotBeVisibleAsLink {
+  visible: false;
+}
+
+type ShouldBeVisible = ShouldBeVisibleAsLink | ShouldNotBeVisibleAsLink;
+
+function shouldBeVisibleAsLink(verifiedType: VerifiedType): ShouldBeVisible {
+  const extra = getVerifiedExtraInformation(verifiedType);
+
   switch (verifiedType) {
-    case 'FootballerInPL':
-      return false // covered by a sep display
-    case 'Footballer':
-      return true
-    case 'ChessMaster':
-      return true
-    case 'Podcaster':
-      return true
-    case 'CommunityFame':
-      return true;
-    case 'Actor':
-      return true;
-    case 'TvFace':
-      return true;
-    case 'Athlete':
-      return true;
+    case "FootballerInPL":
+      return { visible: false }; // covered by a sep display
+    case "Footballer":
+    case "ChessMaster":
+    case "Podcaster":
+    case "CommunityFame":
+    case "Actor":
+    case "TvFace":
+    case "Athlete":
+      return { visible: true, ...extra };
     default:
-      return false;
+      return { visible: false };
   }
 }
 
 type HeroLinkProperties = {
-  title: string,
-  description: string,
-  rel: string
-}
+  title: string;
+  description: string;
+  rel: string;
+};
 
 function HeroLink({ title, description, rel }: HeroLinkProperties) {
   return (
-    <>
-      <ul className="list-disc ml-8 pt-10">
-        <li className="cursor-pointer">
-          <Link href={`/virtual-leagues/${rel}`}>
-            <div>
-              <span className="underline text-lg">{title}</span>
-              <img
-                src="/check.svg"
-                className="verified-icon"
-                alt="Verified" />
-              <p className="text-md md:text-lg text-fpl-purple">
-                {description}
-              </p>
-            </div>
-          </Link>
-        </li>
-      </ul>
-    </>
+    <li className="cursor-pointer pb-4" key={title}>
+      <Link href={`/virtual-leagues/${rel}`}>
+        <div>
+          <span className="underline text-lg">{title}</span>{" "}
+          <img src="/check.svg" className="verified-icon" alt="Verified" />
+          <p className="text-md md:text-lg text-fpl-purple">{description}</p>
+        </div>
+      </Link>
+    </li>
   );
 }
 
