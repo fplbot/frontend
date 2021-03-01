@@ -5,12 +5,12 @@ import React from "react";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Footer from "../../components/Footer";
 import SimpleHeader from "../../components/Menu";
-import { getVerifiedHelpText } from "../../services/getVerifiedHelpText";
 import { VerifiedType } from "../../services/VerifiedType";
 import {
   getVirtualLeagues,
   GetVirtualLeaguesResponse,
 } from "../../services/virtual-leagues";
+import { getVerifiedExtraInformation } from "../../utils/verifiedTypeHelper";
 
 interface VirtualLeaguesIndexProps {
   resData: GetVirtualLeaguesResponse;
@@ -91,47 +91,19 @@ interface ShouldNotBeVisibleAsLink {
 type ShouldBeVisible = ShouldBeVisibleAsLink | ShouldNotBeVisibleAsLink;
 
 function shouldBeVisibleAsLink(verifiedType: VerifiedType): ShouldBeVisible {
+  const extra = getVerifiedExtraInformation(verifiedType);
+
   switch (verifiedType) {
     case "FootballerInPL":
       return { visible: false }; // covered by a sep display
     case "Footballer":
-      return {
-        visible: true,
-        title: "Football players",
-        description: "All verified football players",
-      };
     case "ChessMaster":
-      return {
-        visible: true,
-        title: "Chess players",
-        description: "Aka the Magnus Carlsen league",
-      };
     case "Podcaster":
-      return {
-        visible: true,
-        title: "Podcasters",
-        description: "Famous podcasters",
-      };
     case "CommunityFame":
-      return {
-        visible: true,
-        title: "FPL community",
-        description: "Relevant people from the fpl-community and twitter",
-      };
     case "Actor":
-      return { visible: true, title: "Actors", description: "Famous actors" };
     case "TvFace":
-      return {
-        visible: true,
-        title: "People from TV",
-        description: "People seen on TV",
-      };
     case "Athlete":
-      return {
-        visible: true,
-        title: "Athletes",
-        description: "Famous athletes",
-      };
+      return { visible: true, ...extra };
     default:
       return { visible: false };
   }

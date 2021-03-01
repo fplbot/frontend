@@ -1,11 +1,11 @@
 import { NextPage, NextPageContext } from "next";
 import VirtualLeaguePageContent from "../../components/virtual-leagues/VirtualLeaguePageContent";
-import { getVerifiedHelpText } from "../../services/getVerifiedHelpText";
 import {
   getVerifiedEntries as getVirtualLeagues,
   GetVerifiedEntriesResponse,
 } from "../../services/verified";
 import { toVerifiedType, VerifiedType } from "../../services/VerifiedType";
+import { getVerifiedExtraInformation } from "../../utils/verifiedTypeHelper";
 
 interface PageProps {
   res: GetVerifiedEntriesResponse;
@@ -13,15 +13,19 @@ interface PageProps {
 }
 
 const VirtualLeaguePage: NextPage<PageProps> = ({ res, verifiedType }) => {
-  if (res.type === "SUCCESS")
+  if (res.type === "SUCCESS") {
+
+    const verifiedTypeInfo = getVerifiedExtraInformation(verifiedType);
+
     return (
       <VirtualLeaguePageContent
-        title={verifiedType}
-        description={getVerifiedHelpText(verifiedType)}
+        title={verifiedTypeInfo.title}
+        description={verifiedTypeInfo.description}
         verifiedEntries={res.data}
         relUrl={verifiedType}
       />
     );
+  }
 
   return (
     <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
