@@ -52,7 +52,7 @@ export type GetVerifiedPLEntriesResponse =
   | GetVerifiedEntriesError;
 
 export function getPLVerifiedEntries(): Promise<GetVerifiedPLEntriesResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified`)
+  return fetch(`${FPLBOT_API_BASEURL}/virtual-leagues/pl`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -116,7 +116,7 @@ export type GetVerifiedPLEntryResponse =
 export function getVerifiedPLEntry(
   entryId: Number
 ): Promise<GetVerifiedPLEntryResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/pl-verified/${entryId}`)
+  return fetch(`${FPLBOT_API_BASEURL}/verified/pl/${entryId}`)
   .then((response) => {
     if (response.ok) {
       return response.json();
@@ -147,7 +147,7 @@ export type GetVerifiedEntryResponse =
 export function getVerifiedEntry(
   entryId: Number
 ): Promise<GetVerifiedEntryResponse> {
-  return fetch(`${FPLBOT_API_BASEURL}/fpl/v2/verified/${entryId}`)
+  return fetch(`${FPLBOT_API_BASEURL}/verified/${entryId}`)
   .then((response) => {
     if (response.ok) {
       return response.json();
