@@ -5,8 +5,26 @@ import React from "react";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Footer from "../../components/Footer";
 import SimpleHeader from "../../components/Menu";
+import { VerifiedType } from "../../services/VerifiedType";
+import {
+  getVirtualLeagues,
+  GetVirtualLeaguesResponse,
+} from "../../services/virtual-leagues";
+import { getVerifiedExtraInformation } from "../../utils/verifiedTypeHelper";
 
-const VerifiedIndex: NextPage = () => {
+interface VirtualLeaguesIndexProps {
+  resData: GetVirtualLeaguesResponse;
+}
+
+const VirtualLeaguesIndex: NextPage<VirtualLeaguesIndexProps> = ({
+  resData,
+}) => {
+  if (resData.type == "ERROR")
+    return (
+      <p className="pb-16 text-lg md:text-xl text-fpl-purple text-center">
+        Looks like something went wrong 🤕
+      </p>
+    );
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -22,36 +40,98 @@ const VerifiedIndex: NextPage = () => {
               { title: "Virtual Leagues", href: "/virtual-leagues/" },
             ]}
           />
-
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-4 text-center">
             Virtual Leagues{" "}
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
-
-          <ul className="list-disc ml-8">
-            <li className="cursor-pointer">
-              <Link href="/virtual-leagues/pl">
-                <div>
-                  <span className="underline text-lg">Verified PL Players </span>
-
-                  <img
-                    src="/check.svg"
-                    className="verified-icon"
-                    alt="Verified"
-                  />
-                  <p className="text-md md:text-lg text-fpl-purple">
-                    This virtual league consists of Premier League players'
-                    verified Fantasy Premier League teams.
-                  </p>
-                </div>
-              </Link>
-            </li>
+          <ul className="list-disc ml-8 pt-10">
+            <HeroLink
+              rel="pl"
+              title="Verified PL Players"
+              description="This virtual league consists of Premier League players' verified Fantasy Premier League teams."
+            />
+            <HeroLink
+              rel="all"
+              title="All verified accounts"
+              description="All verifed accounts in our registry"
+            />
+            {resData.data.map((verifiedType) => renderLeagueLink(verifiedType))}
           </ul>
         </div>
       </div>
       <Footer />
     </div>
   );
+
+  function renderLeagueLink(verifiedType: VerifiedType) {
+    const shouldDisplay = shouldBeVisibleAsLink(verifiedType);
+    if (!shouldDisplay.visible) {
+      return null;
+    }
+    return (
+      <HeroLink
+        rel={verifiedType.toLowerCase()}
+        title={shouldDisplay.title}
+        description={shouldDisplay.description}
+      />
+    );
+  }
 };
 
-export default VerifiedIndex;
+interface ShouldBeVisibleAsLink {
+  visible: true;
+  title: string;
+  description: string;
+}
+
+interface ShouldNotBeVisibleAsLink {
+  visible: false;
+}
+
+type ShouldBeVisible = ShouldBeVisibleAsLink | ShouldNotBeVisibleAsLink;
+
+function shouldBeVisibleAsLink(verifiedType: VerifiedType): ShouldBeVisible {
+  const extra = getVerifiedExtraInformation(verifiedType);
+
+  switch (verifiedType) {
+    case "FootballerInPL":
+      return { visible: false }; // covered by a sep display
+    case "Footballer":
+    case "ChessMaster":
+    case "Podcaster":
+    case "CommunityFame":
+    case "Actor":
+    case "TvFace":
+    case "Athlete":
+      return { visible: true, ...extra };
+    default:
+      return { visible: false };
+  }
+}
+
+type HeroLinkProperties = {
+  title: string;
+  description: string;
+  rel: string;
+};
+
+function HeroLink({ title, description, rel }: HeroLinkProperties) {
+  return (
+    <li className="cursor-pointer pb-4" key={title}>
+      <Link href={`/virtual-leagues/${rel}`}>
+        <div>
+          <span className="underline text-lg">{title}</span>{" "}
+          <img src="/check.svg" className="verified-icon" alt="Verified" />
+          <p className="text-md md:text-lg text-fpl-purple">{description}</p>
+        </div>
+      </Link>
+    </li>
+  );
+}
+
+VirtualLeaguesIndex.getInitialProps = async () => {
+  var virtualLeaguesRes = await getVirtualLeagues();
+  return { resData: virtualLeaguesRes };
+};
+
+export default VirtualLeaguesIndex;

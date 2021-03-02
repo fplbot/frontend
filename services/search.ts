@@ -1,4 +1,5 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
+import { VerifiedType } from "./VerifiedType";
 
 export interface FplApiResponse {
   hits: {
@@ -18,16 +19,6 @@ export interface PlayerEntry {
   teamName: string;
   verifiedType?: VerifiedType;
 }
-
-export type VerifiedType =
-  | "FootballerInPL"
-  | "Footballer"
-  | "ChessMaster"
-  | "Podcaster"
-  | "CommunityFame"
-  | "Actor"
-  | "TvFace"
-  | "Athlete";
 
 export interface SearchSuccess {
   type: "SUCCESS";

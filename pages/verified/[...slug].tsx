@@ -1,19 +1,19 @@
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import { Chip } from "../../../components/Chip";
-import Footer from "../../../components/Footer";
-import SimpleHeader from "../../../components/Menu";
-import { getVerifiedPLEntry, VerifiedPLEntry, GetVerifiedPLEntryResponse} from "../../../services/verified";
-import { formatNumber } from "../../../utils/formatter";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import { Chip } from "../../components/Chip";
+import Footer from "../../components/Footer";
+import SimpleHeader from "../../components/Menu";
+import { getVerifiedEntry, GetVerifiedEntryResponse} from "../../services/verified";
+import { formatNumber } from "../../utils/formatter";
 
 interface GetVerifiedEntryNoSlug {
   type: "NO_SLUG";
 }
 
 export type GetVerifiedEntryStatus =
-  | GetVerifiedPLEntryResponse
+  | GetVerifiedEntryResponse
   | GetVerifiedEntryNoSlug;
 
 interface VerifiedEntryIndexProps {
@@ -39,7 +39,7 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
                 breadcrumbs={[
                   { title: "Home", href: "/" },
                   { title: "Virtual Leagues", href: "/virtual-leagues/" },
-                  { title: "PL", href: "/virtual-leagues/pl" },
+                  { title: "All", href: "/virtual-leagues/all" },
                   { title: '...' },
                 ]}
               />
@@ -58,10 +58,10 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
-        <title>{verifiedEntry.plName}</title>
+        <title>{verifiedEntry.realName}</title>
         <meta
           name="description"
-          content={`${verifiedEntry.plName} plays Fantasy Premier League. Here are details about his FPL team.`}
+          content={`${verifiedEntry.realName} plays Fantasy Premier League. Here are details about his FPL team.`}
         />
       </Head>
       <SimpleHeader />
@@ -71,36 +71,18 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
             breadcrumbs={[
               { title: "Home", href: "/" },
               { title: "Virtual Leagues", href: "/virtual-leagues/" },
-              { title: "PL", href: "/virtual-leagues/pl" },
-              { title: verifiedEntry.plName },
+              { title: "All", href: "/virtual-leagues/all" },
+              { title: verifiedEntry.realName },
             ]}
           />
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-            {verifiedEntry.plName}{" "}
+            {verifiedEntry.realName}{" "}
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
         </div>
-        <div className="w-full max-w-2xl m-auto mb-20">
-          <div className="text-center">
-            <img
-              className="entry-image"
-              src={verifiedEntry.imageUrl}
-              alt={verifiedEntry.plName}
-            />
-          </div>
+        <div className="w-full max-w-2xl m-auto mb-20">   
           <div className="border-t border-gray-200 sm:shadow rounded">
-            <dl>
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Plays for</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  <img
-                    className="shirt"
-                    src={verifiedEntry.shirtImageUrl}
-                    alt={`${verifiedEntry.playsForTeam}'s shirt`}
-                  />
-                  &nbsp;{verifiedEntry.playsForTeam}
-                </dd>
-              </div>
+            <dl>      
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">
                   FPL Team name
@@ -150,18 +132,7 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {formatNumber(verifiedEntry.overallRank)}
                 </dd>
-              </div>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">
-                  Self ownership
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  Owned himself {verifiedEntry.selfOwnershipWeekCount} of{" "}
-                  {verifiedEntry.gameweek} gameweeks, earning him{" "}
-                  {formatNumber(verifiedEntry.selfOwnershipTotalPoints)} points
-                  in total.
-                </dd>
-              </div>
+              </div>      
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">FPL Team</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 truncate">
@@ -184,17 +155,15 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
 };
 
 VerifiedEntryIndex.getInitialProps = async ({query}) => {
-
-  if (query.slug) {    
+  if (query.slug) {
     const entryId = parseInt(query.slug[0]);
-
     if (!entryId)
       return { verifiedEntryData: { type: "NO_SLUG" } }
-
-    const verifiedEntry = await getVerifiedPLEntry(entryId);
-    return { verifiedEntryData: verifiedEntry };
+    const verifiedEntry = await getVerifiedEntry(entryId);    
+    return {       
+      verifiedEntryData: verifiedEntry
+     };
   }
-
   return {
     verifiedEntryData: {type: "NO_SLUG"}
   }
