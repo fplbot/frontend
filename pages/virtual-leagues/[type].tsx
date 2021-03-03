@@ -62,7 +62,7 @@ VirtualLeaguePage.getInitialProps = async (ctx: NextPageContext) => {
     }
   }
 
-  var res = await getVerifiedEntries(verifiedType);
+  const res = await getVerifiedEntries(verifiedType);
   if(res.type == "SUCCESS"){
     return {
       data: res.data,
