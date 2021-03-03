@@ -52,11 +52,10 @@ const VirtualLeaguePage: NextPage<VirtualLeaguePageProps> = props => {
 };
 
 VirtualLeaguePage.getInitialProps = async (ctx: NextPageContext) => {
-  let verifiedType: VerifiedType = 'Unknown';
 
-  try {
-    verifiedType = toVerifiedType(ctx.query.type as string);
-  } catch {
+  const verifiedType =  toVerifiedType(ctx.query.type as string);
+
+  if(verifiedType == null){
 
     if (ctx.res)
       ctx.res.statusCode = 404;
@@ -77,8 +76,7 @@ VirtualLeaguePage.getInitialProps = async (ctx: NextPageContext) => {
   }
   return {
     type: 'APIERROR'
-  }
-  ;
+  };
 };
 
 export default VirtualLeaguePage;
