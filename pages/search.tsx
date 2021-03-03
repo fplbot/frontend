@@ -286,6 +286,7 @@ const ResultTable = ({
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.realName}
+                {data.alias && (<>&nbsp;<em>(aka {data.alias})</em></>)}
                 {data.verifiedType && (
                   <>
                     &nbsp;
@@ -303,7 +304,7 @@ const ResultTable = ({
               </td>
               <td className="text-left md:text-center border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">
                 <a
-                  href={`https://fantasy.premierleague.com/entry/${data.entry}/history`}
+                  href={`https://fantasy.premierleague.com/entry/${data.id}/history`}
                   className="block"
                   target="_blank"
                 >
