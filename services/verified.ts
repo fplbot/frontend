@@ -43,7 +43,7 @@ interface GetVerifiedPLEntriesSuccess {
   data: VerifiedPLEntry[];
 }
 
-interface GetVerifiedEntriesError {
+export interface GetVerifiedEntriesError {
   type: "ERROR";
 }
 
@@ -71,7 +71,7 @@ export function getPLVerifiedEntries(): Promise<GetVerifiedPLEntriesResponse> {
     );
 }
 
-interface GetVerifiedEntriesSuccess {
+export interface GetVerifiedEntriesSuccess {
   type: "SUCCESS";
   data: VerifiedEntry[];
 }

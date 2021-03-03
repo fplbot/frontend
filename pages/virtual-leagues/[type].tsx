@@ -1,24 +1,33 @@
 import { NextPage, NextPageContext } from "next";
 import VirtualLeaguePageContent from "../../components/virtual-leagues/VirtualLeaguePageContent";
-import { getVerifiedEntries, GetVerifiedEntriesResponse, } from "../../services/verified";
+import { getVerifiedEntries, VerifiedEntry, GetVerifiedEntriesError} from "../../services/verified";
 import { toVerifiedType, VerifiedType } from "../../services/VerifiedType";
 import { getVerifiedExtraInformation } from "../../utils/verifiedTypeHelper";
 
-interface LegalVerifiedType  {
-  res: GetVerifiedEntriesResponse;
-  verifiedType: VerifiedType
-  type: "LEGALVERIFIEDTYPE"
-};
+interface VerifiedEntriesSucces {
+  type: 'SUCCESS';
+  verifiedType: VerifiedType;
+  data: VerifiedEntry[];
+}
 
 interface IllegalVerifiedType {
-  illegalVerifiedType: string,
-  type: "ILLEGALVERIFIEDTYPE"
+  type: "ILLEGAL_VERIFIED_TYPE";
+  illegalVerifiedType: string;
 };
 
-type VirtualLeaguePageProps = LegalVerifiedType | IllegalVerifiedType;
+type VirtualLeaguePageProps = VerifiedEntriesSucces | IllegalVerifiedType | GetVerifiedEntriesError;
 
 const VirtualLeaguePage: NextPage<VirtualLeaguePageProps> = props => {
-  if (props.type === "LEGALVERIFIEDTYPE" && props.res.type == "SUCCESS") {
+
+  if (props.type === 'ILLEGAL_VERIFIED_TYPE') {
+    return (
+      <p className="pb-16 text-lg∆ md:text-xl text-fpl-purple text-center">
+        The virtual league {props.illegalVerifiedType} does not exist 🤷‍♂️
+      </p>
+    );
+  }
+
+  if (props.type === "SUCCESS") {
 
     const verifiedTypeInfo = getVerifiedExtraInformation(props.verifiedType);
 
@@ -26,18 +35,10 @@ const VirtualLeaguePage: NextPage<VirtualLeaguePageProps> = props => {
       <VirtualLeaguePageContent
         title={verifiedTypeInfo.title}
         description={verifiedTypeInfo.description}
-        verifiedEntries={props.res.data}
+        verifiedEntries={props.data}
         relUrl={props.verifiedType}
       />
     );
-  }
-
-  if (props.type === "ILLEGALVERIFIEDTYPE") {
-    return (
-      <p className="pb-16 text-lg∆ md:text-xl text-fpl-purple text-center">
-        The virtual league {props.illegalVerifiedType} does not exist 🤷‍♂️
-      </p>
-    )
   }
 
   return (
@@ -48,27 +49,28 @@ const VirtualLeaguePage: NextPage<VirtualLeaguePageProps> = props => {
 };
 
 VirtualLeaguePage.getInitialProps = async (ctx: NextPageContext) => {
-  let verifiedType: VerifiedType = 'Unknown';
+  const verifiedType = toVerifiedType(ctx.query.type as string);
 
-  try {
-    verifiedType = toVerifiedType(ctx.query.type as string);
-  } catch {
-
-    if (ctx.res)
-      ctx.res.statusCode = 404;
-
+  if (verifiedType === null) {
     return {
+      type: 'ILLEGAL_VERIFIED_TYPE',
       illegalVerifiedType: ctx.query.type as string,
-      type: 'ILLEGALVERIFIEDTYPE'
     }
   }
 
-  var res = await getVerifiedEntries(verifiedType);
+  const res = await getVerifiedEntries(verifiedType);
+
+  if (res.type === 'SUCCESS') {
+    return {
+      type: 'SUCCESS',
+      data: res.data,
+      verifiedType: verifiedType
+    }
+  }
+
   return {
-    res: res,
-    verifiedType: verifiedType,
-    type: "LEGALVERIFIEDTYPE"
-  };
+    type: 'ERROR',
+  }
 };
 
 export default VirtualLeaguePage;

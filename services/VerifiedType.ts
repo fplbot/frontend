@@ -9,7 +9,7 @@ export type VerifiedType = "Unknown" |
   "TvFace" |
   "Athlete";
 
-export const toVerifiedType = (verifiedType: string): VerifiedType  => {
+export const toVerifiedType = (verifiedType: string): VerifiedType | null => {
   switch (verifiedType.toLowerCase()) {
     case 'footballerinpl':
       return "FootballerInPL";
@@ -30,6 +30,6 @@ export const toVerifiedType = (verifiedType: string): VerifiedType  => {
     case 'unknown':
       return 'Unknown'
     default:
-      throw 'Illegal verifiedType'
+      return null;
   };
 };
