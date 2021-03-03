@@ -4,13 +4,13 @@ import { getVerifiedEntries, GetVerifiedEntriesResponse, } from "../../services/
 import { toVerifiedType, VerifiedType } from "../../services/VerifiedType";
 import { getVerifiedExtraInformation } from "../../utils/verifiedTypeHelper";
 
-type LegalVerifiedType = {
+interface LegalVerifiedType  {
   res: GetVerifiedEntriesResponse;
   verifiedType: VerifiedType
   type: "LEGALVERIFIEDTYPE"
 };
 
-type IllegalVerifiedType = {
+interface IllegalVerifiedType {
   illegalVerifiedType: string,
   type: "ILLEGALVERIFIEDTYPE"
 };
