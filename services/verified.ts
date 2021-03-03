@@ -23,7 +23,7 @@ export interface VerifiedPLEntry {
 }
 
 export interface VerifiedEntry {
-  entryId: number;  
+  entryId: number;
   teamName: string;
   realName: string;
   pointsThisGw: number;
@@ -43,7 +43,7 @@ interface GetVerifiedPLEntriesSuccess {
   data: VerifiedPLEntry[];
 }
 
-interface GetVerifiedEntriesError {
+export interface GetVerifiedEntriesError {
   type: "ERROR";
 }
 
