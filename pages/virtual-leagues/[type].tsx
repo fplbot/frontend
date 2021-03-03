@@ -1,6 +1,6 @@
 import { NextPage, NextPageContext } from "next";
 import VirtualLeaguePageContent from "../../components/virtual-leagues/VirtualLeaguePageContent";
-import { getVerifiedEntries, VerifiedEntry, } from "../../services/verified";
+import { getVerifiedEntries, GetVerifiedEntriesError, VerifiedEntry } from "../../services/verified";
 import { toVerifiedType, VerifiedType } from "../../services/VerifiedType";
 import { getVerifiedExtraInformation } from "../../utils/verifiedTypeHelper";
 
@@ -15,11 +15,7 @@ interface IllegalVerifiedType {
   type: "ILLEGALVERIFIEDTYPE"
 };
 
-interface APIError {
-  type: "APIERROR"
-};
-
-type VirtualLeaguePageProps = LegalVerifiedType | IllegalVerifiedType | APIError;
+type VirtualLeaguePageProps = LegalVerifiedType | IllegalVerifiedType | GetVerifiedEntriesError;
 
 const VirtualLeaguePage: NextPage<VirtualLeaguePageProps> = props => {
   if (props.type === "LEGALVERIFIEDTYPE") {
@@ -74,9 +70,7 @@ VirtualLeaguePage.getInitialProps = async (ctx: NextPageContext) => {
       type: "LEGALVERIFIEDTYPE"
     }
   }
-  return {
-    type: 'APIERROR'
-  };
+  return res;
 };
 
 export default VirtualLeaguePage;
