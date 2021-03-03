@@ -27,7 +27,9 @@ export const toVerifiedType = (verifiedType: string): VerifiedType  => {
       return "TvFace";
     case 'athlete':
       return "Athlete";
-    default:
+    case 'unknown':
       return 'Unknown'
+    default:
+      throw 'Illegal verifiedType'
   };
 };
