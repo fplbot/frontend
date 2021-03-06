@@ -14,10 +14,11 @@ export interface FplApiResponse {
 
 export interface PlayerEntry {
   id: number;
-  entry: number;
   realName: string;
   teamName: string;
   verifiedType?: VerifiedType;
+  alias: string;
+  description: string;
 }
 
 export interface SearchSuccess {
