@@ -286,7 +286,6 @@ const ResultTable = ({
             >
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.realName}
-                {data.alias && (<>&nbsp;<em>(aka {data.alias})</em></>)}
                 {data.verifiedType && (
                   <>
                     &nbsp;
@@ -298,6 +297,7 @@ const ResultTable = ({
                     />
                   </>
                 )}
+                {data.alias && (<>&nbsp;<span className="alias">(aka {data.alias})</span></>)}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.teamName}
