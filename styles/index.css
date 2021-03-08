@@ -43,6 +43,12 @@ th:not(:last-child) {
   margin-right: 1rem;
 }
 
+.alias {
+  font-size: 0.75rem;
+  vertical-align: baseline;
+  opacity: .75;
+}
+
 @media screen and (max-width: 31.125rem) {
   .search-input {
     margin-right: 0;

@@ -1,11 +1,12 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
-import { VerifiedType } from "./VerifiedType";
 
 export interface VerifiedPLEntry {
   entryId: number;
   slug: string;
   teamName: string;
   realName: string;
+  alias: string;
+  description: string;
   plName: string;
   playsForTeam: string;
   shirtImageUrl: string;
@@ -26,6 +27,8 @@ export interface VerifiedEntry {
   entryId: number;
   teamName: string;
   realName: string;
+  alias: string;
+  description: string;
   pointsThisGw: number;
   totalPoints: number;
   overallRank: number;

@@ -48,7 +48,7 @@ export default function VerifiedTable({ verifiedEntries }: VerifiedTableProps) {
                 <div className="verified-table__player_inner">
                   <span>
                     <Link href={`/verified/${data.entryId}/${encodeURIComponent(data.realName.replace(/\s/g, '-').toLowerCase())}`}>
-                      <a>{data.realName}</a>
+                      <a>{data.realName}{data.alias && (<>&nbsp;<span className="alias">(aka {data.alias})</span></>)}</a>
                     </Link>
                     <p className="text-sm">{data.teamName}</p>
                   </span>
