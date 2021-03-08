@@ -40,7 +40,7 @@ export function searchForPlayer(
   page: number
 ): Promise<SearchResponse> {
   return fetch(
-    `${FPLBOT_API_BASEURL}/search/entries/${searchString}?page=${page}`,
+    `${FPLBOT_API_BASEURL}/search/entries/?query=${searchString}&page=${page}`,
     {
       method: "GET",
     }
