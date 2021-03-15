@@ -19,10 +19,6 @@ export type LeagueRes = {
   standings: Standings
 }
 
-export type ErrorType = {
-
-}
-
 export type Transfer = {
   element_in: number
   element_out: number
@@ -63,10 +59,6 @@ async function http<T>(request: RequestInfo): Promise<T> {
   return Promise.reject({
     status: response.status
   });
-}
-
-export type AllEntriesTransfer = {
-
 }
 
 export async function getTransfersForLeague(entries: Entry[]): Promise<EntryTransfer[]> {
