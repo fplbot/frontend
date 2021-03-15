@@ -44,41 +44,45 @@ type Event = {
   is_current: boolean
 }
 
-export type PlayerTransfer = {
+export type EntryTransfer = {
   entry: Entry
   playerIn: Player
   playerOut: Player
 }
 
 type Error = {
-  status : number
+  status: number
 }
 
 async function http<T>(request: RequestInfo): Promise<T> {
   const response = await fetch(request);
-  if(response.ok){
+  if (response.ok) {
     const body = await response.json();
     return body;
   }
   return Promise.reject({
-    status : response.status
+    status: response.status
   });
 }
 
-export async function getTransfersForLeague(entries:Entry[]) : Promise<PlayerTransfer[]>{
+export type AllEntriesTransfer = {
+
+}
+
+export async function getTransfersForLeague(entries: Entry[]): Promise<EntryTransfer[]> {
   const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static/`);
-  let newTransfers: PlayerTransfer[] = [];
+  let newTransfers: EntryTransfer[] = [];
 
   for await (const item of entries) {
     const transfers = await http<Transfer[]>(`/api/fpl/entry/${item.entry}/transfers`);
     var currentGw = bootstrap.events.filter(e => e.is_current)[0];
     var transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
-    var playerTransfersForCurrentGw = transfersForCurrentGw.map<PlayerTransfer>(t => {
+    var playerTransfersForCurrentGw = transfersForCurrentGw.map<EntryTransfer>(t => {
       var playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
       var playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
       var entry = entries.filter(e => e.entry == item.entry)[0];
       return {
-        entry : entry,
+        entry: entry,
         playerIn: playerIn,
         playerOut: playerOut
       }
