@@ -1,47 +1,34 @@
 import Head from 'next/head';
 import { NextPage } from "next";
-import React from 'react';
+import React, { useState } from 'react';
 import useSWR from 'swr'
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Footer from '../../components/Footer';
-
-type League = {
-  id: number;
-  name: string;
-}
-
-type StandingsEntry = {
-  id: number,
-  player_name: string
-  rank: number,
-  total: number
-}
-
-type Standings = {
-  results: StandingsEntry[]
-}
-
-type LeagueRes = {
-  league: League,
-  standings: Standings
-}
-
-type ErrorType = {
-
-}
+import { getTransfersForLeague, LeagueRes, PlayerTransfer } from '../../services/leagues';
 
 const LeagueIndex: NextPage = () => {
+
   let id = 0 as number;
   if (typeof window !== 'undefined') {
     let segs = window.location.pathname.split('/');
     id = parseInt(segs[segs.length - 1]);
   }
 
-  const { data, error } = useSWR<LeagueRes, ErrorType>(`/api/fpl/leagues-classic/${id}/standings/`);
+  const [playerTransfers, setPlayerTransfers] = useState<PlayerTransfer[]>([]);
+  const { data, error } = useSWR<LeagueRes, Error>(`/api/fpl/leagues-classic/${id}/standings/`);
 
   if (error) return <div>failed to load</div>
   if (!data) return <div>loading...</div>
-  if(!data.league) return <div>No league found for {id}!</div>
+  if (!data.league) return <div>No league found for {id}!</div>
+
+
+  async function fetchTransfersClick() {
+    setPlayerTransfers([]);
+    if(data){
+      var transfers = await getTransfersForLeague(data?.standings.results)
+      setPlayerTransfers(transfers);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
@@ -75,7 +62,7 @@ const LeagueIndex: NextPage = () => {
             <tbody>
               {data.standings.results.slice(0, data.standings.results.length > 10 ? 10 : data.standings.results.length).map((item, i) =>
               (
-                <tr key={item.id}>
+                <tr key={item.entry}>
                   <td>{item.rank}</td>
                   <td>{item.player_name}</td>
                   <td>{item.total}</td>
@@ -85,9 +72,21 @@ const LeagueIndex: NextPage = () => {
             </tbody>
           </table>
         </div>
+        <div>
+          <button onClick={fetchTransfersClick} className="font-bold rounded shadow hover:shadow-xl transition duration-500 text-fpl-purple hover:text-white bg-fpl-green hover:bg-fpl-purple py-1 px-4">
+            Fetch transfers
+          </button>
+        </div>
+      </div>
+      <div className="flex-grow px-8">
+        <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
+          {playerTransfers && playerTransfers.map((item, i) => (<div key={i}>{item.entry.player_name} : {item.playerOut.web_name} ➡️ {item.playerIn.web_name}</div>))}
+        </div>
       </div>
       <Footer />
     </div>)
 }
+
+
 
 export default LeagueIndex;
