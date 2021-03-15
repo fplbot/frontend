@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import useSWR from 'swr'
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Footer from '../../components/Footer';
-import { getTransfersForEntries, LeagueRes, EntryTransfer } from '../../services/leagues';
+import { getTransfersForEntries, LeagueRes,LeagueResError, EntryTransfer } from '../../services/leagues';
 
 const LeagueIndex: NextPage = () => {
 
@@ -15,17 +15,15 @@ const LeagueIndex: NextPage = () => {
   }
 
   const [playerTransfers, setPlayerTransfers] = useState<EntryTransfer[]>([]);
-  const { data, error } = useSWR<LeagueRes, Error>(`/api/fpl/leagues-classic/${id}/standings/`);
+  const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings/`);
 
-  if (error) return <div>failed to load</div>
-  if (!data) return <div>loading...</div>
-  if (!data.league) return <div>No league found for {id}!</div>
-
+  if (error) return (<div>Failed to load league</div>)
+  if (!data) return (<div>Loading league...</div>)
+  if (!data.league) return (<div>No league found for {id}!</div>)
 
   async function fetchTransfersClick() {
-    setPlayerTransfers([]);
     if (data) {
-      var transfers = await getTransfersForEntries(data?.standings.results)
+      var transfers = await getTransfersForEntries(data.standings.results)
       setPlayerTransfers(transfers);
     }
   };
@@ -76,7 +74,7 @@ const LeagueIndex: NextPage = () => {
       <div className="flex-grow px-8">
         <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
           <button onClick={fetchTransfersClick} className="font-bold rounded shadow hover:shadow-xl transition duration-500 text-fpl-purple hover:text-white bg-fpl-green hover:bg-fpl-purple py-1 px-4">
-            Fetch transfers
+            Show all transfers!
           </button>
         </div>
       </div>
@@ -88,7 +86,5 @@ const LeagueIndex: NextPage = () => {
       <Footer />
     </div>)
 }
-
-
 
 export default LeagueIndex;

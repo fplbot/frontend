@@ -1,4 +1,4 @@
-export type League = {
+type League = {
   id: number;
   name: string;
 }
@@ -19,7 +19,7 @@ export type LeagueRes = {
   standings: Standings
 }
 
-export type Transfer = {
+type Transfer = {
   element_in: number
   element_out: number
   event: number
@@ -46,7 +46,7 @@ export type EntryTransfer = {
   playerOut: Player
 }
 
-type Error = {
+export type LeagueResError = {
   status: number
 }
 
