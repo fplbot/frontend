@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import useSWR from 'swr'
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Footer from '../../components/Footer';
-import { getTransfersForLeague, LeagueRes, EntryTransfer } from '../../services/leagues';
+import { getTransfersForEntries, LeagueRes, EntryTransfer } from '../../services/leagues';
 
 const LeagueIndex: NextPage = () => {
 
@@ -25,7 +25,7 @@ const LeagueIndex: NextPage = () => {
   async function fetchTransfersClick() {
     setPlayerTransfers([]);
     if (data) {
-      var transfers = await getTransfersForLeague(data?.standings.results)
+      var transfers = await getTransfersForEntries(data?.standings.results)
       setPlayerTransfers(transfers);
     }
   };

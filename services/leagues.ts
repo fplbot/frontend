@@ -61,7 +61,7 @@ async function http<T>(request: RequestInfo): Promise<T> {
   });
 }
 
-export async function getTransfersForLeague(entries: Entry[]): Promise<EntryTransfer[]> {
+export async function getTransfersForEntries(entries: Entry[]): Promise<EntryTransfer[]> {
   const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static/`);
   let newTransfers: EntryTransfer[] = [];
 
