@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import useSWR from 'swr'
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Footer from '../../components/Footer';
-import { getTransfersForEntries, LeagueRes, LeagueResError, EntryTransfer } from '../../services/leagues';
+import { getTransfersForEntries, LeagueRes, LeagueResError, EntryTransfer, http } from '../../services/leagues';
 
 const LeagueIndex: NextPage = () => {
 
@@ -16,7 +16,7 @@ const LeagueIndex: NextPage = () => {
   const id = parseInt(segs[segs.length - 1]);
 
   const [playerTransfers, setPlayerTransfers] = useState<EntryTransfer[]>([]);
-  const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings/`);
+  const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings/`, http);
 
   if (error) return (<div>Failed to load league</div>)
   if (!data) return (<div>Loading league...</div>)

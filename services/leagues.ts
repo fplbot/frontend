@@ -50,7 +50,7 @@ export type LeagueResError = {
   status: number;
 }
 
-async function http<T>(request: RequestInfo): Promise<T> {
+export async function http<T>(request: RequestInfo): Promise<T> {
   const response = await fetch(request);
   if (response.ok) {
     const body = await response.json();
