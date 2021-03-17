@@ -43,7 +43,7 @@ const LeagueIndex: NextPage = () => {
           <Breadcrumbs
             breadcrumbs={[
               { title: "Home", href: "/" },
-              { title: "Leagues", href: "/leagues/" },
+              { title: "Leagues" },
               { title: id.toString() },
             ]}
           />
