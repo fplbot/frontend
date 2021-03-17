@@ -4,50 +4,50 @@ type League = {
 }
 
 type Entry = {
-  entry: number,
-  player_name: string
-  rank: number,
-  total: number
+  entry: number;
+  player_name: string;
+  rank: number;
+  total: number;
 }
 
 type Standings = {
-  results: Entry[]
+  results: Entry[];
 }
 
 export type LeagueRes = {
-  league: League,
-  standings: Standings
+  league: League;
+  standings: Standings;
 }
 
 type Transfer = {
-  element_in: number
-  element_out: number
-  event: number
+  element_in: number;
+  element_out: number;
+  event: number;
 }
 
 type Bootstrap = {
-  elements: Player[],
-  events: Event[]
+  elements: Player[];
+  events: Event[];
 }
 
 type Player = {
-  id: number
-  web_name: string
+  id: number;
+  web_name: string;
 }
 
 type Event = {
-  id: number,
-  is_current: boolean
+  id: number;
+  is_current: boolean;
 }
 
 export type EntryTransfer = {
-  entry: Entry
-  playerIn: Player
-  playerOut: Player
+  entry: Entry;
+  playerIn: Player;
+  playerOut: Player;
 }
 
 export type LeagueResError = {
-  status: number
+  status: number;
 }
 
 async function http<T>(request: RequestInfo): Promise<T> {
@@ -67,20 +67,20 @@ export async function getTransfersForEntries(entries: Entry[]): Promise<EntryTra
 
   for await (const item of entries) {
     const transfers = await http<Transfer[]>(`/api/fpl/entry/${item.entry}/transfers`);
-    var currentGw = bootstrap.events.filter(e => e.is_current)[0];
-    var transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
-    var playerTransfersForCurrentGw = transfersForCurrentGw.map<EntryTransfer>(t => {
-      var playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
-      var playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
-      var entry = entries.filter(e => e.entry == item.entry)[0];
+    const currentGw = bootstrap.events.filter(e => e.is_current)[0];
+    const transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
+    const playerTransfersForCurrentGw = transfersForCurrentGw.map<EntryTransfer>(t => {
+      const playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
+      const playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
+      const entry = entries.filter(e => e.entry == item.entry)[0];
       return {
         entry: entry,
         playerIn: playerIn,
         playerOut: playerOut
       }
     });
-    var newArray = newTransfers.concat(playerTransfersForCurrentGw);
-    newTransfers = newArray;
+
+    newTransfers = newTransfers.concat(playerTransfersForCurrentGw);
   }
 
   return newTransfers;

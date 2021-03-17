@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  let url = `https://fantasy.premierleague.com${req.url?.replace('/fpl', '')}/`;
-  let fplRes = await fetch(url, {
+  const url = `https://fantasy.premierleague.com${req.url?.replace('/fpl', '')}/`;
+  const fplRes = await fetch(url, {
     method: 'GET',
     headers: {
       "Accept": "application/json",
