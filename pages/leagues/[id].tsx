@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Footer from '../../components/Footer';
 import { getTransfersForEntries, LeagueRes, LeagueResError, EntryTransfer, http } from '../../services/leagues';
+import Button from '../../components/Button';
 
 const LeagueIndex: NextPage = () => {
 
@@ -39,7 +40,7 @@ const LeagueIndex: NextPage = () => {
         />
       </Head>
       <div className="flex-grow px-8">
-        <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
+        <div className="w-full max-w-7xl m-auto mt-4 mb-8 px-8 text-center">
           <Breadcrumbs
             breadcrumbs={[
               { title: "Home", href: "/" },
@@ -59,7 +60,7 @@ const LeagueIndex: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data.standings.results.slice(0, data.standings.results.length > 10 ? 10 : data.standings.results.length).map((item, i) =>
+              {data.standings.results.map((item, i) =>
               (
                 <tr key={item.entry}>
                   <td>{item.rank}</td>
@@ -73,14 +74,14 @@ const LeagueIndex: NextPage = () => {
         </div>
       </div>
       <div className="flex-grow px-8">
-        <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
-          <button onClick={fetchTransfersClick} className="font-bold rounded shadow hover:shadow-xl transition duration-500 text-fpl-purple hover:text-white bg-fpl-green hover:bg-fpl-purple py-1 px-4">
+        <div className="w-full max-w-7xl m-auto mt-4 mb-8 px-8 text-center">
+          <Button onClick={fetchTransfersClick} shape="square" >
             Show all transfers!
-          </button>
+          </Button>
         </div>
       </div>
       <div className="flex-grow px-8">
-        <div className="w-full max-w-7xl m-auto mt-4 mb-14 px-8 text-center">
+        <div className="w-full max-w-7xl m-auto mt-4 mb-8 px-8 text-center">
           {playerTransfers && playerTransfers.map((item, i) => (<div key={i}>{item.entry.player_name} : {item.playerOut.web_name} ➡️ {item.playerIn.web_name}</div>))}
         </div>
       </div>
