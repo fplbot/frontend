@@ -3,7 +3,7 @@ type League = {
   name: string;
 }
 
-type Entry = {
+export type Entry = {
   entry: number;
   player_name: string;
   rank: number;
@@ -41,7 +41,6 @@ type Event = {
 }
 
 export type EntryTransfer = {
-  entry: Entry;
   playerIn: Player;
   playerOut: Player;
 }
@@ -61,27 +60,33 @@ export async function http<T>(request: RequestInfo): Promise<T> {
   });
 }
 
-export async function getTransfersForEntries(entries: Entry[]): Promise<EntryTransfer[]> {
+export async function getTransfersForEntries(entries: Entry[]): Promise<Map<string, EntryTransfer[]>> {
   const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static/`);
-  let newTransfers: EntryTransfer[] = [];
+  let entryTransfersMap = new Map<string, EntryTransfer[]>();
 
-  for await (const item of entries) {
-    const transfers = await http<Transfer[]>(`/api/fpl/entry/${item.entry}/transfers`);
-    const currentGw = bootstrap.events.filter(e => e.is_current)[0];
-    const transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
-    const playerTransfersForCurrentGw = transfersForCurrentGw.map<EntryTransfer>(t => {
-      const playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
-      const playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
-      const entry = entries.filter(e => e.entry == item.entry)[0];
-      return {
-        entry: entry,
-        playerIn: playerIn,
-        playerOut: playerOut
-      }
-    });
-
-    newTransfers = newTransfers.concat(playerTransfersForCurrentGw);
+  for(const inject of entries){
+      entryTransfersMap.set(inject.player_name, []);
   }
 
-  return newTransfers;
+  for await (const entry of entries) {
+    const transfers = await http<Transfer[]>(`/api/fpl/entry/${entry.entry}/transfers`);
+    const currentGw = bootstrap.events.filter(e => e.is_current)[0];
+    const transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
+
+    transfersForCurrentGw.forEach(t => {
+      const playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
+      const playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
+      var entryTransfers = transfersForCurrentGw.map(t => { return { playerIn: playerIn, playerOut: playerOut } });
+      let existingTransfers = entryTransfersMap.get(entry.player_name);
+      if(existingTransfers){
+        existingTransfers.push({ playerIn: playerIn, playerOut: playerOut});
+        entryTransfersMap.set(entry.player_name, existingTransfers);
+      }
+      else{
+        entryTransfersMap.set(entry.player_name, entryTransfers);
+      } 
+    });
+  }
+
+  return entryTransfersMap;
 }

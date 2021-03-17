@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import { NextPage } from "next";
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import useSWR from 'swr'
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Footer from '../../components/Footer';
-import { getTransfersForEntries, LeagueRes, LeagueResError, EntryTransfer, http } from '../../services/leagues';
+import { getTransfersForEntries, LeagueRes, LeagueResError, Entry, EntryTransfer, http } from '../../services/leagues';
 import Button from '../../components/Button';
 import SimpleHeader from '../../components/Menu';
 
@@ -17,7 +17,7 @@ const LeagueIndex: NextPage = () => {
   const segs = window?.location.pathname.split('/');
   const id = parseInt(segs[segs.length - 1]);
 
-  const [playerTransfers, setPlayerTransfers] = useState<EntryTransfer[]>([]);
+  const [playerTransfers, setPlayerTransfers] = useState<Map<string, EntryTransfer[]>>(new Map<string, EntryTransfer[]>());
   const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings/`, http);
 
   async function fetchTransfersClick() {
@@ -26,6 +26,30 @@ const LeagueIndex: NextPage = () => {
       setPlayerTransfers(transfers);
     }
   };
+
+  const items: JSX.Element[] = [];
+  playerTransfers.forEach((value: EntryTransfer[], key: string) => {
+    items.push((
+      <div key={key} className="divide-y-4 divide-fpl-purple">
+        <div className="text-left align-top font-bold">
+          {key}
+        </div>
+        <div className="text-left align-top p-3">
+          {value.length > 0 ? value.map((item, i) =>
+          (
+            <div className={`'grid grid-cols-2' ${i > 0 ? 'mt-3' : ''}`}>
+              <div className="bg-red-200">{item.playerOut.web_name}</div>
+              <div className="bg-green-200">{item.playerIn.web_name}</div>
+            </div>
+          ))
+            :
+            (<div className="italic">No transfers</div>)
+          }
+        </div>
+      </div>
+    ));
+  });
+
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
@@ -81,11 +105,11 @@ const LeagueIndex: NextPage = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="flex-grow px-8">
-                  <div className="w-full max-w-7xl m-auto mt-4 mb-8 px-8 text-center">
-                    {playerTransfers && playerTransfers.map((item, i) => (<div key={i}>{item.entry.player_name} : {item.playerOut.web_name} ➡️ {item.playerIn.web_name}</div>))}
+                {items.length > 0 ? (
+                  <div>
+                      {items}
                   </div>
-                </div>
+                ) : (<></>)}
               </div>
             )}
         </div>
