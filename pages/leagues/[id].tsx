@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 import { getTransfersForEntries, LeagueRes, LeagueResError, Entry, EntryTransfer, http } from '../../services/leagues';
 import Button from '../../components/Button';
 import SimpleHeader from '../../components/Menu';
-
+import { Spinner } from '../../components/Spinner';
 const LeagueIndex: NextPage = () => {
 
   if (typeof window == 'undefined') {
@@ -19,11 +19,14 @@ const LeagueIndex: NextPage = () => {
 
   const [playerTransfers, setPlayerTransfers] = useState<Map<string, EntryTransfer[]>>(new Map<string, EntryTransfer[]>());
   const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings/`, http);
+  const [loading, setLoadingState] = useState<boolean>(false);
 
   async function fetchTransfersClick() {
+    setLoadingState(true);
     if (data) {
-      var transfers = await getTransfersForEntries(data.standings.results)
+      const transfers = await getTransfersForEntries(data.standings.results)
       setPlayerTransfers(transfers);
+      setLoadingState(false);
     }
   };
 
@@ -70,8 +73,12 @@ const LeagueIndex: NextPage = () => {
               { title: id && id != NaN ? id.toString() : '?' },
             ]}
           />
-          {error ? (<div>Error!</div>) : (<></>)}
-          {!error && !data ? (<div>Loading league</div>) : (<></>)}
+          {error && (<div>Error!</div>)}
+          {!error && !data && (
+            <div className="flex justify-center">
+              <Spinner size="lg" />
+            </div>
+          )}
           {!data?.league ? (<>No league found!</>) :
             (
               <div>
@@ -105,9 +112,14 @@ const LeagueIndex: NextPage = () => {
                     </Button>
                   </div>
                 </div>
-                {items.length > 0 ? (
+                {loading && (
+                  <div className="flex justify-center">
+                    <Spinner size="lg" />
+                  </div>
+                )}
+                {!loading && items.length > 0 ? (
                   <div>
-                      {items}
+                    {items}
                   </div>
                 ) : (<></>)}
               </div>
