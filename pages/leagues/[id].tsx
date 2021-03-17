@@ -37,9 +37,9 @@ const LeagueIndex: NextPage = () => {
         <div className="text-left align-top p-3">
           {value.length > 0 ? value.map((item, i) =>
           (
-            <div className={`'grid grid-cols-2' ${i > 0 ? 'mt-3' : ''}`}>
-              <div className="bg-red-200">{item.playerOut.web_name}</div>
-              <div className="bg-green-200">{item.playerIn.web_name}</div>
+            <div className={`'grid grid-cols-3' ${i > 0 ? 'mt-4' : ''}`}>
+              <div className="bg-red-200 rounded-md pl-1 mb-1">{item.playerOut.web_name}</div>
+              <div className="bg-green-200 rounded-md pl-1">{item.playerIn.web_name}</div>
             </div>
           ))
             :
