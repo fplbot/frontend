@@ -32,7 +32,7 @@ const LeagueIndex: NextPage = () => {
     items.push((
       <div key={key} className="divide-y-4 divide-fpl-purple">
         <div className="text-left align-top font-bold">
-          {key} {value.chips.length > 0 && (<span className="text-fpl-purple-bright uppercase">({value.chips.map(c => c.name)})</span>)}
+          {key} — {value.chips.length > 0 && (<span className="text-fpl-purple-bright uppercase">({value.chips.map(c => c.name)})</span>)} <span>{value.captain.web_name}(c)</span>
         </div>
         <div className="text-left align-top p-3">
           {value.transfers.length > 0 ? value.transfers.map((item, i) =>

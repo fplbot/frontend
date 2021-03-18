@@ -65,6 +65,15 @@ type Chip = {
   event: number
 }
 
+type PicksRes = {
+  picks : Pick[]
+}
+
+type Pick = {
+  element : number,
+  is_captain: boolean
+}
+
 export async function http<T>(request: RequestInfo): Promise<T> {
   const response = await fetch(request);
   if (response.ok) {
@@ -78,7 +87,8 @@ export async function http<T>(request: RequestInfo): Promise<T> {
 
 export type CurrentGameweekSummary = {
   transfers : EntryTransfer[]
-  chips : Chip[]
+  chips : Chip[],
+  captain: Player
 }
 
 export async function getTransfersForEntries(entries: Entry[]): Promise<Map<string, CurrentGameweekSummary>> {
@@ -90,7 +100,14 @@ export async function getTransfersForEntries(entries: Entry[]): Promise<Map<stri
   for(const inject of entries){
      const history = await http<EntryHistory>(`/api/fpl/entry/${inject.entry}/history`);
      const chipsForCurrentGw = history.chips.filter(c => c.event == currentGw.id);
-      entryTransfersMap.set(inject.player_name, { transfers: [], chips: chipsForCurrentGw });
+     const picks = await http<PicksRes>(`/api/fpl/entry/${inject.entry}/event/${currentGw.id}/picks/`);
+     const captainEl = picks.picks.filter(p => p.is_captain)[0];
+     const captainPlayer = bootstrap.elements.filter(e => e.id === captainEl.element)[0]
+      entryTransfersMap.set(inject.player_name, {
+        transfers: [],
+        chips: chipsForCurrentGw,
+        captain: captainPlayer
+      });
   }
 
   for await (const entry of entries) {
