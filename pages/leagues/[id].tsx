@@ -38,8 +38,9 @@ const LeagueIndex: NextPage = () => {
           {value.length > 0 ? value.map((item, i) =>
           (
             <div className={`'grid grid-cols-3' ${i > 0 ? 'mt-4' : ''}`}>
-              <div className="bg-red-200 rounded-md pl-1 mb-1">{item.playerOut.web_name}</div>
-              <div className="bg-green-200 rounded-md pl-1">{item.playerIn.web_name}</div>
+              <div className="italic text-xs text-gray-500">{timeFormatted(item.time) }</div>
+              <div className="bg-red-200 rounded-md pl-1 mb-1">{item.playerOut.web_name}({item.playerOutCost})</div>
+              <div className="bg-green-200 rounded-md pl-1">{item.playerIn.web_name}({item.playerInCost})</div>
             </div>
           ))
             :
@@ -119,3 +120,9 @@ const LeagueIndex: NextPage = () => {
 };
 
 export default LeagueIndex;
+
+function timeFormatted(time: Date): React.ReactNode {
+  var date = new Date(time)
+  return `${date.getDay()}/${date.getMonth()+1} ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+}
+
