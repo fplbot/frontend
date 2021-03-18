@@ -55,6 +55,16 @@ export type LeagueResError = {
   status: number;
 }
 
+type EntryHistory = {
+  chips : Chip[];
+}
+
+type Chip = {
+  name: string;
+  time: Date,
+  event: number
+}
+
 export async function http<T>(request: RequestInfo): Promise<T> {
   const response = await fetch(request);
   if (response.ok) {
@@ -66,17 +76,25 @@ export async function http<T>(request: RequestInfo): Promise<T> {
   });
 }
 
-export async function getTransfersForEntries(entries: Entry[]): Promise<Map<string, EntryTransfer[]>> {
+export type CurrentGameweekSummary = {
+  transfers : EntryTransfer[]
+  chips : Chip[]
+}
+
+export async function getTransfersForEntries(entries: Entry[]): Promise<Map<string, CurrentGameweekSummary>> {
   const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static/`);
-  let entryTransfersMap = new Map<string, EntryTransfer[]>();
+  const currentGw = bootstrap.events.filter(e => e.is_current)[0];
+
+  let entryTransfersMap = new Map<string, CurrentGameweekSummary>();
 
   for(const inject of entries){
-      entryTransfersMap.set(inject.player_name, []);
+     const history = await http<EntryHistory>(`/api/fpl/entry/${inject.entry}/history`);
+     const chipsForCurrentGw = history.chips.filter(c => c.event == currentGw.id);
+      entryTransfersMap.set(inject.player_name, { transfers: [], chips: chipsForCurrentGw });
   }
 
   for await (const entry of entries) {
     const transfers = await http<Transfer[]>(`/api/fpl/entry/${entry.entry}/transfers`);
-    const currentGw = bootstrap.events.filter(e => e.is_current)[0];
     const transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
 
     transfersForCurrentGw.forEach(t => {
@@ -89,19 +107,22 @@ export async function getTransfersForEntries(entries: Entry[]): Promise<Map<stri
         playerOutCost: `${t.element_out_cost/10}£`,
         time: t.time
       } });
-      let existingTransfers = entryTransfersMap.get(entry.player_name);
-      if(existingTransfers){
-        existingTransfers.push({
+      let summary = entryTransfersMap.get(entry.player_name);
+      if(summary?.transfers){
+        summary.transfers.push({
           playerIn: playerIn,
           playerInCost : `${t.element_in_cost/10}£`,
           playerOut: playerOut,
           playerOutCost: `${t.element_out_cost/10}£`,
           time: t.time
         });
-        entryTransfersMap.set(entry.player_name, existingTransfers);
+        entryTransfersMap.set(entry.player_name, summary);
       }
       else{
-        entryTransfersMap.set(entry.player_name, entryTransfers);
+        entryTransfersMap.set(entry.player_name, {
+          chips: summary?.chips || [],
+          transfers : entryTransfers
+        });
       }
     });
   }
