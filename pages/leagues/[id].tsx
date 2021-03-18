@@ -4,7 +4,7 @@ import React, { Component, useState } from 'react';
 import useSWR from 'swr'
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Footer from '../../components/Footer';
-import { getTransfersForEntries, LeagueRes, LeagueResError, Entry, EntryTransfer, http } from '../../services/leagues';
+import { getTransfersForEntries, LeagueRes, LeagueResError, Entry, EntryTransfer, http, CurrentGameweekSummary } from '../../services/leagues';
 import Button from '../../components/Button';
 import SimpleHeader from '../../components/Menu';
 
@@ -17,25 +17,25 @@ const LeagueIndex: NextPage = () => {
   const segs = window?.location.pathname.split('/');
   const id = parseInt(segs[segs.length - 1]);
 
-  const [playerTransfers, setPlayerTransfers] = useState<Map<string, EntryTransfer[]>>(new Map<string, EntryTransfer[]>());
+  const [summaries, setPlayerSummaries] = useState<Map<string, CurrentGameweekSummary>>(new Map<string, CurrentGameweekSummary>());
   const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings/`, http);
 
   async function fetchTransfersClick() {
     if (data) {
-      var transfers = await getTransfersForEntries(data.standings.results)
-      setPlayerTransfers(transfers);
+      var summary = await getTransfersForEntries(data.standings.results)
+      setPlayerSummaries(summary);
     }
   };
 
   const items: JSX.Element[] = [];
-  playerTransfers.forEach((value: EntryTransfer[], key: string) => {
+  summaries.forEach((value: CurrentGameweekSummary, key: string) => {
     items.push((
       <div key={key} className="divide-y-4 divide-fpl-purple">
         <div className="text-left align-top font-bold">
-          {key}
+          {key} {value.chips.length > 0 && (<span className="text-fpl-purple-bright uppercase">({value.chips.map(c => c.name)})</span>)}
         </div>
         <div className="text-left align-top p-3">
-          {value.length > 0 ? value.map((item, i) =>
+          {value.transfers.length > 0 ? value.transfers.map((item, i) =>
           (
             <div className={`'grid grid-cols-3' ${i > 0 ? 'mt-4' : ''}`}>
               <div className="italic text-xs text-gray-500">{timeFormatted(item.time) }</div>
