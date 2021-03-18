@@ -138,7 +138,8 @@ export async function getTransfersForEntries(entries: Entry[]): Promise<Map<stri
       else{
         entryTransfersMap.set(entry.player_name, {
           chips: summary?.chips || [],
-          transfers : entryTransfers
+          transfers : entryTransfers,
+          captain : summary?.captain || { id: 1, web_name: "lol"}
         });
       }
     });
