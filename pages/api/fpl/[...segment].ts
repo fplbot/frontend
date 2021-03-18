@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const url = `https://fantasy.premierleague.com${req.url?.replace('/fpl', '')}/`;
-  console.log(url);
   const fplRes = await fetch(url, {
     method: 'GET',
     headers: {
