@@ -45,7 +45,7 @@ type Event = {
 
 export type EntryTransfer = {
   playerIn: Player;
-  playerInCost : string;
+  playerInCost: string;
   playerOut: Player;
   playerOutCost: string;
   time: Date;
@@ -56,7 +56,7 @@ export type LeagueResError = {
 }
 
 type EntryHistory = {
-  chips : Chip[];
+  chips: Chip[];
 }
 
 type Chip = {
@@ -66,11 +66,11 @@ type Chip = {
 }
 
 type PicksRes = {
-  picks : Pick[]
+  picks: Pick[]
 }
 
 type Pick = {
-  element : number,
+  element: number,
   is_captain: boolean
 }
 
@@ -86,8 +86,8 @@ export async function http<T>(request: RequestInfo): Promise<T> {
 }
 
 export type CurrentGameweekSummary = {
-  transfers : EntryTransfer[]
-  chips : Chip[],
+  transfers: EntryTransfer[]
+  chips: Chip[],
   captain: Player
 }
 
@@ -97,50 +97,34 @@ export async function getTransfersForEntries(entries: Entry[]): Promise<Map<stri
 
   let entryTransfersMap = new Map<string, CurrentGameweekSummary>();
 
-  for(const inject of entries){
-     const history = await http<EntryHistory>(`/api/fpl/entry/${inject.entry}/history`);
-     const chipsForCurrentGw = history.chips.filter(c => c.event == currentGw.id);
-     const picks = await http<PicksRes>(`/api/fpl/entry/${inject.entry}/event/${currentGw.id}/picks`);
-     const captainEl = picks.picks.filter(p => p.is_captain)[0];
-     const captainPlayer = bootstrap.elements.filter(e => e.id === captainEl.element)[0]
-      entryTransfersMap.set(inject.player_name, {
-        transfers: [],
-        chips: chipsForCurrentGw,
-        captain: captainPlayer
-      });
-  }
-
   for await (const entry of entries) {
     const transfers = await http<Transfer[]>(`/api/fpl/entry/${entry.entry}/transfers`);
     const transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
+    const history = await http<EntryHistory>(`/api/fpl/entry/${entry.entry}/history`);
+    const chipsForCurrentGw = history.chips.filter(c => c.event == currentGw.id);
+    const picks = await http<PicksRes>(`/api/fpl/entry/${entry.entry}/event/${currentGw.id}/picks`);
+    const captainEl = picks.picks.filter(p => p.is_captain)[0];
+    const captainPlayer = bootstrap.elements.filter(e => e.id === captainEl.element)[0]
+
+    entryTransfersMap.set(entry.player_name, {
+      transfers: [],
+      chips: chipsForCurrentGw,
+      captain: captainPlayer
+    });
 
     transfersForCurrentGw.forEach(t => {
       const playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
       const playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
-      var entryTransfers = transfersForCurrentGw.map(t => { return {
-        playerIn: playerIn,
-        playerOut: playerOut,
-        playerInCost: `${t.element_in_cost/10}£`,
-        playerOutCost: `${t.element_out_cost/10}£`,
-        time: t.time
-      } });
       let summary = entryTransfersMap.get(entry.player_name);
-      if(summary?.transfers){
+      if (summary && summary.transfers) {
         summary.transfers.push({
           playerIn: playerIn,
-          playerInCost : `${t.element_in_cost/10}£`,
+          playerInCost: `${t.element_in_cost / 10}£`,
           playerOut: playerOut,
-          playerOutCost: `${t.element_out_cost/10}£`,
+          playerOutCost: `${t.element_out_cost / 10}£`,
           time: t.time
         });
         entryTransfersMap.set(entry.player_name, summary);
-      }
-      else{
-        entryTransfersMap.set(entry.player_name, {
-          chips: summary?.chips || [],
-          transfers : entryTransfers,
-          captain : summary?.captain || { id: 1, web_name: "lol"}
-        });
       }
     });
   }
