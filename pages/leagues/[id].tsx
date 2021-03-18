@@ -18,7 +18,7 @@ const LeagueIndex: NextPage = () => {
   const id = parseInt(segs[segs.length - 1]);
 
   const [summaries, setPlayerSummaries] = useState<Map<string, CurrentGameweekSummary>>(new Map<string, CurrentGameweekSummary>());
-  const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings/`, http);
+  const { data, error } = useSWR<LeagueRes, LeagueResError>(`/api/fpl/leagues-classic/${id}/standings`, http);
 
   async function fetchTransfersClick() {
     if (data) {

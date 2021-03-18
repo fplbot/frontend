@@ -92,7 +92,7 @@ export type CurrentGameweekSummary = {
 }
 
 export async function getTransfersForEntries(entries: Entry[]): Promise<Map<string, CurrentGameweekSummary>> {
-  const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static/`);
+  const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static`);
   const currentGw = bootstrap.events.filter(e => e.is_current)[0];
 
   let entryTransfersMap = new Map<string, CurrentGameweekSummary>();
@@ -100,7 +100,7 @@ export async function getTransfersForEntries(entries: Entry[]): Promise<Map<stri
   for(const inject of entries){
      const history = await http<EntryHistory>(`/api/fpl/entry/${inject.entry}/history`);
      const chipsForCurrentGw = history.chips.filter(c => c.event == currentGw.id);
-     const picks = await http<PicksRes>(`/api/fpl/entry/${inject.entry}/event/${currentGw.id}/picks/`);
+     const picks = await http<PicksRes>(`/api/fpl/entry/${inject.entry}/event/${currentGw.id}/picks`);
      const captainEl = picks.picks.filter(p => p.is_captain)[0];
      const captainPlayer = bootstrap.elements.filter(e => e.id === captainEl.element)[0]
       entryTransfersMap.set(inject.player_name, {
