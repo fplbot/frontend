@@ -21,8 +21,11 @@ export type LeagueRes = {
 
 type Transfer = {
   element_in: number;
+  element_in_cost: number;
   element_out: number;
+  element_out_cost: number;
   event: number;
+  time: Date;
 }
 
 type Bootstrap = {
@@ -42,7 +45,10 @@ type Event = {
 
 export type EntryTransfer = {
   playerIn: Player;
+  playerInCost : string;
   playerOut: Player;
+  playerOutCost: string;
+  time: Date;
 }
 
 export type LeagueResError = {
@@ -76,15 +82,27 @@ export async function getTransfersForEntries(entries: Entry[]): Promise<Map<stri
     transfersForCurrentGw.forEach(t => {
       const playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
       const playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
-      var entryTransfers = transfersForCurrentGw.map(t => { return { playerIn: playerIn, playerOut: playerOut } });
+      var entryTransfers = transfersForCurrentGw.map(t => { return {
+        playerIn: playerIn,
+        playerOut: playerOut,
+        playerInCost: `${t.element_in_cost/10}£`,
+        playerOutCost: `${t.element_out_cost/10}£`,
+        time: t.time
+      } });
       let existingTransfers = entryTransfersMap.get(entry.player_name);
       if(existingTransfers){
-        existingTransfers.push({ playerIn: playerIn, playerOut: playerOut});
+        existingTransfers.push({
+          playerIn: playerIn,
+          playerInCost : `${t.element_in_cost/10}£`,
+          playerOut: playerOut,
+          playerOutCost: `${t.element_out_cost/10}£`,
+          time: t.time
+        });
         entryTransfersMap.set(entry.player_name, existingTransfers);
       }
       else{
         entryTransfersMap.set(entry.player_name, entryTransfers);
-      } 
+      }
     });
   }
 
