@@ -130,7 +130,7 @@ const SummaryList = ({ gameweekSummary, fetchSummary }: SummaryListProps) => {
     return (
       <div className="py-4">
         <Button onClick={fetchSummary} shape="square">
-          Load transfers
+          Load gameweek summary
         </Button>
       </div>
     );
@@ -142,7 +142,7 @@ const SummaryList = ({ gameweekSummary, fetchSummary }: SummaryListProps) => {
 
   if (gameweekSummary.type === "LOADING") {
     return (
-      <div className="py-4">
+      <div className="pt-6 pb-4">
         <CenteredSpinner size="sm" />
       </div>
     );
@@ -158,10 +158,13 @@ const SummaryList = ({ gameweekSummary, fetchSummary }: SummaryListProps) => {
               className="underline"
             >
               {value.playerName}
-            </a>{" "}
+            </a>
             {value.chip !== undefined && <span className="pl-4"><Chip chipUsed={value.chip.name} /></span>}
           </div>
-          <div className="text-left align-top p-3">
+          <p className="pt-4 pb-3 text-left pl-3"><b>Captains: </b></p>
+          <p className="mb-4 text-left pl-4"><b></b>{value.captain} (C) - {value.viceCaptain} (VC) </p>
+          <p className="text-left pl-3"><b>Transfers: </b></p>
+          <div className="text-left p-3">
             {value.transfers.length > 0 ? (
               value.transfers.map((item, i) => (
                 <div
@@ -183,7 +186,7 @@ const SummaryList = ({ gameweekSummary, fetchSummary }: SummaryListProps) => {
                 </div>
               ))
             ) : (
-              <div className="italic">No transfers</div>
+              <div className="italic pl-1">No transfers</div>
             )}
           </div>
         </div>

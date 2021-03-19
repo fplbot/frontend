@@ -76,6 +76,20 @@ interface Chip {
   event: number;
 }
 
+interface EntryHistory {
+  chips: Chip[];
+}
+
+interface PicksRes {
+  picks: Pick[];
+}
+
+interface Pick {
+  element: number;
+  is_captain: boolean;
+  is_vice_captain: boolean;
+}
+
 export async function http<T>(request: RequestInfo): Promise<T> {
   const response = await fetch(request);
   if (response.ok) {
@@ -92,6 +106,8 @@ export interface CurrentGameweekSummary {
   entry: number;
   transfers: EntryTransfer[];
   chip?: Chip;
+  captain: string;
+  viceCaptain: string;
 }
 
 interface CurrentGameweekSummaryData {
@@ -126,6 +142,19 @@ export async function getGameweekSummary(
         (c) => c.event == currentGw.id
       )[0];
 
+      const picks = await http<PicksRes>(
+        `/api/fpl/entry/${entry.entry}/event/${currentGw.id}/picks`
+      );
+      const captainPick = picks.picks.filter(p => p.is_captain)[0];
+      const captainPlayer = bootstrap.elements.filter(
+        (e) => e.id === captainPick.element
+      )[0];
+
+      const viceCaptainPick = picks.picks.filter(p => p.is_vice_captain)[0];
+      const viceCaptainPlayer = bootstrap.elements.filter(
+        (e) => e.id === viceCaptainPick.element
+      )[0];
+
       const transfersForCurrentGw = transfers
         .filter((t) => t.event === currentGw.id)
         .map((t) => {
@@ -150,6 +179,8 @@ export async function getGameweekSummary(
         entry: entry.entry,
         transfers: transfersForCurrentGw,
         chip: chipForCurrentGw,
+        captain: captainPlayer.web_name,
+        viceCaptain: viceCaptainPlayer.web_name
       });
     }
 
