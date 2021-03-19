@@ -1,6 +1,14 @@
 import React from "react";
 import classNames from "classnames";
 
+export function CenteredSpinner(props: SpinnerProps) {
+  return (
+    <div className={'flex justify-center'} >
+      <Spinner {...props}/>
+    </div>
+  );
+}
+
 interface SpinnerProps {
   size: 'sm' | 'lg';
   className?: string;

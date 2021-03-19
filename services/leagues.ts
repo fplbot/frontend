@@ -1,25 +1,39 @@
-type League = {
+import useSWR from "swr";
+import { ChipType } from "./verified";
+
+interface Init {
+  type: "INIT";
+}
+
+interface Loading {
+  type: "LOADING";
+}
+interface Error {
+  type: "ERROR";
+}
+
+interface League {
   id: number;
   name: string;
 }
 
-export type Entry = {
+export interface Entry {
   entry: number;
   player_name: string;
   rank: number;
   total: number;
 }
 
-type Standings = {
+interface Standings {
   results: Entry[];
 }
 
-export type LeagueRes = {
+export interface LeagueRes {
   league: League;
   standings: Standings;
 }
 
-type Transfer = {
+interface Transfer {
   element_in: number;
   element_in_cost: number;
   element_out: number;
@@ -28,22 +42,23 @@ type Transfer = {
   time: Date;
 }
 
-type Bootstrap = {
+interface Bootstrap {
   elements: Player[];
   events: Event[];
 }
 
-type Player = {
+interface Player {
   id: number;
   web_name: string;
+  code: string;
 }
 
-type Event = {
+interface Event {
   id: number;
   is_current: boolean;
 }
 
-export type EntryTransfer = {
+export interface EntryTransfer {
   playerIn: Player;
   playerInCost: string;
   playerOut: Player;
@@ -51,27 +66,29 @@ export type EntryTransfer = {
   time: Date;
 }
 
-export type LeagueResError = {
-  status: number;
-}
-
-type EntryHistory = {
+interface EntryHistory {
   chips: Chip[];
 }
 
-type Chip = {
-  name: string;
-  time: Date,
-  event: number
+interface Chip {
+  name: ChipType;
+  time: Date;
+  event: number;
+
 }
 
-type PicksRes = {
-  picks: Pick[]
+interface EntryHistory {
+  chips: Chip[];
 }
 
-type Pick = {
-  element: number,
-  is_captain: boolean
+interface PicksRes {
+  picks: Pick[];
+}
+
+interface Pick {
+  element: number;
+  is_captain: boolean;
+  is_vice_captain: boolean;
 }
 
 export async function http<T>(request: RequestInfo): Promise<T> {
@@ -81,53 +98,139 @@ export async function http<T>(request: RequestInfo): Promise<T> {
     return body;
   }
   return Promise.reject({
-    status: response.status
+    status: response.status,
   });
 }
-
-export type CurrentGameweekSummary = {
-  transfers: EntryTransfer[]
-  chips: Chip[],
-  captain: Player
+export interface CurrentGameweekSummary {
+  playerName: string;
+  entry: number;
+  transfers: EntryTransfer[];
+  chip?: Chip;
+  captain: string;
+  viceCaptain: string;
 }
 
-export async function getTransfersForEntries(entries: Entry[]): Promise<Map<string, CurrentGameweekSummary>> {
-  const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static`);
-  const currentGw = bootstrap.events.filter(e => e.is_current)[0];
+interface CurrentGameweekSummaryData {
+  type: "DATA";
+  data: CurrentGameweekSummary[];
+}
 
-  let entryTransfersMap = new Map<string, CurrentGameweekSummary>();
+export type CurrentGameweekSummaryState =
+  | Init
+  | Loading
+  | Error
+  | CurrentGameweekSummaryData;
 
-  for await (const entry of entries) {
-    const transfers = await http<Transfer[]>(`/api/fpl/entry/${entry.entry}/transfers`);
-    const transfersForCurrentGw = transfers.filter(t => t.event === currentGw.id);
-    const history = await http<EntryHistory>(`/api/fpl/entry/${entry.entry}/history`);
-    const chipsForCurrentGw = history.chips.filter(c => c.event == currentGw.id);
-    const picks = await http<PicksRes>(`/api/fpl/entry/${entry.entry}/event/${currentGw.id}/picks`);
-    const captainEl = picks.picks.filter(p => p.is_captain)[0];
-    const captainPlayer = bootstrap.elements.filter(e => e.id === captainEl.element)[0]
+export async function getGameweekSummary(
+  entries: Entry[]
+): Promise<CurrentGameweekSummaryState> {
+  try {
+    const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static/`);
+    const currentGw = bootstrap.events.filter((e) => e.is_current)[0];
 
-    entryTransfersMap.set(entry.player_name, {
-      transfers: [],
-      chips: chipsForCurrentGw,
-      captain: captainPlayer
-    });
+    const currentGameweekSummary: CurrentGameweekSummary[] = [];
 
-    transfersForCurrentGw.forEach(t => {
-      const playerIn = bootstrap.elements.filter(e => e.id === t.element_in)[0];
-      const playerOut = bootstrap.elements.filter(e => e.id === t.element_out)[0];
-      let summary = entryTransfersMap.get(entry.player_name);
-      if (summary && summary.transfers) {
-        summary.transfers.push({
-          playerIn: playerIn,
-          playerInCost: `${t.element_in_cost / 10}£`,
-          playerOut: playerOut,
-          playerOutCost: `${t.element_out_cost / 10}£`,
-          time: t.time
+    for await (const entry of entries) {
+      const transfers = await http<Transfer[]>(
+        `/api/fpl/entry/${entry.entry}/transfers`
+      );
+
+      const history = await http<EntryHistory>(
+        `/api/fpl/entry/${entry.entry}/history`
+      );
+      const chipForCurrentGw = history.chips.filter(
+        (c) => c.event == currentGw.id
+      )[0];
+
+      const picks = await http<PicksRes>(
+        `/api/fpl/entry/${entry.entry}/event/${currentGw.id}/picks`
+      );
+      const captainPick = picks.picks.filter(p => p.is_captain)[0];
+      const captainPlayer = bootstrap.elements.filter(
+        (e) => e.id === captainPick.element
+      )[0];
+
+      const viceCaptainPick = picks.picks.filter(p => p.is_vice_captain)[0];
+      const viceCaptainPlayer = bootstrap.elements.filter(
+        (e) => e.id === viceCaptainPick.element
+      )[0];
+
+      const transfersForCurrentGw = transfers
+        .filter((t) => t.event === currentGw.id)
+        .map((t) => {
+          const playerIn = bootstrap.elements.filter(
+            (e) => e.id === t.element_in
+          )[0];
+          const playerOut = bootstrap.elements.filter(
+            (e) => e.id === t.element_out
+          )[0];
+
+          return {
+            playerIn: playerIn,
+            playerOut: playerOut,
+            playerInCost: `£${t.element_in_cost / 10}`,
+            playerOutCost: `£${t.element_out_cost / 10}`,
+            time: t.time,
+          };
         });
-        entryTransfersMap.set(entry.player_name, summary);
-      }
-    });
+
+      currentGameweekSummary.push({
+        playerName: entry.player_name,
+        entry: entry.entry,
+        transfers: transfersForCurrentGw,
+        chip: chipForCurrentGw,
+        captain: captainPlayer.web_name,
+        viceCaptain: viceCaptainPlayer.web_name
+      });
+    }
+
+    return {
+      type: "DATA",
+      data: currentGameweekSummary,
+    };
+  } catch (e) {
+    return {
+      type: "ERROR",
+    };
+  }
+}
+
+interface StandingsData {
+  type: "DATA";
+  data: LeagueRes;
+}
+
+export type StandingsLeagueResult = Loading | Error | StandingsData;
+
+interface StandingsLeagueState {
+  standingsState: StandingsLeagueResult;
+}
+
+export function useLeagueStandings(id: number): StandingsLeagueState {
+  const { data, error } = useSWR<LeagueRes>(
+    `/api/fpl/leagues-classic/${id}/standings/`,
+    http
+  );
+
+  if (data && !error) {
+    return {
+      standingsState: {
+        type: "DATA",
+        data: data,
+      },
+    };
   }
 
-  return entryTransfersMap;
+  if (!data && !error) {
+    return {
+      standingsState: {
+        type: "LOADING",
+      },
+    };
+  }
+  return {
+    standingsState: {
+      type: "ERROR",
+    },
+  };
 }
