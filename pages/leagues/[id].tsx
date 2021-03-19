@@ -39,7 +39,7 @@ const LeagueIndex: NextPage = () => {
             breadcrumbs={[
               { title: "Home", href: "/" },
               { title: "Leagues" },
-              { title: id && id != NaN ? id.toString() : "?" },
+              { title: id && id != NaN && standingsState.type === "DATA" ? standingsState.data.league.name : id.toString() },
             ]}
           />
           <Content standingsState={standingsState} />
@@ -82,12 +82,12 @@ const Content = ({ standingsState }: ContentProps) => {
         </thead>
         <tbody className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
           {data.standings.results.map((item, i) => (
-            <tr key={item.entry}>
+            <tr key={item.entry} className={`${i > 2 ? "hidden sm:table-row" : ""}`}>
               <td className="text-center border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {i === 0 && "🥇"}
                 {i === 1 && "🥈"}
                 {i === 2 && "🥉"}
-                {i !== 0 && i !== 1 && i !== 2 && item.rank}
+                {i > 2 && item.rank}
               </td>
               <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {item.player_name}
