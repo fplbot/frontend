@@ -168,8 +168,8 @@ export async function getGameweekSummary(
           return {
             playerIn: playerIn,
             playerOut: playerOut,
-            playerInCost: `${t.element_in_cost / 10}£`,
-            playerOutCost: `${t.element_out_cost / 10}£`,
+            playerInCost: `£${t.element_in_cost / 10}`,
+            playerOutCost: `£${t.element_out_cost / 10}`,
             time: t.time,
           };
         });
