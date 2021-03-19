@@ -8,6 +8,7 @@ import {
   StandingsLeagueResult,
   CurrentGameweekSummaryState,
   getGameweekSummary,
+  Entry,
 } from "../../services/leagues";
 import Button from "../../components/Button";
 import SimpleHeader from "../../components/Menu";
@@ -64,20 +65,6 @@ const Content = ({ standingsState }: ContentProps) => {
     return <ErrorComponent />;
   }
 
-  const [
-    gameweekSummary,
-    setGameweekSummary,
-  ] = useState<CurrentGameweekSummaryState>({ type: "INIT" });
-
-  function fetchGameweekSummary() {
-    setGameweekSummary({ type: "LOADING" });
-    if (standingsState.type === "DATA") {
-      getGameweekSummary(standingsState.data.standings.results).then((res) =>
-        setGameweekSummary(res)
-      );
-    }
-  }
-
   const data = standingsState.data;
 
   return (
@@ -112,20 +99,29 @@ const Content = ({ standingsState }: ContentProps) => {
           ))}
         </tbody>
       </table>
-      <SummaryList
-        gameweekSummary={gameweekSummary}
-        fetchSummary={fetchGameweekSummary}
-      />
+      <SummaryList entries={data.standings.results} />
     </div>
   );
 };
 
 interface SummaryListProps {
-  gameweekSummary: CurrentGameweekSummaryState;
-  fetchSummary: () => void;
+  entries: Entry[];
 }
 
-const SummaryList = ({ gameweekSummary, fetchSummary }: SummaryListProps) => {
+const SummaryList = ({ entries }: SummaryListProps) => {
+
+  const [
+    gameweekSummary,
+    setGameweekSummary,
+  ] = useState<CurrentGameweekSummaryState>({ type: "INIT" });
+
+  function fetchSummary() {
+    setGameweekSummary({ type: "LOADING" });
+    getGameweekSummary(entries).then((res) => {
+      setGameweekSummary(res);
+    });
+  }
+
   if (gameweekSummary.type === "INIT") {
     return (
       <div className="py-4">
