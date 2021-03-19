@@ -74,6 +74,7 @@ interface Chip {
   name: ChipType;
   time: Date;
   event: number;
+
 }
 
 interface EntryHistory {
@@ -100,7 +101,6 @@ export async function http<T>(request: RequestInfo): Promise<T> {
     status: response.status,
   });
 }
-
 export interface CurrentGameweekSummary {
   playerName: string;
   entry: number;

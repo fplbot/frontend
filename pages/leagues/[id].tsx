@@ -142,7 +142,7 @@ const SummaryList = ({ gameweekSummary, fetchSummary }: SummaryListProps) => {
 
   if (gameweekSummary.type === "LOADING") {
     return (
-      <div className="pt-6 pb-4">
+      <div className="pt-8 pb-6">
         <CenteredSpinner size="sm" />
       </div>
     );
