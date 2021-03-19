@@ -7,20 +7,20 @@
 }
 
 @media (min-width: 640px) {
-  table {
+  .searchtable table {
     display: inline-table !important;
   }
 
-  thead tr:not(:first-child) {
+  .searchtable thead tr:not(:first-child) {
     display: none;
   }
 }
 
-td:not(:last-child) {
+.searchtable td:not(:last-child) {
   border-bottom: 0;
 }
 
-th:not(:last-child) {
+.searchtable th:not(:last-child) {
   border-bottom: 2px solid rgba(0, 0, 0, .1);
 }
 
@@ -211,4 +211,8 @@ th:not(:last-child) {
   .verified-table__cap {
     width: 10rem;
   }
+}
+
+.league-transfers {
+  max-width: 500px;
 }

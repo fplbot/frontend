@@ -263,7 +263,7 @@ const ResultTable = ({
         currentPage={page}
         updatePage={updatePage}
       />
-      <table className="w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
+      <table className="searchtable w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
         <thead className="text-white">
           {searchState.data.map((data, i) => (
             <tr
