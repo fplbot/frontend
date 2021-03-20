@@ -65,6 +65,12 @@ const Content = ({ standingsState }: ContentProps) => {
     return <ErrorComponent />;
   }
 
+  const [showFullTable, setShowFullTable] = useState(false);
+
+  function showCompleteTable(){
+    setShowFullTable(true);
+  }
+
   const data = standingsState.data;
 
   return (
@@ -82,7 +88,7 @@ const Content = ({ standingsState }: ContentProps) => {
         </thead>
         <tbody className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
           {data.standings.results.map((item, i) => (
-            <tr key={item.entry} className={`${i > 2 ? "hidden sm:table-row" : ""}`}>
+            <tr key={item.entry} className={`${i > 2 && !showFullTable ? "hidden sm:hidden md:table-row lg:table-row xl:table-row 2xl:table-row " : ""}`}>
               <td className="text-center border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {i === 0 && "🥇"}
                 {i === 1 && "🥈"}
@@ -98,6 +104,13 @@ const Content = ({ standingsState }: ContentProps) => {
             </tr>
           ))}
         </tbody>
+        <tfoot className={!showFullTable ? "sm:visible md:hidden lg:hidden xl:hidden 2xl:hidden" : "hidden"}>
+          <tr >
+            <td colSpan={3} className="text-center text-sm bg-white text-gray-500 border-grey-light p-2">
+                <a onClick={showCompleteTable} className="underline">Show full table</a>
+            </td>
+          </tr>
+        </tfoot>
       </table>
       <SummaryList entries={data.standings.results} />
     </div>
