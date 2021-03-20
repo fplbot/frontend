@@ -106,8 +106,8 @@ const Content = ({ standingsState }: ContentProps) => {
         </tbody>
         <tfoot className={!showFullTable ? "sm:visible md:hidden lg:hidden xl:hidden 2xl:hidden" : "hidden"}>
           <tr >
-            <td colSpan={3} className="text-center text-sm bg-white text-gray-500 border-grey-light p-2">
-                <a onClick={showCompleteTable} className="underline">Show full table</a>
+            <td onClick={showCompleteTable} colSpan={3} className="font-extrabold shadow hover:shadow-xl transition duration-500 text-center text-sm bg-fpl-purple text-white hover:bg-fpl-green hover:text-fpl-purple cursor-pointer">
+                +
             </td>
           </tr>
         </tfoot>
