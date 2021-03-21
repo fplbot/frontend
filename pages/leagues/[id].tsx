@@ -129,14 +129,11 @@ const SummaryList = ({ leagueId }: SummaryListProps) => {
 
   useEffect(() => {
     fetchSummary();
-  },[])
+  }, [])
 
   function fetchSummary() {
     getGameweekSummary(leagueId, summaries => {
-      setGameweekSummary({
-        type: "DATA",
-        data: summaries
-      });
+      setGameweekSummary(summaries);
     });
   }
 

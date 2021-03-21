@@ -122,7 +122,7 @@ export type CurrentGameweekSummaryState =
 
 export async function getGameweekSummary(
   id: number,
-  listUpdate : (summaries:CurrentGameweekSummary[]) => void
+  listUpdate?: (summaries: CurrentGameweekSummaryData) => void
 ): Promise<CurrentGameweekSummaryState> {
   const leagueRes = await http<LeagueRes>(`/api/fpl/leagues-classic/${id}/standings/`);
   const entries = leagueRes.standings.results;
@@ -184,7 +184,12 @@ export async function getGameweekSummary(
         captain: captainPlayer.web_name,
         viceCaptain: viceCaptainPlayer.web_name
       });
-      listUpdate(currentGameweekSummary);
+
+      if (listUpdate)
+        listUpdate({
+          type: "DATA",
+          data: currentGameweekSummary,
+        });
     }
 
     return {
