@@ -1,4 +1,5 @@
 import { FPLBOT_API_BASEURL } from "../utils/envconfig";
+import { ChipType } from "./fpl";
 
 export interface VerifiedPLEntry {
   entryId: number;
@@ -38,8 +39,6 @@ export interface VerifiedEntry {
   movement: number;
   gameweek: number;
 }
-
-export type ChipType = "3xc" | "wildcard" | "freehit" | "bboost";
 
 interface GetVerifiedPLEntriesSuccess {
   type: "SUCCESS";
