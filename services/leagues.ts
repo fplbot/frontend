@@ -122,7 +122,7 @@ export type CurrentGameweekSummaryState =
 
 export async function getGameweekSummary(
   id: number,
-  listUpdate?: (summaries: CurrentGameweekSummaryData) => void
+  listUpdate?: (summaries: CurrentGameweekSummaryState) => void
 ): Promise<CurrentGameweekSummaryState> {
   const leagueRes = await http<LeagueRes>(`/api/fpl/leagues-classic/${id}/standings/`);
   const entries = leagueRes.standings.results;
@@ -131,65 +131,26 @@ export async function getGameweekSummary(
     const currentGw = bootstrap.events.filter((e) => e.is_current)[0];
 
     const currentGameweekSummary: CurrentGameweekSummary[] = [];
-
     for await (const entry of entries) {
-      const transfers = await http<Transfer[]>(
-        `/api/fpl/entry/${entry.entry}/transfers`
-      );
+      try {
+        const summary = await summaryForEntry(entry, currentGw, bootstrap);
 
-      const history = await http<EntryHistory>(
-        `/api/fpl/entry/${entry.entry}/history`
-      );
-      const chipForCurrentGw = history.chips.filter(
-        (c) => c.event == currentGw.id
-      )[0];
+        currentGameweekSummary.push(summary);
+        if (listUpdate)
+          listUpdate({
+            type: "DATA",
+            data: currentGameweekSummary,
+          });
+      } catch {
+        if (listUpdate)
+          listUpdate({
+            type: "ERROR"
+          });
+        return {
+          type: "ERROR"
+        };
+      }
 
-      const picks = await http<PicksRes>(
-        `/api/fpl/entry/${entry.entry}/event/${currentGw.id}/picks`
-      );
-      const captainPick = picks.picks.filter(p => p.is_captain)[0];
-      const captainPlayer = bootstrap.elements.filter(
-        (e) => e.id === captainPick.element
-      )[0];
-
-      const viceCaptainPick = picks.picks.filter(p => p.is_vice_captain)[0];
-      const viceCaptainPlayer = bootstrap.elements.filter(
-        (e) => e.id === viceCaptainPick.element
-      )[0];
-
-      const transfersForCurrentGw = transfers
-        .filter((t) => t.event === currentGw.id)
-        .map((t) => {
-          const playerIn = bootstrap.elements.filter(
-            (e) => e.id === t.element_in
-          )[0];
-          const playerOut = bootstrap.elements.filter(
-            (e) => e.id === t.element_out
-          )[0];
-
-          return {
-            playerIn: playerIn,
-            playerOut: playerOut,
-            playerInCost: `£${t.element_in_cost / 10}`,
-            playerOutCost: `£${t.element_out_cost / 10}`,
-            time: t.time,
-          };
-        });
-
-      currentGameweekSummary.push({
-        playerName: entry.player_name,
-        entry: entry.entry,
-        transfers: transfersForCurrentGw,
-        chip: chipForCurrentGw,
-        captain: captainPlayer.web_name,
-        viceCaptain: viceCaptainPlayer.web_name
-      });
-
-      if (listUpdate)
-        listUpdate({
-          type: "DATA",
-          data: currentGameweekSummary,
-        });
     }
 
     return {
@@ -200,6 +161,62 @@ export async function getGameweekSummary(
     return {
       type: "ERROR",
     };
+  }
+}
+
+async function summaryForEntry(entry: Entry, currentGw: Event, bootstrap: Bootstrap)
+  : Promise<CurrentGameweekSummary> {
+
+  const transfers = await http<Transfer[]>(
+    `/api/fpl/entry/${entry.entry}/transfers`
+  );
+
+  const history = await http<EntryHistory>(
+    `/api/fpl/entry/${entry.entry}/history`
+  );
+  const chipForCurrentGw = history.chips.filter(
+    (c) => c.event == currentGw.id
+  )[0];
+
+  const picks = await http<PicksRes>(
+    `/api/fpl/entry/${entry.entry}/event/${currentGw.id}/picks`
+  );
+  const captainPick = picks.picks.filter(p => p.is_captain)[0];
+  const captainPlayer = bootstrap.elements.filter(
+    (e) => e.id === captainPick.element
+  )[0];
+
+  const viceCaptainPick = picks.picks.filter(p => p.is_vice_captain)[0];
+  const viceCaptainPlayer = bootstrap.elements.filter(
+    (e) => e.id === viceCaptainPick.element
+  )[0];
+
+  const transfersForCurrentGw = transfers
+    .filter((t) => t.event === currentGw.id)
+    .map((t) => {
+      const playerIn = bootstrap.elements.filter(
+        (e) => e.id === t.element_in
+      )[0];
+      const playerOut = bootstrap.elements.filter(
+        (e) => e.id === t.element_out
+      )[0];
+
+      return {
+        playerIn: playerIn,
+        playerOut: playerOut,
+        playerInCost: `£${t.element_in_cost / 10}`,
+        playerOutCost: `£${t.element_out_cost / 10}`,
+        time: t.time,
+      };
+    });
+
+  return {
+    playerName: entry.player_name,
+    entry: entry.entry,
+    transfers: transfersForCurrentGw,
+    chip: chipForCurrentGw,
+    captain: captainPlayer.web_name,
+    viceCaptain: viceCaptainPlayer.web_name
   }
 }
 
