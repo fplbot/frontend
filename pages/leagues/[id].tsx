@@ -1,16 +1,13 @@
 import Head from "next/head";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Footer from "../../components/Footer";
 import {
   useLeagueStandings,
-  StandingsLeagueResult,
   CurrentGameweekSummaryState,
   getGameweekSummary,
-  Entry,
 } from "../../services/leagues";
-import Button from "../../components/Button";
 import SimpleHeader from "../../components/Menu";
 import { CenteredSpinner } from "../../components/Spinner";
 import { Chip } from "../../components/Chip";
@@ -24,8 +21,6 @@ const LeagueIndex: NextPage = () => {
   const segs = window?.location.pathname.split("/");
   const id = parseInt(segs[segs.length - 1]);
 
-  const { standingsState } = useLeagueStandings(id);
-
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-tr from-white to-gray-200">
       <Head>
@@ -35,14 +30,7 @@ const LeagueIndex: NextPage = () => {
       <SimpleHeader />
       <div className="flex-grow md:px-8 px-2">
         <div className="w-full max-w-7xl m-auto mt-4 mb-8 md:px-8 px-2 text-center">
-          <Breadcrumbs
-            breadcrumbs={[
-              { title: "Home", href: "/" },
-              { title: "Leagues" },
-              { title: id && id != NaN && standingsState.type === "DATA" ? standingsState.data.league.name : id.toString() },
-            ]}
-          />
-          <Content standingsState={standingsState} />
+          <Content leagueId={id} />
         </div>
       </div>
       <Footer />
@@ -53,10 +41,14 @@ const LeagueIndex: NextPage = () => {
 export default LeagueIndex;
 
 interface ContentProps {
-  standingsState: StandingsLeagueResult;
+  leagueId: number;
 }
 
-const Content = ({ standingsState }: ContentProps) => {
+const Content = ({ leagueId }: ContentProps) => {
+
+  const { standingsState } = useLeagueStandings(leagueId);
+  const [showFullTable, setShowFullTable] = useState(false);
+
   if (standingsState.type === "LOADING") {
     return <CenteredSpinner size="lg" />;
   }
@@ -65,84 +57,87 @@ const Content = ({ standingsState }: ContentProps) => {
     return <ErrorComponent />;
   }
 
-  const [showFullTable, setShowFullTable] = useState(false);
-
-  function showCompleteTable(){
+  function showCompleteTable() {
     setShowFullTable(true);
   }
 
   const data = standingsState.data;
 
   return (
-    <div>
-      <h1 className="text-xl md:text-2xl font-bold text-fpl-purple mb-2">
-        {data.league.name}
-      </h1>
-      <table className="rounded overflow-hidden sm:shadow-lg my-5 mx-auto">
-        <thead>
-          <tr className="bg-fpl-purple text-white rounded-l-lg sm:rounded-none">
-            <th className="py-2 px-4">Rank</th>
-            <th>Name</th>
-            <th className="py-2 px-4">Points</th>
-          </tr>
-        </thead>
-        <tbody className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
-          {data.standings.results.map((item, i) => (
-            <tr key={item.entry} className={`${i > 2 && !showFullTable ? "hidden sm:hidden md:table-row lg:table-row xl:table-row 2xl:table-row " : ""}`}>
-              <td className="text-center border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {i === 0 && "🥇"}
-                {i === 1 && "🥈"}
-                {i === 2 && "🥉"}
-                {i > 2 && item.rank}
-              </td>
-              <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {item.player_name}
-              </td>
-              <td className="text-center border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {item.total}
-              </td>
+    <>
+      <Breadcrumbs
+        breadcrumbs={[
+          { title: "Home", href: "/" },
+          { title: "Leagues" },
+          { title: leagueId && leagueId != NaN && standingsState.type === "DATA" ? standingsState.data.league.name : "" },
+        ]}
+      />
+      <div>
+        <h1 className="text-xl md:text-2xl font-bold text-fpl-purple mb-2">
+          {data.league.name}
+        </h1>
+        <table className="rounded overflow-hidden sm:shadow-lg my-5 mx-auto">
+          <thead>
+            <tr className="bg-fpl-purple text-white rounded-l-lg sm:rounded-none">
+              <th className="py-2 px-4">Rank</th>
+              <th>Name</th>
+              <th className="py-2 px-4">Points</th>
             </tr>
-          ))}
-        </tbody>
-        <tfoot className={!showFullTable ? "sm:visible md:hidden lg:hidden xl:hidden 2xl:hidden" : "hidden"}>
-          <tr >
-            <td onClick={showCompleteTable} colSpan={3} className="font-extrabold shadow hover:shadow-xl transition duration-500 text-center text-sm bg-fpl-purple text-white hover:bg-fpl-green hover:text-fpl-purple cursor-pointer">
+          </thead>
+          <tbody className="mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none">
+            {data.standings.results.map((item, i) => (
+              <tr key={item.entry} className={`${i > 2 && !showFullTable ? "hidden sm:hidden md:table-row lg:table-row xl:table-row 2xl:table-row " : ""}`}>
+                <td className="text-center border-grey-light border hover:bg-gray-100 p-3 truncate">
+                  {i === 0 && "🥇"}
+                  {i === 1 && "🥈"}
+                  {i === 2 && "🥉"}
+                  {i > 2 && item.rank}
+                </td>
+                <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
+                  {item.player_name}
+                </td>
+                <td className="text-center border-grey-light border hover:bg-gray-100 p-3 truncate">
+                  {item.total}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot className={!showFullTable ? "sm:visible md:hidden lg:hidden xl:hidden 2xl:hidden" : "hidden"}>
+            <tr >
+              <td onClick={showCompleteTable} colSpan={3} className="font-extrabold shadow hover:shadow-xl transition duration-500 text-center text-sm bg-fpl-purple text-white hover:bg-fpl-green hover:text-fpl-purple cursor-pointer">
                 +
             </td>
-          </tr>
-        </tfoot>
-      </table>
-      <SummaryList entries={data.standings.results} />
-    </div>
+            </tr>
+          </tfoot>
+        </table>
+        <SummaryList leagueId={leagueId} />
+      </div>
+    </>
   );
 };
 
 interface SummaryListProps {
-  entries: Entry[];
+  leagueId: number;
 }
 
-const SummaryList = ({ entries }: SummaryListProps) => {
+const SummaryList = ({ leagueId }: SummaryListProps) => {
 
   const [
     gameweekSummary,
     setGameweekSummary,
-  ] = useState<CurrentGameweekSummaryState>({ type: "INIT" });
+  ] = useState<CurrentGameweekSummaryState>({ type: "LOADING" });
+
+  useEffect(() => {
+    fetchSummary();
+  },[])
 
   function fetchSummary() {
-    setGameweekSummary({ type: "LOADING" });
-    getGameweekSummary(entries).then((res) => {
-      setGameweekSummary(res);
+    getGameweekSummary(leagueId, summaries => {
+      setGameweekSummary({
+        type: "DATA",
+        data: summaries
+      });
     });
-  }
-
-  if (gameweekSummary.type === "INIT") {
-    return (
-      <div className="py-4">
-        <Button onClick={fetchSummary} shape="square">
-          Load gameweek summary
-        </Button>
-      </div>
-    );
   }
 
   if (gameweekSummary.type === "ERROR") {
@@ -206,7 +201,6 @@ const SummaryList = ({ entries }: SummaryListProps) => {
 
 function timeFormatted(time: Date): React.ReactNode {
   var date = new Date(time);
-  return `${date.getDay()}/${
-    date.getMonth() + 1
-  } ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+  return `${date.getDay()}/${date.getMonth() + 1
+    } ${date.getUTCHours()}:${date.getUTCMinutes()}`;
 }

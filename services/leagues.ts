@@ -116,14 +116,16 @@ interface CurrentGameweekSummaryData {
 }
 
 export type CurrentGameweekSummaryState =
-  | Init
   | Loading
   | Error
   | CurrentGameweekSummaryData;
 
 export async function getGameweekSummary(
-  entries: Entry[]
+  id: number,
+  listUpdate : (summaries:CurrentGameweekSummary[]) => void
 ): Promise<CurrentGameweekSummaryState> {
+  const leagueRes = await http<LeagueRes>(`/api/fpl/leagues-classic/${id}/standings/`);
+  const entries = leagueRes.standings.results;
   try {
     const bootstrap = await http<Bootstrap>(`/api/fpl/bootstrap-static/`);
     const currentGw = bootstrap.events.filter((e) => e.is_current)[0];
@@ -182,6 +184,7 @@ export async function getGameweekSummary(
         captain: captainPlayer.web_name,
         viceCaptain: viceCaptainPlayer.web_name
       });
+      listUpdate(currentGameweekSummary);
     }
 
     return {
