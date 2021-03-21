@@ -175,7 +175,7 @@ const SummaryList = ({ leagueId }: SummaryListProps) => {
                   {/*<div className="italic text-xs text-gray-500">
                     {timeFormatted(item.time)}
                   </div>*/}
-                  <div className="rounded-md pl-1 mb-1 flex">
+                  <div className="rounded-md pl-1 mb-1 flex text-xs md:text-base">
                     <div className="w-2/5">
                       <svg width="24" height="19" viewBox="0 0 24 19" className="fill-current text-red-500 inline-flex mr-1">
                         <polygon fill-rule="evenodd" points="12.82 0 12.82 4.75 0 4.75 0 14.25 12.82 14.25 12.82 19 24 9.5" transform="rotate(-180 12 9.5)">
