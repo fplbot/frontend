@@ -153,7 +153,7 @@ const SummaryList = ({ leagueId }: SummaryListProps) => {
     <div className="league-transfers mx-auto divide-y-2 divide-grey-light">
       {gameweekSummary.data.map((value) => (
         <div key={value.playerName} className="rounded-lg shadow bg-white mb-5">
-          <div className="align-top p-3 mb-3 bg-fpl-purple text-white rounded-t-lg shadow">
+          <div className="align-top p-3 bg-fpl-purple text-white rounded-t-lg shadow">
             <a
               href={`https://fantasy.premierleague.com/entry/${value.entry}/history`}
               className="underline font-bold"
@@ -161,8 +161,9 @@ const SummaryList = ({ leagueId }: SummaryListProps) => {
               {value.playerName}
             </a>
           </div>
-          <span className="text-left"><b></b>{value.captain} (C) & {value.viceCaptain} (VC) </span>
-            {value.chip !== undefined && <div className="font-bold mb-4 text-sm mr-1"><Chip chipUsed={value.chip.name} />!</div>}
+          {value.chip !== undefined && <div className="font-bold text-sm bg-fpl-green text-fpl-purple"><Chip chipUsed={value.chip.name} />!</div>}
+
+          <div className="p-3"><b></b>{value.captain} (C) & {value.viceCaptain} (VC) </div>
 
 
           <div className="text-left p-3">
