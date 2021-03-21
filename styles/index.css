@@ -7,7 +7,7 @@
 }
 
 @media (min-width: 640px) {
-  .searchtable table {
+  .searchtable {
     display: inline-table !important;
   }
 
