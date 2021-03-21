@@ -152,19 +152,19 @@ const SummaryList = ({ leagueId }: SummaryListProps) => {
   return (
     <div className="league-transfers mx-auto divide-y-2 divide-grey-light">
       {gameweekSummary.data.map((value) => (
-        <div key={value.playerName} className="pt-4">
-          <div className="text-left align-top font-bold">
+        <div key={value.playerName} className="rounded-lg shadow bg-white mb-5">
+          <div className="align-top p-3 mb-3 bg-fpl-purple text-white rounded-t-lg shadow">
             <a
               href={`https://fantasy.premierleague.com/entry/${value.entry}/history`}
-              className="underline"
+              className="underline font-bold"
             >
               {value.playerName}
             </a>
-            {value.chip !== undefined && <span className="pl-4"><Chip chipUsed={value.chip.name} /></span>}
           </div>
-          <p className="pt-4 pb-3 text-left pl-3"><b>Captains: </b></p>
-          <p className="mb-4 text-left pl-4"><b></b>{value.captain} (C) - {value.viceCaptain} (VC) </p>
-          <p className="text-left pl-3"><b>Transfers: </b></p>
+          <span className="text-left"><b></b>{value.captain} (C) & {value.viceCaptain} (VC) </span>
+            {value.chip !== undefined && <div className="font-bold mb-4 text-sm mr-1"><Chip chipUsed={value.chip.name} />!</div>}
+
+
           <div className="text-left p-3">
             {value.transfers.length > 0 ? (
               value.transfers.map((item, i) => (
