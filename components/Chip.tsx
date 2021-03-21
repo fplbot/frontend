@@ -1,4 +1,4 @@
-import { ChipType } from "../services/verified";
+import { ChipType } from "../services/fpl";
 
 export interface ChipProps {
   chipUsed: ChipType;

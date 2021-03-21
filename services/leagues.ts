@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { ChipType } from "./verified";
+import { Bootstrap, Chip, Entry, EntryHistory, LeagueRes, PicksRes, Player, Standings, Transfer, Event } from "./fpl";
 
 interface Init {
   type: "INIT";
@@ -12,83 +12,12 @@ interface Error {
   type: "ERROR";
 }
 
-interface League {
-  id: number;
-  name: string;
-}
-
-export interface Entry {
-  entry: number;
-  player_name: string;
-  rank: number;
-  total: number;
-}
-
-interface Standings {
-  results: Entry[];
-}
-
-export interface LeagueRes {
-  league: League;
-  standings: Standings;
-}
-
-interface Transfer {
-  element_in: number;
-  element_in_cost: number;
-  element_out: number;
-  element_out_cost: number;
-  event: number;
-  time: Date;
-}
-
-interface Bootstrap {
-  elements: Player[];
-  events: Event[];
-}
-
-interface Player {
-  id: number;
-  web_name: string;
-  code: string;
-}
-
-interface Event {
-  id: number;
-  is_current: boolean;
-}
-
 export interface EntryTransfer {
   playerIn: Player;
   playerInCost: string;
   playerOut: Player;
   playerOutCost: string;
   time: Date;
-}
-
-interface EntryHistory {
-  chips: Chip[];
-}
-
-interface Chip {
-  name: ChipType;
-  time: Date;
-  event: number;
-
-}
-
-interface EntryHistory {
-  chips: Chip[];
-}
-
-interface PicksRes {
-  picks: Pick[];
-}
-
-interface Pick {
-  element: number;
-  is_captain: boolean;
-  is_vice_captain: boolean;
 }
 
 export async function http<T>(request: RequestInfo): Promise<T> {
@@ -101,6 +30,7 @@ export async function http<T>(request: RequestInfo): Promise<T> {
     status: response.status,
   });
 }
+
 export interface CurrentGameweekSummary {
   playerName: string;
   entry: number;
@@ -150,7 +80,6 @@ export async function getGameweekSummary(
           type: "ERROR"
         };
       }
-
     }
 
     return {
