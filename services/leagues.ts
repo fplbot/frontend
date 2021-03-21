@@ -63,9 +63,7 @@ export async function getGameweekSummary(
     const currentGameweekSummary: CurrentGameweekSummary[] = [];
     for await (const entry of entries) {
       try {
-        const summary = await summaryForEntry(entry, currentGw, bootstrap);
-
-        currentGameweekSummary.push(summary);
+        currentGameweekSummary.push(await summaryForEntry(entry, currentGw, bootstrap));
         if (listUpdate)
           listUpdate({
             type: "DATA",
