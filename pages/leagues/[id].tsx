@@ -104,7 +104,7 @@ const Content = ({ leagueId }: ContentProps) => {
           </tbody>
           <tfoot className={!showFullTable ? "sm:visible md:hidden lg:hidden xl:hidden 2xl:hidden" : "hidden"}>
             <tr >
-              <td onClick={showCompleteTable} colSpan={3} className="font-extrabold shadow hover:shadow-xl transition duration-500 text-center text-sm bg-fpl-purple text-white hover:bg-fpl-green hover:text-fpl-purple cursor-pointer">
+              <td onClick={showCompleteTable} colSpan={3} className="font-extrabold shadow hover:shadow-xl transition duration-500 text-center text-sm p-3 bg-white text-gray-500 hover:bg-gray-100 hover:text-fpl-purple cursor-pointer">
                 +
             </td>
             </tr>
