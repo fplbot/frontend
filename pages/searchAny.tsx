@@ -290,22 +290,24 @@ const ResultTable = ({
                 </div>
                 <div>
                   <span className="mr-1">
-                    {data.source.realName}
+                    <span className="font-bold">{data.source.realName}</span>
                     {data.source.verifiedType && (
                       <img
                         src="/check.svg"
-                        className="verified-icon mr-1"
+                        className="verified-icon mr-1 ml-1"
                         alt="Verified team"
                         title={getVerifiedHelpText(data.source.verifiedType)}
                       />
                     )}
                     {data.source.alias && (
                       <>
-                        <span className="alias">(aka {data.source.alias})</span>
+                        <span className="alias hidden sm:inline-block">
+                          (aka {data.source.alias})
+                        </span>
                       </>
                     )}
                   </span>
-                  <span className="italic mr-1 text-sm">
+                  <span className="italic mr-1 text-sm hidden sm:inline-block">
                     {data.source.teamName}
                   </span>
                 </div>
@@ -326,9 +328,11 @@ const ResultTable = ({
                   <Icon>📊</Icon>
                 </div>
                 <div>
-                  <span className="mr-1">{data.source.name}</span>
-                  <span className="italic text-sm">
-                    ({data.source.adminName})
+                  <span className="mr-1">
+                    <span className="font-bold">{data.source.name}</span>
+                  </span>
+                  <span className="text-sm">
+                    {data.source.adminName}
                   </span>
                 </div>
                 <div className="w-full flex justify-end mr-3">
