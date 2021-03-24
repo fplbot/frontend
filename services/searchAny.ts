@@ -4,7 +4,7 @@ import { VerifiedType } from "./VerifiedType";
 export interface FplApiResponse {
   hits: {
     count: number;
-    exposedHits: (PlayerEntry|LeagueEntry)[];
+    exposedHits: Source[];
     hitCountExceedingExposedOnes: number;
     totalHits: number;
     page: number;
@@ -42,10 +42,11 @@ export type LeagueSource = {
   source : LeagueEntry;
 }
 
+export type Source = PlayerSource | LeagueSource;
 
 export interface SearchSuccess {
   type: "SUCCESS";
-  data: (PlayerSource|LeagueSource|any)[];
+  data: Source[];
   hasPrev: boolean;
   hasNext: boolean;
   totalPages: number;
