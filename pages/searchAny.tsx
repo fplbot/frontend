@@ -11,6 +11,8 @@ import {
   searchAny,
   SearchResponse,
   SearchSuccess,
+  LeagueEntry,
+  PlayerEntry,
 } from "../services/searchAny";
 import { VerifiedType } from "../services/VerifiedType";
 
@@ -282,71 +284,81 @@ const ResultTable = ({
                 : "")
             }
           >
-            {data.type == "entry" && (
-              <>
-                <div>
-                  <Icon>⚽️</Icon>
-                </div>
-                <div>
-                  <span className="mr-1">
-                    <span className="font-bold">{data.source.realName}</span>
-                    {data.source.verifiedType && (
-                      <img
-                        src="/check.svg"
-                        className="verified-icon mr-1 ml-1"
-                        alt="Verified team"
-                        title={getVerifiedHelpText(data.source.verifiedType)}
-                      />
-                    )}
-                    {data.source.alias && (
-                      <>
-                        <span className="alias hidden sm:inline-block">
-                          (aka {data.source.alias})
-                        </span>
-                      </>
-                    )}
-                  </span>
-                  <span className="italic mr-1 text-sm hidden sm:inline-block">
-                    {data.source.teamName}
-                  </span>
-                </div>
-                <div className="w-full flex justify-end mr-3">
-                  <a
-                    href={`https://fantasy.premierleague.com/entry/${data.source.id}/history/`}
-                    className="underline"
-                    target="_blank"
-                  >
-                    View
-                  </a>
-                </div>
-              </>
-            )}
-            {data.type == "league" && (
-              <>
-                <div>
-                  <Icon>📊</Icon>
-                </div>
-                <div>
-                  <span className="mr-1">
-                    <span className="font-bold">{data.source.name}</span>
-                  </span>
-                  <span className="text-sm">
-                    {data.source.adminName}
-                  </span>
-                </div>
-                <div className="w-full flex justify-end mr-3">
-                  <a href={`/leagues/${data.source.id}`} className="underline">
-                    View
-                  </a>
-                </div>
-              </>
-            )}
+            {data.type == "entry" && <PlayerEntryRow item={data.source} />}
+            {data.type == "league" && <LeagueEntryRow item={data.source} />}
           </div>
         ))}
       </div>
     </div>
   );
 };
+
+interface PlayerEntryRowProps {
+  item: PlayerEntry;
+}
+
+const PlayerEntryRow = ({ item }: PlayerEntryRowProps) => (
+  <>
+    <div>
+      <Icon>⚽️</Icon>
+    </div>
+    <div>
+      <span className="mr-1">
+        <span className="font-bold">{item.realName}</span>
+        {item.verifiedType && (
+          <img
+            src="/check.svg"
+            className="verified-icon mr-1 ml-1"
+            alt="Verified team"
+            title={getVerifiedHelpText(item.verifiedType)}
+          />
+        )}
+        {item.alias && (
+          <>
+            <span className="alias hidden sm:inline-block">
+              (aka {item.alias})
+            </span>
+          </>
+        )}
+      </span>
+      <span className="italic mr-1 text-sm hidden sm:inline-block">
+        {item.teamName}
+      </span>
+    </div>
+    <div className="w-full flex justify-end mr-3">
+      <a
+        href={`https://fantasy.premierleague.com/entry/${item.id}/history/`}
+        className="underline"
+        target="_blank"
+      >
+        View
+      </a>
+    </div>
+  </>
+);
+
+interface LeagueEntryRowProps {
+  item: LeagueEntry;
+}
+
+const LeagueEntryRow = ({ item }: LeagueEntryRowProps) => (
+  <>
+    <div>
+      <Icon>📊</Icon>
+    </div>
+    <div>
+      <span className="mr-1">
+        <span className="font-bold">{item.name}</span>
+      </span>
+      <span className="text-sm">{item.adminName}</span>
+    </div>
+    <div className="w-full flex justify-end mr-3">
+      <a href={`/leagues/${item.id}`} className="underline">
+        View
+      </a>
+    </div>
+  </>
+);
 
 type IconProps = {
   children: string | JSX.Element;
