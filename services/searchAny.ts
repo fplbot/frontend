@@ -45,7 +45,7 @@ export type LeagueSource = {
 
 export interface SearchSuccess {
   type: "SUCCESS";
-  data: (PlayerSource|LeagueSource)[];
+  data: (PlayerSource|LeagueSource|any)[];
   hasPrev: boolean;
   hasNext: boolean;
   totalPages: number;
