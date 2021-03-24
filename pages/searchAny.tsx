@@ -276,7 +276,7 @@ const ResultTable = ({
           <div
             key={`table-row-${i}`}
             className={
-              "flex border-grey-light border rounded-lg p-1 mb-1 truncate " +
+              "flex border-grey-light border rounded-lg p-5 mb-1 truncate " +
               (data.type == "entry"
                 ? "bg-white hover:bg-gray-100"
                 : data.type == "league"
@@ -298,43 +298,30 @@ interface PlayerEntryRowProps {
 }
 
 const PlayerEntryRow = ({ item }: PlayerEntryRowProps) => (
-  <>
-    <div>
-      <Icon>⚽️</Icon>
-    </div>
-    <div>
-      <span className="mr-1">
-        <span className="font-bold">{item.realName}</span>
-        {item.verifiedType && (
-          <img
-            src="/check.svg"
-            className="verified-icon mr-1 ml-1"
-            alt="Verified team"
-            title={getVerifiedHelpText(item.verifiedType)}
-          />
-        )}
-        {item.alias && (
-          <>
-            <span className="alias hidden sm:inline-block">
-              (aka {item.alias})
-            </span>
-          </>
-        )}
-      </span>
-      <span className="italic mr-1 text-sm hidden sm:inline-block">
-        {item.teamName}
-      </span>
-    </div>
-    <div className="w-full flex justify-end mr-3">
-      <a
-        href={`https://fantasy.premierleague.com/entry/${item.id}/history/`}
-        className="underline"
-        target="_blank"
-      >
-        View
-      </a>
-    </div>
-  </>
+  <Row
+    icon="⚽️"
+    title={item.realName}
+    subText={item.realName}
+    linkHref={`https://fantasy.premierleague.com/entry/${item.id}/history/`}
+  >
+    <>
+      {item.verifiedType && (
+        <img
+          src="/check.svg"
+          className="verified-icon mr-1 ml-1"
+          alt="Verified team"
+          title={getVerifiedHelpText(item.verifiedType)}
+        />
+      )}
+      {item.alias && (
+        <>
+          <span className="alias hidden sm:inline-block">
+            (aka {item.alias})
+          </span>
+        </>
+      )}
+    </>
+  </Row>
 );
 
 interface LeagueEntryRowProps {
@@ -342,18 +329,36 @@ interface LeagueEntryRowProps {
 }
 
 const LeagueEntryRow = ({ item }: LeagueEntryRowProps) => (
+  <Row
+    icon="📊"
+    title={item.name}
+    subText={item.adminName}
+    linkHref={`/leagues/${item.id}`}
+  />
+);
+
+interface RowProps {
+  icon: string;
+  children?: string | JSX.Element;
+  title: string | JSX.Element;
+  subText: string;
+  linkHref: string;
+}
+
+const Row = ({ icon, title, subText, linkHref, children }: RowProps) => (
   <>
     <div>
-      <Icon>📊</Icon>
+      <Icon>{icon}</Icon>
     </div>
     <div>
       <span className="mr-1">
-        <span className="font-bold">{item.name}</span>
+        <span className="font-bold">{title}</span>
+        {children}
       </span>
-      <span className="text-sm">{item.adminName}</span>
+      <span className="text-sm hidden sm:inline-block">{subText}</span>
     </div>
     <div className="w-full flex justify-end mr-3">
-      <a href={`/leagues/${item.id}`} className="underline">
+      <a href={linkHref} className="underline">
         View
       </a>
     </div>
