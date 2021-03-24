@@ -13,7 +13,6 @@ export interface FplApiResponse {
 }
 
 export interface PlayerEntry  {
-  type: "entry";
   id: number;
   realName: string;
   teamName: string;
@@ -23,7 +22,6 @@ export interface PlayerEntry  {
 }
 
 export interface LeagueEntry  {
-  type: "league";
   id: number;
   name: string;
   adminEntry: number;
