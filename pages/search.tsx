@@ -8,12 +8,12 @@ import Footer from "../components/Footer";
 import SimpleHeader from "../components/Menu";
 import { Spinner } from "../components/Spinner";
 import {
-  searchAny,
+  search,
   SearchResponse,
   SearchSuccess,
   LeagueEntry,
   PlayerEntry,
-} from "../services/searchAny";
+} from "../services/search";
 import { VerifiedType } from "../services/VerifiedType";
 
 interface SearchInit {
@@ -50,7 +50,7 @@ function SearchIndex({ query }: SearchIndexProps) {
   });
 
   useEffect(() => {
-    search();
+    searchForTerm();
   }, [submittedSearchValue, pageValue]);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -79,8 +79,8 @@ function SearchIndex({ query }: SearchIndexProps) {
             Search FPL content
           </h1>
           <p className="text-md md:text-lg text-center text-fpl-purple">
-            Search managers or leagues. Also feel free to check out our
-            virtual leagues — for example{" "}
+            Search managers or leagues. Also feel free to check out our virtual
+            leagues — for example{" "}
             <Link href="/virtual-leagues/pl">
               <a className="underline">verified PL players playing FPL</a>
             </Link>
@@ -131,7 +131,7 @@ function SearchIndex({ query }: SearchIndexProps) {
     updateQueryParam(submittedSearchValue, page);
   }
 
-  function search() {
+  function searchForTerm() {
     if (submittedSearchValue === "") {
       setSearchState({ type: "EMPTY" });
       return;
@@ -140,7 +140,7 @@ function SearchIndex({ query }: SearchIndexProps) {
       type: "LOADING",
       prevData: searchState.type === "SUCCESS" ? searchState : undefined,
     });
-    searchAny(submittedSearchValue, pageValue).then((res) => {
+    search(submittedSearchValue, pageValue).then((res) => {
       setSearchState(res);
     });
   }

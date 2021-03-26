@@ -56,7 +56,7 @@ interface SearchError {
 
 export type SearchResponse = SearchSuccess | SearchError;
 
-export function searchAny(
+export function search(
   searchString: string,
   page: number
 ): Promise<SearchResponse> {
