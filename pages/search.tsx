@@ -1,6 +1,6 @@
 import { NextPageContext } from "next";
 import Head from "next/head";
-import Link from 'next/link';
+import Link from "next/link";
 import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
@@ -8,9 +8,12 @@ import Footer from "../components/Footer";
 import SimpleHeader from "../components/Menu";
 import { Spinner } from "../components/Spinner";
 import {
-  searchForPlayer,
+  search,
   SearchResponse,
-  SearchSuccess} from "../services/search";
+  SearchSuccess,
+  LeagueEntry,
+  PlayerEntry,
+} from "../services/search";
 import { VerifiedType } from "../services/VerifiedType";
 
 interface SearchInit {
@@ -47,7 +50,7 @@ function SearchIndex({ query }: SearchIndexProps) {
   });
 
   useEffect(() => {
-    search();
+    searchForTerm();
   }, [submittedSearchValue, pageValue]);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -66,17 +69,22 @@ function SearchIndex({ query }: SearchIndexProps) {
         <title>Fantasy Premier League Search</title>
         <meta
           name="description"
-          content="Search for Fantasy Premier League managers. Search by name or team name, and find FPL players and celebrities."
+          content="Search for Fantasy Premier League content. Search managers, teams or leagues."
         />
       </Head>
       <SimpleHeader />
       <div className="flex-grow">
         <div className="w-full max-w-2xl m-auto py-24 px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-            Search for FPL player
+            Search FPL content
           </h1>
           <p className="text-md md:text-lg text-center text-fpl-purple">
-            You can search by name or team name. Also feel free to check out our virtual league of <Link href="/virtual-leagues/pl"><a className="underline">verified PL players playing FPL</a></Link>.
+            Search managers or leagues. Also feel free to check out our virtual
+            leagues — for example{" "}
+            <Link href="/virtual-leagues/pl">
+              <a className="underline">verified PL players playing FPL</a>
+            </Link>
+            .
           </p>
 
           <form className="mt-10" onSubmit={submitSearchValue}>
@@ -123,7 +131,7 @@ function SearchIndex({ query }: SearchIndexProps) {
     updateQueryParam(submittedSearchValue, page);
   }
 
-  function search() {
+  function searchForTerm() {
     if (submittedSearchValue === "") {
       setSearchState({ type: "EMPTY" });
       return;
@@ -132,7 +140,7 @@ function SearchIndex({ query }: SearchIndexProps) {
       type: "LOADING",
       prevData: searchState.type === "SUCCESS" ? searchState : undefined,
     });
-    searchForPlayer(submittedSearchValue, pageValue).then((res) => {
+    search(submittedSearchValue, pageValue).then((res) => {
       setSearchState(res);
     });
   }
@@ -263,67 +271,110 @@ const ResultTable = ({
         currentPage={page}
         updatePage={updatePage}
       />
-      <table className="searchtable w-full flex flex-row flex-no-wrap rounded overflow-hidden sm:shadow-lg my-5">
-        <thead className="text-white">
-          {searchState.data.map((data, i) => (
-            <tr
-              className="bg-fpl-purple flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0"
-              key={`table-header-${i}`}
-            >
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Team name</th>
-              <th className="p-3 text-left" style={{ width: "120px" }}>
-                Open team
-              </th>
-            </tr>
-          ))}
-        </thead>
-        <tbody className="flex-1 sm:flex-none">
-          {searchState.data.map((data, i) => (
-            <tr
-              className="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0 bg-white rounded-r-lg sm:rounded-none"
-              key={`table-row-${i}`}
-            >
-              <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {data.realName}
-                {data.verifiedType && (
-                  <>
-                    &nbsp;
-                    <img
-                      src="/check.svg"
-                      className="verified-icon"
-                      alt="Verified team"
-                      title={getVerifiedHelpText(data.verifiedType)}
-                    />
-                  </>
-                )}
-                {data.alias && (<>&nbsp;<span className="alias">(aka {data.alias})</span></>)}
-              </td>
-              <td className="text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {data.teamName}
-              </td>
-              <td className="text-left md:text-center border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">
-                <a
-                  href={`https://fantasy.premierleague.com/entry/${data.id}/history`}
-                  className="block"
-                  target="_blank"
-                >
-                  ➡️
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Pagination
-        searchState={searchState}
-        searchPhrase={searchPhrase}
-        currentPage={page}
-        updatePage={updatePage}
-      />
+      <div className="pt-3">
+        {searchState.data.map((data, i) => (
+          <div
+            key={`table-row-${i}`}
+            className={
+              "flex border-grey-light border rounded-lg p-5 mb-1 truncate " +
+              (data.type == "entry"
+                ? "bg-white hover:bg-gray-100"
+                : data.type == "league"
+                ? "bg-white hover:bg-gray-100"
+                : "")
+            }
+          >
+            {data.type == "entry" && <PlayerEntryRow item={data.source} />}
+            {data.type == "league" && <LeagueEntryRow item={data.source} />}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
+
+interface PlayerEntryRowProps {
+  item: PlayerEntry;
+}
+
+const PlayerEntryRow = ({ item }: PlayerEntryRowProps) => (
+  <Row
+    icon="👤"
+    title={item.realName}
+    subTitle={item.teamName}
+    linkHref={`https://fantasy.premierleague.com/entry/${item.id}/history/`}
+  >
+    <VerifiedPlayerDetails item={item} />
+  </Row>
+);
+
+interface VerifiedPlayerDetailsProps {
+  item: PlayerEntry;
+}
+
+const VerifiedPlayerDetails = ({ item }: VerifiedPlayerDetailsProps) => (
+  <>
+    {item.verifiedType && (
+      <img
+        src="/check.svg"
+        className="verified-icon mr-1 ml-1"
+        alt="Verified team"
+        title={getVerifiedHelpText(item.verifiedType)}
+      />
+    )}
+    {item.alias && (
+      <span className="alias hidden sm:inline-block">(aka {item.alias})</span>
+    )}
+  </>
+);
+
+interface LeagueEntryRowProps {
+  item: LeagueEntry;
+}
+
+const LeagueEntryRow = ({ item }: LeagueEntryRowProps) => (
+  <Row
+    icon="🏆"
+    title={item.name}
+    subTitle={`admin:${item.adminName}`}
+    linkHref={`/leagues/${item.id}`}
+  />
+);
+
+interface RowProps {
+  icon: string;
+  children?: string | JSX.Element;
+  title: string | JSX.Element;
+  subTitle: string;
+  linkHref: string;
+}
+
+const Row = ({ icon, title, subTitle, linkHref, children }: RowProps) => (
+  <>
+    <div>
+      <Icon>{icon}</Icon>
+    </div>
+    <div>
+      <span className="mr-1">
+        <span className="font-bold">{title}</span>
+        {children}
+      </span>
+      <span className="text-sm hidden sm:inline-block">{subTitle}</span>
+    </div>
+    <div className="w-full flex justify-end mr-3">
+      <a href={linkHref} className="underline">
+        View
+      </a>
+    </div>
+  </>
+);
+
+type IconProps = {
+  children: string | JSX.Element;
+};
+const Icon = ({ children }: IconProps) => (
+  <span className="verified-icon w-15 h-15 p-3">{children}</span>
+);
 
 interface PaginationProps {
   searchState: SearchSuccess;
@@ -378,23 +429,23 @@ const Pagination = ({
 
 const getVerifiedHelpText = (verifiedType: VerifiedType): string => {
   switch (verifiedType) {
-    case 'FootballerInPL':
+    case "FootballerInPL":
       return "That guy in Premier League";
-    case 'Footballer':
+    case "Footballer":
       return "That famous football player";
-    case 'ChessMaster':
+    case "ChessMaster":
       return "That chess champion";
-    case 'Podcaster':
+    case "Podcaster":
       return "That voice on the podcast thing";
-    case 'CommunityFame':
+    case "CommunityFame":
       return "That person on Twitter";
-    case 'Actor':
+    case "Actor":
       return "That actor";
-    case 'TvFace':
+    case "TvFace":
       return "That TV face";
-    case 'Athlete':
+    case "Athlete":
       return "That famous athlete";
-    case 'Unknown':
+    case "Unknown":
       return "Not sure who this is";
   }
 };
