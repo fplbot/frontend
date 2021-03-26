@@ -69,18 +69,18 @@ function SearchIndex({ query }: SearchIndexProps) {
         <title>Fantasy Premier League Search</title>
         <meta
           name="description"
-          content="Search for Fantasy Premier League managers. Search by name or team name, and find FPL players and celebrities."
+          content="Search for Fantasy Premier League content. Search managers, teams or leagues."
         />
       </Head>
       <SimpleHeader />
       <div className="flex-grow">
         <div className="w-full max-w-2xl m-auto py-24 px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-            Search for FPL player
+            Search FPL content
           </h1>
           <p className="text-md md:text-lg text-center text-fpl-purple">
-            You can search by name or team name. Also feel free to check out our
-            virtual league of{" "}
+            Search managers or leagues. Also feel free to check out our
+            virtual leagues — for example{" "}
             <Link href="/virtual-leagues/pl">
               <a className="underline">verified PL players playing FPL</a>
             </Link>
@@ -164,7 +164,7 @@ interface SearchStateProps {
 const updateQueryParam = (searchValue: string, page: number) => {
   Router.push(
     {
-      pathname: "/searchAny",
+      pathname: "/search",
       query: { q: encodeURI(searchValue), page: page },
     },
     undefined,

@@ -18,7 +18,7 @@ export default function SearchBarSection() {
           Try our search 🕵️
         </h1>
         <p className="text-lg text-center text-fpl-purple mt-4 mb-4">
-          Search for people playing Fantasy&nbsp;Premier&nbsp;League. You can search by name or team name. Also feel free to check out our virtual league of <Link href="/virtual-leagues/pl"><a className="underline">verified PL players playing FPL</a></Link>.
+          Search Fantasy&nbsp;Premier&nbsp;League for managers or leagues. Also feel free to check out our virtual league of <Link href="/virtual-leagues/pl"><a className="underline">verified PL players playing FPL</a></Link>.
         </p>
         <form className="search-bar" action="/search">
           <input
