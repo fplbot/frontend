@@ -4,7 +4,7 @@ import { VerifiedType } from "./VerifiedType";
 export interface FplApiResponse {
   hits: {
     count: number;
-    exposedHits: PlayerEntry[];
+    exposedHits: Source[];
     hitCountExceedingExposedOnes: number;
     totalHits: number;
     page: number;
@@ -12,7 +12,7 @@ export interface FplApiResponse {
   };
 }
 
-export interface PlayerEntry {
+export interface PlayerEntry  {
   id: number;
   realName: string;
   teamName: string;
@@ -21,9 +21,30 @@ export interface PlayerEntry {
   description: string;
 }
 
+export interface LeagueEntry  {
+  id: number;
+  name: string;
+  adminEntry: number;
+  adminName: string;
+  adminTeamName: string;
+  adminCountry: string;
+}
+
+export type PlayerSource = {
+  type : "entry";
+  source : PlayerEntry;
+}
+
+export type LeagueSource = {
+  type : "league";
+  source : LeagueEntry;
+}
+
+export type Source = PlayerSource | LeagueSource;
+
 export interface SearchSuccess {
   type: "SUCCESS";
-  data: PlayerEntry[];
+  data: Source[];
   hasPrev: boolean;
   hasNext: boolean;
   totalPages: number;
@@ -35,12 +56,12 @@ interface SearchError {
 
 export type SearchResponse = SearchSuccess | SearchError;
 
-export function searchForPlayer(
+export function search(
   searchString: string,
   page: number
 ): Promise<SearchResponse> {
   return fetch(
-    `${FPLBOT_API_BASEURL}/search/entries/?query=${searchString}&page=${page}`,
+    `${FPLBOT_API_BASEURL}/search/any?query=${searchString}&page=${page}`,
     {
       method: "GET",
     }
@@ -68,3 +89,4 @@ export function searchForPlayer(
       }
     );
 }
+
