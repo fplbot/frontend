@@ -1,19 +1,32 @@
+import Stripe from "stripe";
+
 interface StripeFail {
   type: "ERR";
 }
 
-interface StripeSuccess {
+interface StripeSessionCreateSuccess {
   type: "SUCCESS";
   sessionId: string;
 }
 
-export type StripeResponse = StripeFail | StripeSuccess;
-
-export async function createStripeCheckoutSession(priceId: string) {
-  return await http("/api/checkout_sessions", { priceId: priceId });
+interface StripeHttpRes {
+  sessionId: string;
 }
 
-async function http(url: string, body: any): Promise<StripeResponse> {
+export type StripeSessionCreateResponse =
+  | StripeFail
+  | StripeSessionCreateSuccess;
+
+export async function createStripeCheckoutSession(priceId: string) {
+  return await httpPost("/api/checkout_sessions", { priceId: priceId });
+}
+
+
+
+async function httpPost(
+  url: string,
+  body: any
+): Promise<StripeSessionCreateResponse> {
   try {
     const response = await fetch("/api/checkout_sessions", {
       method: "POST",
@@ -29,7 +42,7 @@ async function http(url: string, body: any): Promise<StripeResponse> {
       body: JSON.stringify(body),
     });
     if (response.ok) {
-      let json = await response.json();
+      let json: StripeHttpRes = await response.json();
       return {
         type: "SUCCESS",
         sessionId: json.sessionId,
@@ -38,6 +51,8 @@ async function http(url: string, body: any): Promise<StripeResponse> {
       return await Promise.reject(response);
     }
   } catch (error) {
-    return { type: "ERR" };
+    return {
+      type: "ERR",
+    };
   }
 }

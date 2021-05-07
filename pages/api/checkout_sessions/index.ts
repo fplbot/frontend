@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
 import Stripe from "stripe";
+import { FPLBOT_APP_URL } from "../../../utils/envconfig";
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2020-08-27",
 });
@@ -32,9 +33,8 @@ export default async function handler(
           },
         ],
         // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
-        success_url:
-          "http://localhost:3000/checkout/success?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url: "http://localhost:3000/checkout/cancelled",
+        success_url: `${FPLBOT_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${FPLBOT_APP_URL}/checkout/cancelled`,
       });
 
       res.send({
