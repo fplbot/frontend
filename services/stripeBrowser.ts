@@ -18,17 +18,15 @@ export type StripeSessionCreateResponse =
   | StripeSessionCreateSuccess;
 
 export async function createStripeCheckoutSession(priceId: string) {
-  return await httpPost("/api/checkout_sessions", { priceId: priceId });
+  return await httpPostToStripeApi("/api/checkout_sessions", { priceId: priceId });
 }
 
-
-
-async function httpPost(
+async function httpPostToStripeApi(
   url: string,
   body: any
 ): Promise<StripeSessionCreateResponse> {
   try {
-    const response = await fetch("/api/checkout_sessions", {
+    const response = await fetch(url, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -42,7 +40,7 @@ async function httpPost(
       body: JSON.stringify(body),
     });
     if (response.ok) {
-      let json: StripeHttpRes = await response.json();
+      const json: StripeHttpRes = await response.json();
       return {
         type: "SUCCESS",
         sessionId: json.sessionId,

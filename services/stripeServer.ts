@@ -38,7 +38,7 @@ export async function listPrices() {
     });
 
     if (response.ok) {
-      let json: PriceContainer = await response.json();
+      const json: PriceContainer = await response.json();
       return {
         type: "SUCCESS",
         prices: json.data,
@@ -62,7 +62,7 @@ export async function getProducts() {
     });
 
     if (response.ok) {
-      let json: ProductContainer = await response.json();
+      const json: ProductContainer = await response.json();
       return {
         type: "SUCCESS",
         products: json.data,

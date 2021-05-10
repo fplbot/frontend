@@ -56,21 +56,20 @@ const CheckoutPage = ({ plans }: CheckoutPageProps) => (
 );
 
 CheckoutPage.getInitialProps = async () => {
-  var res = await getProducts();
-  if (res.type == "SUCCESS") {
-    var pricesRes = await listPrices();
-    if (pricesRes.type == "SUCCESS") {
-      const plans = pricesRes.prices?.map((price: Stripe.Price) => {
-        var productForPrice = res.products?.filter(
-          (product: Stripe.Product) => product.id == price.product
-        )[0];
-        return {
-          product: productForPrice,
-          price: price,
-        };
-      });
-      return { plans: plans };
-    }
+  const res = await getProducts();
+  const pricesRes = await listPrices();
+  if (res.type === "SUCCESS" && pricesRes.type === "SUCCESS") {
+    const plans = pricesRes.prices?.map((price: Stripe.Price) => {
+      var productForPrice = res.products?.find(
+        (product: Stripe.Product) => product.id == price.product
+      );
+      return {
+        product: productForPrice,
+        price: price,
+      };
+    });
+
+    return { plans: plans };
   }
 
   return {
@@ -89,7 +88,7 @@ const CheckoutSubscription = ({
   priceId,
   title,
 }: CheckoutSubscriptionProps) => {
-  const onClick = async (e: any, priceId: string) => {
+  const onClick = async (e: any) => {
     e.preventDefault();
     const createSessionResponse = await createStripeCheckoutSession(priceId);
 
@@ -106,12 +105,9 @@ const CheckoutSubscription = ({
 
   return (
     <>
-      <Button onClick={(e) => onClick(e, priceId)}>
+      <Button onClick={onClick}>
         <>Subscribe to {title}</>
       </Button>
     </>
   );
 };
-function getPrices() {
-  throw new Error("Function not implemented.");
-}

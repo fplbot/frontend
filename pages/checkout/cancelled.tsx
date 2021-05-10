@@ -15,7 +15,9 @@ const CheckoutCancelled = () => (
         <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
           No worries!
         </h1>
-        <a href="/checkout" className="underline">Back to checkout</a>
+        <a href="/checkout" className="underline">
+          Back to checkout
+        </a>
       </div>
     </div>
     <Footer />
