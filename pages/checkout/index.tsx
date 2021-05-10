@@ -1,21 +1,16 @@
 import Head from "next/head";
 import React from "react";
-import Stripe from "stripe";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import SimpleHeader from "../../components/Menu";
 import { createStripeCheckoutSession } from "../../services/stripeBrowser";
-import { getProducts, listPrices } from "../../services/stripeServer";
+import { getPlans, Plan } from "../../services/stripeServer";
 import getStripe from "../../utils/getStripe";
 
-interface ProductWithPrice {
-  product: Stripe.Product;
-  price: Stripe.Price;
-}
 
 interface CheckoutPageProps {
-  plans: ProductWithPrice[];
+  plans: Plan[];
 }
 
 const CheckoutPage = ({ plans }: CheckoutPageProps) => (
@@ -56,23 +51,16 @@ const CheckoutPage = ({ plans }: CheckoutPageProps) => (
 );
 
 CheckoutPage.getInitialProps = async () => {
-  const res = await getProducts();
-  const pricesRes = await listPrices();
-  if (res.type === "SUCCESS" && pricesRes.type === "SUCCESS") {
-    const plans = pricesRes.prices?.map((price: Stripe.Price) => {
-      var productForPrice = res.products?.find(
-        (product: Stripe.Product) => product.id == price.product
-      );
-      return {
-        product: productForPrice,
-        price: price,
-      };
-    });
+  const res = await getPlans();
 
-    return { plans: plans };
+  if (res.type === "SUCCESS") {
+    return {
+      plans: res.plans
+    }
   }
 
   return {
+    type: "ERR",
     plans: [],
   };
 };

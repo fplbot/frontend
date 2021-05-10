@@ -17,6 +17,7 @@ interface StripeListProductsSuccess {
 export type StripeListPricesResponse =
   | StripeServerFailure
   | StripeListPricesSuccess;
+
 export type StripeListProductsResponse =
   | StripeServerFailure
   | StripeListProductsSuccess;
@@ -73,6 +74,38 @@ export async function getProducts() {
   } catch (err) {
     return {
       type: "ERR",
+    };
+  }
+}
+
+export interface Plan {
+  product: Stripe.Product;
+  price: Stripe.Price;
+}
+
+export async function getPlans() {
+  var res = await getProducts();
+  var pricesRes = await listPrices();
+
+  if (res.type === "SUCCESS" && pricesRes.type === "SUCCESS") {
+    const plans = pricesRes.prices?.map((price: Stripe.Price) => {
+      var productForPrice = res.products?.find(
+        (product: Stripe.Product) => product.id == price.product
+      );
+      return {
+        product: productForPrice,
+        price: price,
+      };
+    });
+
+    return {
+      type: "SUCCESS",
+      plans: plans,
+    };
+  } else {
+    return {
+      type: "ERR",
+      plans: [],
     };
   }
 }
