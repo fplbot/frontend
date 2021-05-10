@@ -205,7 +205,7 @@ const SummaryList = ({ leagueId }: SummaryListProps) => {
 };
 
 function timeFormatted(time: Date): React.ReactNode {
-  var date = new Date(time);
+  const date = new Date(time);
   return `${date.getDay()}/${date.getMonth() + 1
     } ${date.getUTCHours()}:${date.getUTCMinutes()}`;
 }

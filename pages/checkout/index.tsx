@@ -130,9 +130,13 @@ const CheckoutSubscription = ({
     e.preventDefault();
     const createSessionResponse = await createStripeCheckoutSession(priceId);
 
-    if (createSessionResponse.type == "SUCCESS") {
+    if (createSessionResponse.type === "SUCCESS") {
       const stripe = await getStripe();
-      const { error } = await stripe!.redirectToCheckout({
+      if (stripe == null) {
+        console.warn("Failed to load stripe 🤷‍♂️");
+        return;
+      }
+      const { error } = await stripe.redirectToCheckout({
         sessionId: createSessionResponse.sessionId,
       });
       console.warn(error.message);
