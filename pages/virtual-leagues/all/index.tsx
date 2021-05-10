@@ -22,7 +22,7 @@ const AllVerifiedPage: NextPage<AllVerifiedPageProps> = ({ res }) => {
 };
 
 AllVerifiedPage.getInitialProps = async () => {
-  var allEntriesRes = await getVerifiedEntries("all");
+  const allEntriesRes = await getVerifiedEntries("all");
   return {
     res: allEntriesRes
   }

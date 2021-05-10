@@ -30,7 +30,7 @@ interface ProductContainer {
   data: Stripe.Product[];
 }
 
-export async function listPrices() {
+export async function listPrices(): Promise<StripeListPricesResponse> {
   try {
     const response = await fetch("https://api.stripe.com/v1/prices", {
       headers: {
@@ -54,7 +54,7 @@ export async function listPrices() {
   }
 }
 
-export async function getProducts() {
+export async function getProducts(): Promise<StripeListProductsResponse> {
   try {
     const response = await fetch("https://api.stripe.com/v1/products", {
       headers: {
@@ -83,20 +83,31 @@ export interface Plan {
   price: Stripe.Price;
 }
 
-export async function getPlans() {
-  var res = await getProducts();
-  var pricesRes = await listPrices();
+export interface GetPlansSuccess {
+  type: "SUCCESS";
+  plans: Plan[];
+}
 
-  if (res.type === "SUCCESS" && pricesRes.type === "SUCCESS") {
-    const plans = pricesRes.prices?.map((price: Stripe.Price) => {
-      var productForPrice = res.products?.find(
-        (product: Stripe.Product) => product.id == price.product
-      );
-      return {
-        product: productForPrice,
-        price: price,
-      };
-    });
+export type GetPlansResponse = StripeServerFailure | GetPlansSuccess;
+
+export async function getPlans(): Promise<GetPlansResponse> {
+  const productsRes = await getProducts();
+  const pricesRes = await listPrices();
+
+  if (productsRes.type === "SUCCESS" && pricesRes.type === "SUCCESS") {
+    const plans = pricesRes.prices
+      .map((price: Stripe.Price) => {
+        const productForPrice = productsRes.products.find(
+          (product: Stripe.Product) => product.id == price.product
+        );
+        return {
+          product: productForPrice,
+          price: price,
+        };
+      })
+      .filter(
+        (el) => el.product !== null && el.product !== undefined
+      ) as Plan[];
 
     return {
       type: "SUCCESS",
@@ -105,7 +116,6 @@ export async function getPlans() {
   } else {
     return {
       type: "ERR",
-      plans: [],
     };
   }
 }

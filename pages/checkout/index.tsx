@@ -30,11 +30,11 @@ const CheckoutPage = ({ plans }: CheckoutPageProps) => (
           return (
             <div className="">
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
+                <h1 className="text-2xl md:text-xl font-bold text-fpl-purple mb-2">
                   {plan.product.name}
                 </h1>
               </div>
-              <div className="m-3 p3">
+              <div className="m-3 p3 pb-10">
                 <CheckoutSubscription
                   priceId={plan.price.id}
                   title={plan.product.name}
@@ -80,9 +80,13 @@ const CheckoutSubscription = ({
     e.preventDefault();
     const createSessionResponse = await createStripeCheckoutSession(priceId);
 
-    if (createSessionResponse.type == "SUCCESS") {
+    if (createSessionResponse.type === "SUCCESS") {
       const stripe = await getStripe();
-      const { error } = await stripe!.redirectToCheckout({
+      if (stripe == null) {
+        console.warn("Failed to load stripe 🤷‍♂️");
+        return;
+      }
+      const { error } = await stripe.redirectToCheckout({
         sessionId: createSessionResponse.sessionId,
       });
       console.warn(error.message);
