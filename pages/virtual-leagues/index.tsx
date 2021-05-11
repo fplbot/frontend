@@ -130,7 +130,7 @@ function HeroLink({ title, description, rel }: HeroLinkProperties) {
 }
 
 VirtualLeaguesIndex.getInitialProps = async () => {
-  var virtualLeaguesRes = await getVirtualLeagues();
+  const virtualLeaguesRes = await getVirtualLeagues();
   return { resData: virtualLeaguesRes };
 };
 

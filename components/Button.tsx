@@ -16,7 +16,7 @@ function Button({
   color = "PURPLE",
   shape = "square",
 }: ButtonProps) {
-  var buttonClassName = classNames({
+  const buttonClassName = classNames({
     "font-bold rounded shadow hover:shadow-xl transition duration-500 ": true,
     "py-3 px-3": shape === "square",
     "py-2 px-8": shape === "long",
