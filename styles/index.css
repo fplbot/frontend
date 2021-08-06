@@ -216,3 +216,30 @@
 .league-transfers {
   max-width: 500px;
 }
+
+.disabled-stuff {
+  position: relative;
+}
+
+.disabled-stuff__content {
+  pointer-events: none;
+  opacity: .5;
+}
+
+.disabled-stuff__message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20rem;
+  text-align: center;
+  background: white;
+  font-size: 1.3rem;
+  padding: 1rem;
+  border: 2px solid #37003c;
+  transform: rotate(-6deg);
+  border-radius: 5px;
+  margin-left: -10rem;
+  color: #37003c;
+  margin-top: -5rem;
+  box-shadow: -2px 9px 15px -6px;
+}
