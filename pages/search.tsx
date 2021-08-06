@@ -73,46 +73,53 @@ function SearchIndex({ query }: SearchIndexProps) {
         />
       </Head>
       <SimpleHeader />
-      <div className="flex-grow">
-        <div className="w-full max-w-2xl m-auto py-24 px-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-            Search FPL content
-          </h1>
-          <p className="text-md md:text-lg text-center text-fpl-purple">
-            Search managers or leagues. Also feel free to check out our virtual
-            leagues — for example{" "}
-            <Link href="/virtual-leagues/pl">
-              <a className="underline">verified PL players playing FPL</a>
-            </Link>
-            .
-          </p>
+        <div className="flex-grow">
+          <div className="disabled-stuff">
+            <div className="disabled-stuff__content">
+              <div className="w-full max-w-2xl m-auto py-24 px-8 text-center">
+                <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
+                  Search FPL content
+                </h1>
+                <p className="text-md md:text-lg text-center text-fpl-purple">
+                  Search managers or leagues. Also feel free to check out our virtual
+                  leagues — for example{" "}
+                  <Link href="/virtual-leagues/pl">
+                    <a className="underline">verified PL players playing FPL</a>
+                  </Link>
+                  .
+                </p>
 
-          <form className="mt-10" onSubmit={submitSearchValue}>
-            <input
-              aria-label="Search for FPL player"
-              value={searchValue}
-              placeholder="Magnus Carlsen"
-              onChange={(e) => {
-                setSearchValue(e.target.value);
-              }}
-              ref={inputRef}
-              className="search-input w-72 py-2 px-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
-            />
+                <form className="mt-10" onSubmit={submitSearchValue}>
+                  <input
+                    aria-label="Search for FPL player"
+                    value={searchValue}
+                    placeholder="Magnus Carlsen"
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                    }}
+                    ref={inputRef}
+                    className="search-input w-72 py-2 px-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
+                  />
 
-            <Button onClick={submitSearchValue} shape="long" className="mt-4">
-              Search
-            </Button>
-          </form>
+                  <Button onClick={submitSearchValue} shape="long" className="mt-4">
+                    Search
+                  </Button>
+                </form>
+              </div>
+              <div className="pb-16 px-8 text-center">
+                <SearchState
+                  searchState={searchState}
+                  searchPhrase={submittedSearchValue}
+                  page={pageValue}
+                  updatePage={updatePageNumber}
+                />
+              </div>
+            </div>
+            <div className="disabled-stuff__message">
+              The search is currently disabled while we prepare it for the 21/22 season 🤷
+            </div>
+          </div>
         </div>
-        <div className="pb-16 px-8 text-center">
-          <SearchState
-            searchState={searchState}
-            searchPhrase={submittedSearchValue}
-            page={pageValue}
-            updatePage={updatePageNumber}
-          />
-        </div>
-      </div>
       <Footer />
     </div>
   );
