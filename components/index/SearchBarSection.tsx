@@ -36,7 +36,7 @@ export default function SearchBarSection() {
             </form>
           </div>
           <div className="disabled-stuff__message">
-            The search is currently disabled while we prepare it for the 21/22 season 🤷
+            The search is currently disabled while we prepare for the 21/22 season 🤷
           </div>
         </div>
       </div>
