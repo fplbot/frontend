@@ -27,7 +27,7 @@
 .verified-icon{
   width: 1.4em;
   display: inline;
-  vertical-align: middle;
+  /* vertical-align: middle; */
   margin-top: -.25em;
 }
 
