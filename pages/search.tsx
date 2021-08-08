@@ -74,50 +74,38 @@ function SearchIndex({ query }: SearchIndexProps) {
       </Head>
       <SimpleHeader />
         <div className="flex-grow">
-          <div className="disabled-stuff">
-            <div className="disabled-stuff__content">
-              <div className="w-full max-w-2xl m-auto py-24 px-8 text-center">
-                <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
-                  Search FPL content
-                </h1>
-                <p className="text-md md:text-lg text-center text-fpl-purple">
-                  Search managers or leagues. Also feel free to check out our virtual
-                  leagues — for example{" "}
-                  <Link href="/virtual-leagues/pl">
-                    <a className="underline">verified PL players playing FPL</a>
-                  </Link>
-                  .
-                </p>
+          <div className="w-full max-w-3xl m-auto py-24 px-8 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-fpl-purple mb-2">
+              Search FPL content
+            </h1>
+            <p className="text-md md:text-lg text-center text-fpl-purple">
+              Search <s>managers</s> or leagues. <strong>Only searches for leagues are possible at the moment.</strong>
+            </p>
 
-                <form className="mt-10" onSubmit={submitSearchValue}>
-                  <input
-                    aria-label="Search for FPL player"
-                    value={searchValue}
-                    placeholder="Magnus Carlsen"
-                    onChange={(e) => {
-                      setSearchValue(e.target.value);
-                    }}
-                    ref={inputRef}
-                    className="search-input w-72 py-2 px-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
-                  />
+            <form className="mt-10" onSubmit={submitSearchValue}>
+              <input
+                aria-label="Search for FPL player"
+                value={searchValue}
+                placeholder="Magnus Carlsen"
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                }}
+                ref={inputRef}
+                className="search-input w-72 py-2 px-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
+              />
 
-                  <Button onClick={submitSearchValue} shape="long" className="mt-4">
-                    Search
-                  </Button>
-                </form>
-              </div>
-              <div className="pb-16 px-8 text-center">
-                <SearchState
-                  searchState={searchState}
-                  searchPhrase={submittedSearchValue}
-                  page={pageValue}
-                  updatePage={updatePageNumber}
-                />
-              </div>
-            </div>
-            <div className="disabled-stuff__message">
-              The search is currently disabled while we prepare for the 21/22 season 🤷
-            </div>
+              <Button onClick={submitSearchValue} shape="long" className="mt-4">
+                Search
+              </Button>
+            </form>
+          </div>
+          <div className="pb-16 px-8 text-center">
+            <SearchState
+              searchState={searchState}
+              searchPhrase={submittedSearchValue}
+              page={pageValue}
+              updatePage={updatePageNumber}
+            />
           </div>
         </div>
       <Footer />
@@ -310,6 +298,7 @@ const PlayerEntryRow = ({ item }: PlayerEntryRowProps) => (
     title={item.realName}
     subTitle={item.teamName}
     linkHref={`https://fantasy.premierleague.com/entry/${item.id}/history/`}
+    external={true}
   >
     <VerifiedPlayerDetails item={item} />
   </Row>
@@ -343,8 +332,9 @@ const LeagueEntryRow = ({ item }: LeagueEntryRowProps) => (
   <Row
     icon="🏆"
     title={item.name}
-    subTitle={`admin:${item.adminName}`}
-    linkHref={`/leagues/${item.id}`}
+    subTitle={`Admin: ${item.adminName}`}
+    linkHref={`https://fantasy.premierleague.com/leagues/${item.id}/standings/c`}
+    external={true}
   />
 );
 
@@ -354,22 +344,23 @@ interface RowProps {
   title: string | JSX.Element;
   subTitle: string;
   linkHref: string;
+  external?: boolean
 }
 
-const Row = ({ icon, title, subTitle, linkHref, children }: RowProps) => (
+const Row = ({ icon, title, subTitle, linkHref, children, external }: RowProps) => (
   <>
     <div>
       <Icon>{icon}</Icon>
     </div>
     <div>
-      <span className="mr-1">
+      <span className="mr-2">
         <span className="font-bold">{title}</span>
         {children}
       </span>
       <span className="text-sm hidden sm:inline-block">{subTitle}</span>
     </div>
     <div className="w-full flex justify-end mr-3">
-      <a href={linkHref} className="underline">
+      <a href={linkHref} className="underline" target={external ? '_blank' : '_self'}>
         View
       </a>
     </div>
