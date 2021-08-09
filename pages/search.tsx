@@ -152,11 +152,8 @@ function SearchIndex({ query }: SearchIndexProps) {
 
   function updateSearchType(searchType: SearchType) {
     setSearchTypeValue(searchType);
+    setPageValue(0);
     updateQueryParam(submittedSearchValue, 0, searchType);
-  }
-
-  function handleTypeInputChange(event: Event) {
-    const target = event.target;
   }
 
   function searchForTerm() {
