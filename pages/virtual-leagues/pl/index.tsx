@@ -8,11 +8,10 @@ import { Chip } from "../../../components/Chip";
 import Footer from "../../../components/Footer";
 import SimpleHeader from "../../../components/Menu";
 import {
-  getPLVerifiedEntries,
-  VerifiedPLEntry,
-  GetVerifiedPLEntriesResponse,
+  getPLVerifiedEntries, GetVerifiedPLEntriesResponse, VerifiedPLEntry
 } from "../../../services/verified";
 import { formatNumber } from "../../../utils/formatter";
+import { getEntryUrl } from "../../../utils/urlHelper";
 
 interface VerifiedIndexProps {
   verifiedEntriesData: GetVerifiedPLEntriesResponse;
@@ -126,7 +125,7 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
                 {data.pointsThisGw}
               </td>
               <td className="verified-table__cap verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
-                {data.captain} ({data.viceCaptain})
+                {data.captain} {data.viceCaptain && `(${data.viceCaptain})`}
               </td>
               <td className="verified-table__chip verified-table__group2 text-left border-grey-light border hover:bg-gray-100 p-3 truncate">
                 {data.chipUsed ? (
@@ -155,7 +154,7 @@ const VerifiedTable = ({ verifiedEntries }: VerifiedTableProps) => {
               </td>
               <td className="verified-table__open verified-table__group4 text-center border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">
                 <a
-                  href={`https://fantasy.premierleague.com/entry/${data.entryId}/event/${data.gameweek}`}
+                  href={getEntryUrl(data.entryId, data.gameweek)}
                   className="block"
                   target="_blank"
                 >
