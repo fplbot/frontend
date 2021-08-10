@@ -1,6 +1,5 @@
 import { NextPageContext } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import Router from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../components/Button";
@@ -8,11 +7,10 @@ import Footer from "../components/Footer";
 import SimpleHeader from "../components/Menu";
 import { Spinner } from "../components/Spinner";
 import {
-  search,
-  SearchResponse,
-  SearchSuccess,
   LeagueEntry,
-  PlayerEntry,
+  PlayerEntry, search,
+  SearchResponse,
+  SearchSuccess, SearchType
 } from "../services/search";
 import { VerifiedType } from "../services/VerifiedType";
 
@@ -32,7 +30,7 @@ interface SearchLoading {
 type SearchState = SearchResponse | SearchLoading | SearchEmpty | SearchInit;
 
 interface SearchIndexProps {
-  query: { q: string | null; page: string | null };
+  query: { q: string | null; page: string | null, type: SearchType | null };
 }
 
 function SearchIndex({ query }: SearchIndexProps) {
@@ -45,13 +43,24 @@ function SearchIndex({ query }: SearchIndexProps) {
   const [pageValue, setPageValue] = useState<number>(
     query.page ? parseInt(query.page, 10) : 0
   );
+  const [searchForEntries, setSearchForEntries] = useState<boolean>(true);
+  const [searchForLeagues, setSearchForLeagues] = useState<boolean>(true);
+  const [searchTypeValue, setSearchTypeValue] = useState<SearchType>(
+    query.type || 'all'
+  );
   const [searchState, setSearchState] = useState<SearchState>({
     type: query.q ? "LOADING" : "INIT",
   });
 
   useEffect(() => {
     searchForTerm();
-  }, [submittedSearchValue, pageValue]);
+  }, [submittedSearchValue, pageValue, searchTypeValue]);
+
+  useEffect(() => {
+    if (searchForEntries && searchForLeagues) updateSearchType('all');
+    else if (searchForEntries && !searchForLeagues) updateSearchType('entries');
+    else if (!searchForEntries && searchForLeagues) updateSearchType('leagues');
+  }, [searchForEntries, searchForLeagues])
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -79,7 +88,7 @@ function SearchIndex({ query }: SearchIndexProps) {
               Search FPL content
             </h1>
             <p className="text-md md:text-lg text-center text-fpl-purple">
-              Search <s>managers</s> or leagues. <strong>Only searches for leagues are possible at the moment.</strong>
+              Search for <s>managers</s> or leagues. <strong>Searching for managers are not fully supported until the season begins.</strong>
             </p>
 
             <form className="mt-10" onSubmit={submitSearchValue}>
@@ -93,10 +102,25 @@ function SearchIndex({ query }: SearchIndexProps) {
                 ref={inputRef}
                 className="search-input w-72 py-2 px-4 text-fpl-purple border-2 border-fpl-purple rounded focus:outline-none"
               />
-
               <Button onClick={submitSearchValue} shape="long" className="mt-4">
                 Search
               </Button>
+              <div className="mt-6">
+                <label className="checkbox">
+                  <input className="checkbox-input" type="checkbox" value="Entries" checked={searchForEntries} onChange={e => setSearchForEntries(e.target.checked)}/>
+                  <span className="checkbox-indicator"></span>
+                  <span className="checkbox-description">
+                    Managers
+                  </span>
+                </label>
+                <label className="checkbox">
+                  <input className="checkbox-input" type="checkbox" value="Leagues" checked={searchForLeagues} onChange={e => setSearchForLeagues(e.target.checked)}/>
+                  <span className="checkbox-indicator"></span>
+                  <span className="checkbox-description">
+                    Leagues
+                  </span>
+                </label>
+              </div>
             </form>
           </div>
           <div className="pb-16 px-8 text-center">
@@ -118,12 +142,18 @@ function SearchIndex({ query }: SearchIndexProps) {
     }
     setSubmittedSearchValue(searchValue);
     setPageValue(0);
-    updateQueryParam(searchValue, 0);
+    updateQueryParam(searchValue, 0, searchTypeValue);
   }
 
   function updatePageNumber(page: number) {
     setPageValue(page);
-    updateQueryParam(submittedSearchValue, page);
+    updateQueryParam(submittedSearchValue, page, searchTypeValue);
+  }
+
+  function updateSearchType(searchType: SearchType) {
+    setSearchTypeValue(searchType);
+    setPageValue(0);
+    updateQueryParam(submittedSearchValue, 0, searchType);
   }
 
   function searchForTerm() {
@@ -135,7 +165,7 @@ function SearchIndex({ query }: SearchIndexProps) {
       type: "LOADING",
       prevData: searchState.type === "SUCCESS" ? searchState : undefined,
     });
-    search(submittedSearchValue, pageValue).then((res) => {
+    search(submittedSearchValue, pageValue, searchTypeValue).then((res) => {
       setSearchState(res);
     });
   }
@@ -156,11 +186,11 @@ interface SearchStateProps {
   updatePage: (newPage: number) => void;
 }
 
-const updateQueryParam = (searchValue: string, page: number) => {
+const updateQueryParam = (searchValue: string, page: number, searchType: SearchType ) => {
   Router.push(
     {
       pathname: "/search",
-      query: { q: encodeURI(searchValue), page: page },
+      query: { q: encodeURI(searchValue), page: page, type: searchType },
     },
     undefined,
     {

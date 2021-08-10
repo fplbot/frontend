@@ -18,7 +18,7 @@ export default function SearchBarSection() {
           Try our search 🕵️
         </h1>
         <p className="text-lg text-center text-fpl-purple mt-4 mb-4">
-          Search Fantasy&nbsp;Premier&nbsp;League for <s>managers</s> or leagues. <strong>Only searches for leagues are possible at the moment.</strong>
+          Search Fantasy&nbsp;Premier&nbsp;League for <s>managers</s> or leagues. <strong>Searching for managers are not fully supported until the season begins.</strong>
         </p>
         <form className="search-bar" action="/search">
           <input

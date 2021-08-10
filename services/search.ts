@@ -55,13 +55,15 @@ interface SearchError {
 }
 
 export type SearchResponse = SearchSuccess | SearchError;
+export type SearchType = 'all' | 'entries' | 'leagues';
 
 export function search(
   searchString: string,
-  page: number
+  page: number,
+  searchType: SearchType
 ): Promise<SearchResponse> {
   return fetch(
-    `${FPLBOT_API_BASEURL}/search/any?query=${searchString}&page=${page}`,
+    `${FPLBOT_API_BASEURL}/search/any?query=${searchString}&page=${page}&type=${searchType}`,
     {
       method: "GET",
     }
