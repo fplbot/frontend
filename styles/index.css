@@ -243,3 +243,61 @@
   margin-top: -5rem;
   box-shadow: -2px 9px 15px -6px;
 }
+
+.checkbox {
+  position: relative;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  min-height: 1.5rem;
+  margin-right: 1rem;
+  cursor: default;
+  -webkit-appearance: none
+}
+
+.checkbox-input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0
+}
+
+.checkbox-indicator {
+  position: relative;
+  display: block;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  margin-right: .5rem;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 2px solid #6e6e6e;
+  border-radius: 3px;
+}
+
+.checkbox-input:focus+.checkbox-indicator {
+  border-color: #000
+}
+
+.checkbox-input:active+.checkbox-indicator{
+  background: #ededed
+}
+
+.checkbox {
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.checkbox-indicator {
+  width: unset
+}
+
+.checkbox-description {
+  width: calc(100% - 2rem);
+  text-align: left
+}
+
+.checkbox-input:checked+.checkbox-indicator {
+  border-color: rgba(55, 0, 60);
+  background: rgba(55, 0, 60) url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20%3E%3Cpolyline%20stroke-width%3D%223%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20points%3D%223%2C12.5%209%2C19%2021%2C6%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")
+}
