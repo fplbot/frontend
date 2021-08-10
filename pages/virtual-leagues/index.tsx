@@ -44,26 +44,19 @@ const VirtualLeaguesIndex: NextPage<VirtualLeaguesIndexProps> = ({
             Virtual Leagues{" "}
             <img src="/check.svg" className="verified-icon" alt="Verified" />
           </h1>
-          <div className="disabled-stuff">
-            <div className="disabled-stuff__content">
-              <ul className="list-disc ml-8 pt-10">
-                <HeroLink
-                  rel="pl"
-                  title="Verified PL Players"
-                  description="This virtual league consists of Premier League players' verified Fantasy Premier League teams."
-                />
-                <HeroLink
-                  rel="all"
-                  title="All verified accounts"
-                  description="All verifed accounts in our registry"
-                />
-                {resData.data.map((verifiedType) => renderLeagueLink(verifiedType))}
-              </ul>
-            </div>
-            <div className="disabled-stuff__message">
-              The virtual leagues are disabled while we prepare them for the 21/22 season 🤷
-            </div>
-          </div>
+          <ul className="list-disc ml-8 pt-10">
+            <HeroLink
+              rel="pl"
+              title="Verified PL Players"
+              description="This virtual league consists of Premier League players' verified Fantasy Premier League teams."
+            />
+            <HeroLink
+              rel="all"
+              title="All verified accounts"
+              description="All verifed accounts in our registry"
+            />
+            {resData.data.map((verifiedType) => renderLeagueLink(verifiedType))}
+          </ul>
         </div>
       </div>
       <Footer />

@@ -1,12 +1,13 @@
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import { Chip } from "../../../components/Chip";
 import Footer from "../../../components/Footer";
 import SimpleHeader from "../../../components/Menu";
-import { getVerifiedPLEntry, VerifiedPLEntry, GetVerifiedPLEntryResponse} from "../../../services/verified";
+import { getVerifiedPLEntry, GetVerifiedPLEntryResponse } from "../../../services/verified";
 import { formatNumber } from "../../../utils/formatter";
+import { getEntryUrl } from "../../../utils/urlHelper";
 
 interface GetVerifiedEntryNoSlug {
   type: "NO_SLUG";
@@ -120,7 +121,7 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Captain</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {verifiedEntry.captain} (VC: {verifiedEntry.viceCaptain})
+                  {verifiedEntry.captain} {verifiedEntry.viceCaptain && `(VC: ${verifiedEntry.viceCaptain})`}
                 </dd>
               </div>
               <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -166,11 +167,11 @@ const VerifiedEntryIndex: NextPage<VerifiedEntryIndexProps> = ({verifiedEntryDat
                 <dt className="text-sm font-medium text-gray-500">FPL Team</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 truncate">
                   <a
-                    href={`https://fantasy.premierleague.com/entry/${verifiedEntry.entryId}/event/${verifiedEntry.gameweek}`}
+                    href={getEntryUrl(verifiedEntry.entryId, verifiedEntry.gameweek)}
                     className="block underline"
                     target="_blank"
                   >
-                    {`https://fantasy.premierleague.com/entry/${verifiedEntry.entryId}/event/${verifiedEntry.gameweek}`}
+                    {getEntryUrl(verifiedEntry.entryId, verifiedEntry.gameweek)}
                   </a>
                 </dd>
               </div>
