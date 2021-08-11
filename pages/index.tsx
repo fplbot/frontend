@@ -15,7 +15,7 @@ const Index: NextPage = () => {
         <title>Fantasy Premier League slackbot and search</title>
         <meta
           name="description"
-          content="Slackbot for Fantasy Premier League. Posts live gameweek updates, standings for the league you follow and more. Search for Fantasy Premier League managers. Search by name or team name, and find FPL players and celebrities."/>
+          content="Slackbot for Fantasy Premier League. Posts live gameweek updates, standings for the league you follow and more. Search for Fantasy Premier League managers or leagues. Search by name or team name, and find FPL players and celebrities."/>
       </Head>
       <Header />
       <Features />
