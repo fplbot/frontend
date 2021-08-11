@@ -78,7 +78,7 @@ function SearchIndex({ query }: SearchIndexProps) {
         <title>Fantasy Premier League Search</title>
         <meta
           name="description"
-          content="Search for Fantasy Premier League content. Search managers, teams or leagues."
+          content="Search for Fantasy Premier League content. Search for managers or leagues."
         />
       </Head>
       <SimpleHeader />
@@ -88,7 +88,7 @@ function SearchIndex({ query }: SearchIndexProps) {
               Search FPL content
             </h1>
             <p className="text-md md:text-lg text-center text-fpl-purple">
-              Search for <s>managers</s> or leagues. <strong>Searching for managers are not fully supported until the season begins.</strong>
+              Search for managers or leagues.
             </p>
 
             <form className="mt-10" onSubmit={submitSearchValue}>
