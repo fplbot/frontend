@@ -46,6 +46,11 @@ export function getVerifiedExtraInformation(
         title: "Athletes",
         description: "Famous athletes",
       };
+    case "PastWinner":
+      return {
+        title: "FPL champions of the past",
+        description: "People that have won FPL",
+      };
     default:
       return {
         title: "Unknown",
