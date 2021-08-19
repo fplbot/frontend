@@ -7,7 +7,8 @@ export type VerifiedType = "Unknown" |
   "CommunityFame" |
   "Actor" |
   "TvFace" |
-  "Athlete";
+  "Athlete" |
+  "PastWinner";
 
 export const toVerifiedType = (verifiedType: string): VerifiedType | null  => {
   switch (verifiedType.toLowerCase()) {
@@ -27,6 +28,8 @@ export const toVerifiedType = (verifiedType: string): VerifiedType | null  => {
       return "TvFace";
     case 'athlete':
       return "Athlete";
+    case 'pastwinner':
+      return "PastWinner";
     case 'unknown':
       return 'Unknown'
     default:

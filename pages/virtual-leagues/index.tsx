@@ -103,6 +103,7 @@ function shouldBeVisibleAsLink(verifiedType: VerifiedType): ShouldBeVisible {
     case "Actor":
     case "TvFace":
     case "Athlete":
+    case "PastWinner":
       return { visible: true, ...extra };
     default:
       return { visible: false };
