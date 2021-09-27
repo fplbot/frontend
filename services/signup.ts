@@ -16,18 +16,13 @@ interface RedirectUriSuccess {
 
 type RedirectUriResponse = RedirectUriError | RedirectUriSuccess;
 
-export function getRedirectUri(channel: string, leagueId: number): Promise<RedirectUriResponse> {
-  const channelWithPrefix = channel.includes("#") ? channel : `#${channel}`
+export function getRedirectUri(): Promise<RedirectUriResponse> {
 
   return fetch(`${FPLBOT_API_BASEURL}/oauth/install-url`, {
-    method: 'POST',
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      channel: channelWithPrefix,
-      leagueId: leagueId
-    })
+    }
   })
     .then(async response => {
       const json = await response.json();
