@@ -1,12 +1,9 @@
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import Footer from "../components/Footer";
-import AddToSlackForm from "../components/index/AddToSlackForm";
 import Features from "../components/index/Features";
 import Header from "../components/index/Header";
-import SearchBanner from "../components/index/SearchBanner";
-import { isFplSearchHost } from "../utils/hostUtils";
 
 const Index: NextPage = () => {
   return (
@@ -19,8 +16,6 @@ const Index: NextPage = () => {
       </Head>
       <Header />
       <Features />
-      <AddToSlackForm />
-      <SearchBanner />
       <Footer />
     </div>
   );

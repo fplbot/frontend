@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../Button";
 import SearchBarSection from "./SearchBarSection";
 import Menu from '../Menu';
+import AddToSlackForm from "./AddToSlackForm";
 
 function Header() {
   return (
@@ -13,21 +14,15 @@ function Header() {
         <div className="block h-64 w-full bg-fpl-purple absolute bottom-0 inset-x-0" />
 
         <div className="container mx-auto py-24 px-8 text-center">
-          <SearchBarSection />     
+          <SearchBarSection />
           <h2 className="text-3xl md:text-4xl font-bold text-fpl-purple">
             👆 This search is part of @fplbot
           </h2>
           <p className="text-lg text-center text-fpl-purple mt-4">
             An unofficial Slackbot for Fantasy&nbsp;Premier&nbsp;League
-          </p>    
-          <Button
-            onClick={scrollToFeature}
-            color="GREEN"
-            className="mt-8 mb-16 text-2xl"
-            shape="long"
-          >
-            Try fplbot
-          </Button>
+          </p>
+          <AddToSlackForm />
+
 
           <div className="relative shadow-2xl">
             <img
