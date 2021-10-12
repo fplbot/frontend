@@ -19,7 +19,7 @@ function Header() {
             👆 This search is part of @fplbot
           </h2>
           <p className="text-lg text-center text-fpl-purple mt-4">
-            An unofficial Slackbot for Fantasy&nbsp;Premier&nbsp;League
+            An unofficial chatbot for Fantasy&nbsp;Premier&nbsp;League
           </p>
           <AddToSlackForm />
 

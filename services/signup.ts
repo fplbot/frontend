@@ -39,6 +39,29 @@ export function getRedirectUri(): Promise<RedirectUriResponse> {
     });
 }
 
+export function getDiscordRedirectUri(): Promise<RedirectUriResponse> {
+
+  return fetch(`${FPLBOT_API_BASEURL}/oauth/install-url-discord`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(async response => {
+      const json = await response.json();
+      if (response.ok) {
+        return json;
+      }
+      return Promise.reject(json);
+    })
+    .then((json: RedirectUriJson): RedirectUriSuccess => {
+      return { type: 'SUCCESS', redirectUri: json.redirectUri };
+    })
+    .catch((error): RedirectUriError => {
+      return { type: 'ERROR', reason: error.errors };
+    });
+}
+
 interface LeagueIdJson {
   leagueName: string;
   leagueAdmin: string;
