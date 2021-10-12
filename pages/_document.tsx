@@ -33,7 +33,7 @@ class MyDocument extends Document {
           <meta name="twitter:creator" content="@fplbotapp" />
           <meta property="og:url" content="https://www.fplbot.app" />
           <meta property="og:title" content="@fplbot" />
-          <meta property="og:description" content="A Slack app for Fantasy Premier League" />
+          <meta property="og:description" content="A Slack/Discord chatbot for Fantasy Premier League " />
           <meta property="og:image" content="https://fantasy.premierleague.com/img/share/facebook-share.png" />
           <link rel="icon" href="/favicon.ico" />
         </Head>

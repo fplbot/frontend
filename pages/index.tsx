@@ -9,10 +9,11 @@ const Index: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Fantasy Premier League slackbot and search</title>
+        <title>Fantasy Premier League Slack/Discord chatbot and search</title>
+        <meta name="title" content="Fantasy Premier League Slack/Discord chatbot and search" />
         <meta
           name="description"
-          content="Slackbot for Fantasy Premier League. Posts live gameweek updates, standings for the league you follow and more. Search for Fantasy Premier League managers or leagues. Search by name or team name, and find FPL players and celebrities."/>
+          content="Posts live gameweek updates, standings for the league you follow and more. Search for Fantasy Premier League managers or leagues. Search by name or team name, and find FPL players and celebrities."/>
       </Head>
       <Header />
       <Features />
