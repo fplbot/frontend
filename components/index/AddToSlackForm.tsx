@@ -1,5 +1,5 @@
 import React from 'react';
-import { getRedirectUri } from '../../services/signup';
+import { getDiscordRedirectUri, getRedirectUri } from '../../services/signup';
 
 function AddToSlackForm() {
 
@@ -14,8 +14,14 @@ function AddToSlackForm() {
             <p className="block uppercase tracking-wide text-fpl-purple font-bold mb-4">Install fplbot</p>
 
             <div className="container mx-auto w-40 pt-8">
-              <button className="rounded shadow-sm hover:shadow" onClick={onSubmit}>
+              <button className="rounded shadow-sm hover:shadow" onClick={redirectToSlack}>
                 <img src="https://platform.slack-edge.com/img/add_to_slack@2x.png" alt="Add to slack button" />
+              </button>
+            </div>
+
+            <div className="container mx-auto w-40 pt-8 ">
+              <button className="rounded-md shadow-sm hover:shadow border-gray-300 border p-1 bg-white" onClick={redirectToDiscord}>
+                <img src="/Discord-logo.png" alt="Add to Discord button" />
               </button>
             </div>
           </div>
@@ -29,9 +35,17 @@ function AddToSlackForm() {
   );
 
 
-  function onSubmit() {
-
+  function redirectToSlack() {
     getRedirectUri()
+      .then((res) => {
+        if (res.type === 'SUCCESS') {
+          window.location.href = res.redirectUri;
+        }
+      });
+  }
+
+  function redirectToDiscord() {
+    getDiscordRedirectUri()
       .then((res) => {
         if (res.type === 'SUCCESS') {
           window.location.href = res.redirectUri;
