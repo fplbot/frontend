@@ -6,9 +6,10 @@ function Footer() {
       <div className="flex flex-col items-center">
         <h4 className="text-lg font-bold mb-2">Love fplbot?</h4>
         <ul className="leading-relaxed ">
-          <li>💚 Sponsor us on patreon</li>
+          <li>💚 Sponsor us on <a href="https://www.patreon.com/johnkors" className="underline">patreon</a></li>
           <li>💚 Follow us on <a href="https://twitter.com/fplbotapp" className="underline">twitter</a></li>
-          <li>💚 Join our <a href="https://join.slack.com/t/fplbot/shared_invite/zt-hevkzs43-UJjYEgbfwOSxBDHFBuBNMQ" className="underline">slack workspace</a></li>
+          <li>💚 Questions: <a href="https://join.slack.com/t/fplbot/shared_invite/zt-xgwrkmxw-qNOwrNF9FT5m2kwhOqRhzw" className="underline">Slack</a>/<a href="https://discord.gg/zRWMRctR5T" className="underline">Discord</a></li>
+          <li>💚 Other: <a href="mailto:fplbot@blank.no" className="underline">fplbot@blank.no</a></li>
         </ul>
       </div>
       <p className="text-gray-200 text-center font text-xs mt-8">
