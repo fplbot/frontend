@@ -1,6 +1,6 @@
 # ⚠️ Archived
 
-The www.fplbot.app frontend app has been merged into the [fplbot repo](https://github.com/fplbot/frontend/), and the resource in Heroku has been deleted.
+The www.fplbot.app frontend app has been merged into the [fplbot repo](https://github.com/fplbot/fplbot/), and all infra in Heroku has been deleted.
 
 ====
 
